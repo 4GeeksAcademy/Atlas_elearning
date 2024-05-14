@@ -73,6 +73,85 @@ def create_signup_user():
     except Exception as err:
         return jsonify({"Error":"Error in User Creation:" + str(err)}), 500
 
+@api.route('/signup/teacher', methods=['POST'])
+def create_signup_teacher():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        is_teacher = request.json.get('isTeacher')
+        name = request.json.get('name')
+        last_name = request.json.get('lastName')
+        username = request.json.get('username')
+        number_document = request.json.get('numberDocument')
+        phone = request.json.get('phone')
+        age = request.json.get('age')
+        gender = request.json.get('gender')
+        certificate_teacher = request.json.get('certificateTeacher')
+        user_id = request.json.get('userId')
+        # Check if any required field is None or empty
+        if email is None or password is None or is_teacher is None or name is None or last_name is None or username is None or number_document is None or phone is None or age is None or gender is None or certificate_teacher is None or user_id is None:
+            return jsonify({"Error": "email, password, is_teacher, name, last_name, username, number_document, phone, age, gender, certificate_teacher, user_id are required"}), 400
+        existing_teacher = Teacher.query.filter_by(email=email).first()
+        if existing_teacher:
+            return jsonify({"Error": "Email already exists"}), 409
+        password_hash = generate_password_hash(password)
+        new_teacher = Teacher(
+            email=email,
+            password=password_hash,
+            is_teacher=is_teacher,
+            name=name,
+            last_name=last_name,
+            username=username,
+            number_document=number_document,
+            phone=phone,
+            age=age,
+            gender=gender,
+            certificate_teacher=certificate_teacher,
+            user_id=user_id
+        )
+        db.session.add(new_teacher)
+        db.session.commit()
+        return jsonify({"Message": "Teacher Created Successfully", "teacher_create": new_teacher.serialize()}), 201
+    except Exception as e:
+        return jsonify({"error": "Error posting teacher user" + str(e)})
+    
+@api.route('/signup/manager', methods=['POST'])
+def create_signup_manager():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        is_manager = request.json.get('isManager')
+        name = request.json.get('name')
+        last_name = request.json.get('lastName')
+        phone = request.json.get('phone')
+        user_id = request.json.get('userId')
+        teacher_id = request.json.get('teacherId')
+        # Validar la longitud del correo electrónico
+        if len(email) > 80:
+            return jsonify({"Error": "Email too long"}), 400
+        if not email or not password or not is_manager or not name or not last_name or not phone or not user_id or not teacher_id:
+            return jsonify({"msg": "email, password, is_manager, name, last_name, phone, user_id and teacher_id are required"})
+        existing_manager = Manager.query.filter_by(email=email).first()
+        if existing_manager:
+            return jsonify({"msg": "Email already exists"}), 409
+        password_hash = generate_password_hash(password)
+        new_manager = Manager(
+            email=email,
+            password=password_hash,
+            is_manager=is_manager,
+            name=name,
+            last_name=last_name,
+            phone=phone,
+            user_id=user_id,
+            teacher_id=teacher_id
+        )
+        db.session.add(new_manager)
+        db.session.commit()
+        return jsonify({"msg": "manager has been created successfully", "manager_create": new_manager.serialize()}), 201
+    except Exception as e:
+        return jsonify({"Error": "Error in user creation manager" + str(e)}), 500
+
+
 @api.route('/login/user', methods=['POST'])
 def get_token_login_user():
     try:
