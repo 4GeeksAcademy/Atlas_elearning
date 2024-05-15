@@ -60,12 +60,14 @@ export const AddUser = () => {
                 [name]: value
             }));
         }
-    };
+    }
+
+    console.log(userData)
 
     async function handleSubmit(event) {
         event.preventDefault();
         await actions.createUser(userData, selectedRole)
-        handlerCounter()
+        setCounter(0)
     }
 
     function handlerGoToLogIn() {
@@ -76,9 +78,6 @@ export const AddUser = () => {
         navigate('/')
     }
 
-    function handlerCounter() {
-        setCounter(0)
-    }
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -212,7 +211,7 @@ export const AddUser = () => {
                         type="number"
                         className="form-control"
                         name='certificateTeacher'
-                        onChange={() => { setCertificate(e.target.value) }}
+                        onChange={() => { setCertificate(eve.target.value) }}
                         value={certificate}
                         required />
                     <div className="invalid-tooltip">Please provide a valid certificate.</div>

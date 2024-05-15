@@ -14,6 +14,7 @@ import re
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
+app = Flask(__name__)
 CORS(api)
 
 
@@ -60,7 +61,7 @@ def create_signup_user():
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201, redirect('/FormUser')
+        return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201
 
     except Exception as err:
         return jsonify({"Error":"Error in User Creation:" + str(err)}), 500
@@ -152,7 +153,7 @@ def create_signup_manager():
         db.session.add(new_manager)
         db.session.commit()
         
-        return jsonify({"msg": "manager has been created successfully", "manager_create": new_manager.serialize()}), 201
+        return jsonify({"msg": "Manager has been Created Successfully", "manager_create": new_manager.serialize()}), 201
     except Exception as e: 
         return jsonify({"Error": "Error in user manager creation" + str(e)}), 500
 

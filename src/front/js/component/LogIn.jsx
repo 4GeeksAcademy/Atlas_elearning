@@ -10,6 +10,7 @@ export const LogIn = () => {
     const [selectedRole, setSelectedRole] = useState('')
     const [active, setActive] = useState(false)
     const [counter, setCounter] = useState(7)
+    const [redirectPath, setRedirectPath] = useState('')
     const [login, setLogin] = useState({
         "email": '',
         "password": ''
@@ -34,7 +35,7 @@ export const LogIn = () => {
         if (login.email !== '' && login.password !== '') {
             await actions.loginIn(login, selectedRole);
             if (localStorage.getItem('jwt-token')) {
-                handlerCounter()
+                setCounter(0)
             }
         } else {
             alert('Ingrese todo los campos')
@@ -53,17 +54,19 @@ export const LogIn = () => {
         navigate('/')
     }
 
-    function handlerCounter() {
-        setCounter(0)
-    }
-
     console.log(selectedRole)
+
+    useEffect(() => {
+        if (redirectPath !== '') {
+            navigate(redirectPath)
+        }
+    }, [navigate, redirectPath])
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
                 if (prevCounter + 1 === 4) {
-                    navigate(`/${selectedRole}View`)
+                    setRedirectPath(`/${selectedRole}View`)
                     clearInterval(interval)
                 }
                 return prevCounter + 1;
@@ -71,7 +74,7 @@ export const LogIn = () => {
         }, 500);
 
         return () => clearInterval(interval)
-    }, [navigate, selectedRole])
+    }, [setRedirectPath, selectedRole])
 
     return (
         <div className=' position-relative'>
