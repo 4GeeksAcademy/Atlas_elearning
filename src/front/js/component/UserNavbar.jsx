@@ -12,13 +12,7 @@ export const UserNavbar = () => {
                 <div className="container-fluid">
                     <a className="navbar-brand">Atlas learning</a>
 
-
-
                     <button onClick={handleHomeView} className="btn btn-outline-danger m-1">Go back home</button>
-
-
-
-
 
                 </div>
             </nav>

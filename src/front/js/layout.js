@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
@@ -31,10 +31,10 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<FormUser />} path="/FormUser" />
-                        <Route element={<TeacherView />} path="/TeacherView" />
+                        <Route element={<TeacherView />} path="/teacherView" />
                         <Route element={<LogIn />} path="/LogIn" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<UserView />} path="/UserView" />
+                        <Route element={<UserView />} path="/userView" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

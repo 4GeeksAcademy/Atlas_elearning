@@ -16,7 +16,7 @@ export const Home = () => {
     return (
         <div>
             <Navbar />
-            
+
             <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div className="carousel-inner">
                     <div className="carousel-item active">

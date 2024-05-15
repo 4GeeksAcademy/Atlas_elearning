@@ -3,6 +3,9 @@ import { CoursesContainer } from './CoursesContainer.jsx'
 
 export const UserCourses = () => {
   return (
-    <CoursesContainer />
+    <div>
+      <CoursesContainer />
+    </div>
+    
   )
 }

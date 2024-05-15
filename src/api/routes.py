@@ -1,7 +1,7 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint, redirect
 from api.models import db, User, Manager, Teacher, Course, Orders, Payment, Modules, Request 
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
@@ -15,6 +15,7 @@ api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
 
 
 @api.route('/signup/user', methods=['POST'])
@@ -59,7 +60,7 @@ def create_signup_user():
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201
+        return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201, redirect('/FormUser')
 
     except Exception as err:
         return jsonify({"Error":"Error in User Creation:" + str(err)}), 500
