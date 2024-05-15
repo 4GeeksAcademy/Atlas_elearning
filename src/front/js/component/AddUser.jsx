@@ -10,6 +10,7 @@ export const AddUser = () => {
     const [isUsers, setIsUsers] = useState(true)
     const [certificate, setCertificate] = useState()
     const [counter, setCounter] = useState(5)
+    const [redirectPath, setRedirectPath] = useState('')
     const navigate = useNavigate()
     const [userData, setUserData] = useState({
         email: '',
@@ -78,12 +79,17 @@ export const AddUser = () => {
         navigate('/')
     }
 
+    useEffect(() => {
+        if (redirectPath !== '') {
+            navigate(redirectPath)
+        }
+    }, [navigate, redirectPath])
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
                 if (prevCounter + 1 === 4) {
-                    navigate('/LogIn')
+                    setRedirectPath('/LogIn')
                     clearInterval(interval)
                 }
                 return prevCounter + 1;
@@ -91,7 +97,7 @@ export const AddUser = () => {
         }, 500);
 
         return () => clearInterval(interval)
-    }, [navigate])
+    }, [setRedirectPath, selectedRole])
 
 
     return (
