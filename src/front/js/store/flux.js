@@ -8,6 +8,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       spinner: false
     },
     actions: {
+      
       /* getMessage: async () => {
         try {
           const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
