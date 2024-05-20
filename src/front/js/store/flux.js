@@ -159,6 +159,46 @@ const getState = ({ getStore, getActions, setStore }) => {
             throw new Error(errorData.Error || "Error in Reset")
           }
 
+          const dataResetPassword = await respResetPassword.json()
+          localStorage.setItem("jwt-token-reset", dataResetPassword.access_token)
+          setStore({...store, msg: dataResetPassword.message})
+        }
+        catch(err){
+
+        }finally{
+          getActions().spinner(false)
+        }
+      },
+
+      resetPasswordNewChange: async (password, userRol) => {
+        const store = getStore()
+        getActions().updateMsgError("")
+        getActions().updateMsg("")
+        getActions().spinner(true)
+
+        try{
+          console.log(process.env.BACKEND_URL + `/api/forgot-password/` + tokenPassword)
+          const tokenPassword = localStorage.getItem("jwt-token-reset")
+          if (!tokenPassword) throw new Error("No token found")
+
+          const respResetPassword = await fetch(
+            process.env.BACKEND_URL + `/api/reset-password/` + userRol + "/" + tokenPassword,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(password),
+            }
+          )
+          
+          
+          if(!respResetPassword.ok){
+            const errorData = await respResetPassword.json()
+            setStore({...store, error: errorData.Error})
+            throw new Error(errorData.Error || "Error in Reset")
+          }
+
           const dataResetPassword = await respResetPassword.json();
           setStore({...store, msg: dataResetPassword.message})
         }

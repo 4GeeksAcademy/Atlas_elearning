@@ -13,6 +13,7 @@ from datetime import timedelta
 
 from flask_mail import Message
 from app import mail
+import os
 
 
 api = Blueprint('api', __name__)
@@ -219,13 +220,14 @@ def forgot_password():
         return jsonify({"Error": "User not found"}), 404
 
     reset_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=1))
-    reset_link = url_for('api.reset_password', token=reset_token, _external=True)
+    frontend_url = os.getenv('FRONTEND_URL')  
+    reset_link = f"{frontend_url}ResetPassword/token/"  # Construir el enlace completo
 
     msg = Message('Password Reset Request', recipients=[email])
     msg.body = f"To reset your password, click the following link: {reset_link}"
     mail.send(msg)
 
-    return jsonify({"message": "Password reset link sent"}), 200
+    return jsonify({"message": "Password reset link sent", "access_token": reset_token}), 200
 
 # Ruta para resetear la contraseña
 @api.route('/reset-password/user/<token>', methods=['POST'])

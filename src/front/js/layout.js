@@ -18,6 +18,7 @@ import { SignOut } from "./pages/SignOut.jsx";
 
 import ProtectedRoute from "./component/ProtectedRoute.jsx";
 import { ResetPassword } from "./component/ResetPassword.jsx";
+import { ResetPasswordNewChange } from "./component/ResetPasswordNewChange.jsx";
 
 //create your first component
 const Layout = () => {
@@ -37,6 +38,7 @@ const Layout = () => {
                         <Route element={<LogIn />} path="/LogIn" />
                         <Route element={<SignOut />} path="/SignOut"/>
                         <Route element={<ResetPassword />} path="/ResetPassword"/>
+                        <Route element={<ResetPasswordNewChange />} path="/ResetPassword/token"/>
                         
                         {/* Protected Routes */}
                         <Route 

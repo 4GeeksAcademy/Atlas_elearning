@@ -5,7 +5,7 @@ import { Context } from '../store/appContext'
 import { GoArrowLeft } from "react-icons/go";
 
 
-export const ResetPassword = () => {
+export const ResetPasswordNewChange = () => {
     const { store, actions } = useContext(Context)
     const navigate = useNavigate()
     const [selectedRole, setSelectedRole] = useState('')
@@ -13,7 +13,7 @@ export const ResetPassword = () => {
     const [counter, setCounter] = useState(7)
     const [redirectPath, setRedirectPath] = useState('')
     const [login, setLogin] = useState({
-        "email": ''
+        "password": ''
     })
 
     function handlerChangeLogin(eve) {
@@ -32,8 +32,8 @@ export const ResetPassword = () => {
 
     async function handlerLogin(e) {
         e.preventDefault();
-        if (login.email !== '') {
-            await actions.resetPassword(login, selectedRole)
+        if (login.password !== '') {
+            await actions.resetPasswordNewChange(login, selectedRole)
             setCounter(0)
         } else {
             alert('Ingrese todo los campos')
@@ -66,7 +66,7 @@ export const ResetPassword = () => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
                 if (prevCounter + 1 === 6 && store.error == '') {
-                    /* setRedirectPath(`/${selectedRole}View`) */
+                    setRedirectPath('/LogIn')
                     clearInterval(interval)
                 }
                 return prevCounter + 1;
@@ -109,15 +109,15 @@ console.log(msg, msgError)
                             {
                                 (active)
                                     ? <div>
-                                        {/* Email */}
+                                        {/* Password */}
                                         <div className='col-md my-3'>
-                                            <label className='my-2'>Email</label>
+                                            <label className='my-2'>New Password</label>
                                             <input
-                                                name='email'
-                                                value={login.email}
+                                                name='password'
+                                                value={login.password}
                                                 onChange={handlerChangeLogin}
                                                 type="text"
-                                                placeholder='Ingrese email'
+                                                placeholder='Ingrese password'
                                                 className="form-control"
                                             />
                                         </div>
@@ -167,7 +167,7 @@ console.log(msg, msgError)
                 </div>
                 <div className='col-lg-7 d-sm-none d-md-none d-lg-block d-flex justify-content-center align-items-center'>
                     <img
-                        src="https://media.kasperskydaily.com/wp-content/uploads/sites/85/2015/12/05131456/passwords-10x10-featured.jpg"
+                        src="https://assets-global.website-files.com/63f5de8e8260819e3bbf4432/653269a25f1eb2094d605aba_change-gmail-password.png"
                         alt="imgLogInEducation"
                         className='img-fluid'
                         style={{ height: "100vh", width: 'auto' }}
