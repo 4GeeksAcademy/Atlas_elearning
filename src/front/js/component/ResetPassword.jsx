@@ -10,7 +10,7 @@ export const ResetPassword = () => {
     const navigate = useNavigate()
     const [selectedRole, setSelectedRole] = useState('')
     const [active, setActive] = useState(false)
-    const [counter, setCounter] = useState(7)
+    const [counter, setCounter] = useState(10)
     const [redirectPath, setRedirectPath] = useState('')
     const [login, setLogin] = useState({
         "email": ''
@@ -36,16 +36,13 @@ export const ResetPassword = () => {
             await actions.resetPassword(login, selectedRole)
             setCounter(0)
         } else {
-            alert('Ingrese todo los campos')
+            alert('Ingrese el Email, please')
         }
     }
 
-    function handlerGoToRegister() {
-        navigate('/FormUser')
-    }
 
-    function handlerResetPassword() {
-        navigate('/ResetPassword')
+    function handlerLogIn() {
+        navigate('/LogIn')
     }
 
     function handlerChangeActive() {
@@ -65,8 +62,8 @@ export const ResetPassword = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (prevCounter + 1 === 6 && store.error == '') {
-                    /* setRedirectPath(`/${selectedRole}View`) */
+                if (prevCounter + 1 === 8 && store.error == '') {
+                    setRedirectPath('/LogIn')
                     clearInterval(interval)
                 }
                 return prevCounter + 1;
@@ -78,16 +75,16 @@ export const ResetPassword = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
-console.log(msg, msgError)
+
     return (
         <div className=' position-relative'>
             {/* Msg */}
             <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
                 {msgError === ''
-                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 9) ? "alert alert-success" : "d-none"}`}>
                         {msg}
                     </div>
-                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 9) ? "alert alert-danger" : "d-none"}`}>
                         {msgError}
                     </div>}
             </div>
@@ -138,7 +135,7 @@ console.log(msg, msgError)
                                             </button>
                                         </div>
                                         <div className='col-md my-3 text-center'>
-                                            <p className='text-decoration-underline' onClick={handlerResetPassword} style={{ cursor: "pointer" }}>Go To Home</p>
+                                            <p className='text-decoration-underline' onClick={handlerLogIn} style={{ cursor: "pointer" }}>Go To Log In</p>
                                         </div>
                                         <div className='col-md my-3 text-center'>
                                             <p className='text-decoration-underline' onClick={handlerChangeActive} style={{ cursor: "pointer" }}>Do you want to change roles?</p>
