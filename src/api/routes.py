@@ -21,7 +21,7 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-
+#-----------------------CREACION DE USERS------------------------#
 @api.route('/signup/user', methods=['POST'])
 def create_signup_user():
     try:
@@ -177,7 +177,7 @@ def create_signup_manager():
 
 
 
-
+#-----------------------LOGIN DE USERS------------------------#
 @api.route('/login/user', methods=['POST'])
 def get_token_login_user():
     try:
@@ -208,9 +208,72 @@ def get_token_login_user():
     except Exception as e:
         return jsonify({"Error": "User not exists in Data Base", "Msg": str(e)}), 500
 
+@api.route('/login/teacher', methods=['POST'])
+def get_token_login_teacher():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        if not email or not password:
+            return jsonify({"Error": "Email and Password are required"}), 400
 
+        # Buscar el usuario con ese correo
+        login_teacher = Teacher.query.filter_by(email=email).first()
+        if not login_teacher:
+            return jsonify({'Error': 'Invalid Email'}), 400
+
+        # Obtener la contraseña desde la base de datos
+        password_from_db = login_teacher.password
+
+        # Verificar la contraseña
+        true_or_false = check_password_hash(password_from_db, password)
+
+        if true_or_false:
+            expires = timedelta(days=1)
+            teacher_id = login_teacher.id
+            access_token = create_access_token(identity=teacher_id, expires_delta=expires)
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
+        else:
+            return jsonify({"Error":"Invalid Password"}), 400
+        
+    except Exception as e:
+        return jsonify({"Error": "Teacher not exists in Data Base" , "Msg": str(e)}), 500
+
+
+@api.route('/login/manager', methods=['POST'])
+def get_token_login_manager():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        if not email or not password:
+            return jsonify({"Error": "Email and Password are required"}), 400
+
+       # Buscar el usuario con ese correo
+        login_manager = Manager.query.filter_by(email=email).first()
+        if not login_manager:
+            return jsonify({'Error': 'Invalid Email'}), 400
+
+        # Obtener la contraseña desde la base de datos
+        password_from_db = login_manager.password
+
+        # Verificar la contraseña
+        true_or_false = check_password_hash(password_from_db, password)
+
+        if true_or_false:
+            expires = timedelta(days=1)
+            manager_id = login_manager.id
+            access_token = create_access_token(identity=manager_id, expires_delta=expires)
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
+        else:
+            return jsonify({"Error":"Invalid Password"}), 400
+        
+    except Exception as e:
+        return jsonify({"Error": "Manager not exists in Data Base" , "Msg": str(e)}), 500
+
+
+
+#-----------------------RESET PASSWORD DE USERS------------------------#
 @api.route('/forgot-password/user', methods=['POST'])
-def forgot_password():
+def forgot_password_user():
     email = request.json.get('email')
     if not email:
         return jsonify({"Error": "Email is required"}), 400
@@ -231,7 +294,7 @@ def forgot_password():
 
 # Ruta para resetear la contraseña
 @api.route('/reset-password/user/<token>', methods=['POST'])
-def reset_password(token):
+def reset_password_user(token):
     try:
         decoded_token = decode_token(token)
         user_id = decoded_token['sub']
@@ -251,67 +314,92 @@ def reset_password(token):
         return jsonify({"Error": f"An error occurred: {str(e)}"}), 500
 
 
+@api.route('/forgot-password/teacher', methods=['POST'])
+def forgot_password_teacher():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"Error": "Email is required"}), 400
 
+    teacher = Teacher.query.filter_by(email=email).first()
+    if not teacher:
+        return jsonify({"Error": "User not found"}), 404
 
-@api.route('/login/manager', methods=['POST'])
-def get_token_login_manager():
+    reset_token = create_access_token(identity=teacher.id, expires_delta=timedelta(hours=1))
+    frontend_url = os.getenv('FRONTEND_URL')  
+    reset_link = f"{frontend_url}ResetPassword/token/"  # Construir el enlace completo
+
+    msg = Message('Password Reset Request', recipients=[email])
+    msg.body = f"To reset your password, click the following link: {reset_link}"
+    mail.send(msg)
+
+    return jsonify({"message": "Password reset link sent", "access_token": reset_token}), 200
+
+# Ruta para resetear la contraseña
+@api.route('/reset-password/teacher/<token>', methods=['POST'])
+def reset_password_teacher(token):
     try:
-        email = request.json.get('email')
-        password = request.json.get('password')
-        if not email or not password:
-            return jsonify({"Error": "Email and Password are required"}), 400
+        decoded_token = decode_token(token)
+        teacher_id = decoded_token['sub']
+        teacher = Teacher.query.get(teacher_id)
+        
+        if not teacher:
+            return jsonify({"Error": "Invalid or expired token"}), 400
 
-        #buscamos el user con ese correo
-        login_manager = Manager.query.filter_by(email=request.json['email']).one()
+        new_password = request.json.get('password')
+        if not new_password:
+            return jsonify({"Error": "Password is required"}), 400
 
-        if not login_manager:
-            return jsonify({'Error': 'Invalid Email'}), 400
-
-        password_from_db = login_manager.password
-        hashed_password_hex = password_from_db
-        hashed_password_bin = bytes.fromhex(hashed_password_hex[2:])
-        true_or_false = check_password_hash(hashed_password_bin, password)
-
-        if true_or_false:
-            expires = timedelta(days=1)
-            user_id = login_manager.id
-            access_token = create_access_token(identity=user_id, expires_delta=expires)
-            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
-        else:
-            return {"Error":"Invalid Password"}, 400
+        teacher.password = generate_password_hash(new_password).decode('utf-8')
+        db.session.commit()
+        return jsonify({"message": "Password reset successful"}), 200
     except Exception as e:
-        return jsonify({"Error": "Manager not exists in Data Base" , "Msg": str(e)}), 500
+        return jsonify({"Error": f"An error occurred: {str(e)}"}), 500
 
-@api.route('/login/teacher', methods=['POST'])
-def get_token_login_teacher():
+
+@api.route('/forgot-password/manager', methods=['POST'])
+def forgot_password_manager():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"Error": "Email is required"}), 400
+
+    manager = Manager.query.filter_by(email=email).first()
+    if not manager:
+        return jsonify({"Error": "User not found"}), 404
+
+    reset_token = create_access_token(identity=manager.id, expires_delta=timedelta(hours=1))
+    frontend_url = os.getenv('FRONTEND_URL')  
+    reset_link = f"{frontend_url}ResetPassword/token/"  # Construir el enlace completo
+
+    msg = Message('Password Reset Request', recipients=[email])
+    msg.body = f"To reset your password, click the following link: {reset_link}"
+    mail.send(msg)
+
+    return jsonify({"message": "Password reset link sent", "access_token": reset_token}), 200
+
+# Ruta para resetear la contraseña
+@api.route('/reset-password/manager/<token>', methods=['POST'])
+def reset_password_manager(token):
     try:
-        email = request.json.get('email')
-        password = request.json.get('password')
-        if not email or not password:
-            return jsonify({"Error": "Email and Password are required"}), 400
+        decoded_token = decode_token(token)
+        manager_id = decoded_token['sub']
+        manager = Manager.query.get(manager_id)
+        
+        if not manager:
+            return jsonify({"Error": "Invalid or expired token"}), 400
 
-        #buscamos el user con ese correo
-        login_teacher = Teacher.query.filter_by(email=request.json['email']).one()
+        new_password = request.json.get('password')
+        if not new_password:
+            return jsonify({"Error": "Password is required"}), 400
 
-        if not login_teacher:
-            return jsonify({'Error': 'Invalid Email'}), 400
-
-        password_from_db = login_teacher.password
-        hashed_password_hex = password_from_db
-        hashed_password_bin = bytes.fromhex(hashed_password_hex[2:])
-        true_or_false = check_password_hash(hashed_password_bin, password)
-
-        if true_or_false:
-            expires = timedelta(days=1)
-            user_id = login_teacher.id
-            access_token = create_access_token(identity=user_id, expires_delta=expires)
-            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
-        else:
-            return jsonify({"Error":"Invalid Password"}), 400
+        manager.password = generate_password_hash(new_password).decode('utf-8')
+        db.session.commit()
+        return jsonify({"message": "Password reset successful"}), 200
     except Exception as e:
-        return jsonify({"Error": "Teacher not exists in Data Base" , "Msg": str(e)}), 500
+        return jsonify({"Error": f"An error occurred: {str(e)}"}), 500
 
 
+
+#-----------------------GET DE USERS------------------------#
 @api.route('/view/user')
 @jwt_required() #Decorador para requerir autenticacion con jwt
 def show_view_user():
@@ -451,6 +539,8 @@ def show_view_manager():
         return jsonify({"Error": "Token invalid or not exits"}), 401
 
 
+
+#-----------------------COURSES------------------------#
 @api.route('/view/courses', methods=['POST'])
 def post_courses():
     try:
@@ -478,7 +568,6 @@ def post_courses():
     except Exception as err:
         return jsonify({"Error":"Error in Course Creation:" + str(err)}), 500
 
-
 @api.route('/view/courses', methods=['GET'])
 def get_courses():
     try:
@@ -488,7 +577,6 @@ def get_courses():
     
     except Exception as err:
         return jsonify({"Error": "Error in fetching courses: " + str(err)}), 500
-
 
 @api.route('/view/courses/<int:course_id>', methods=['PUT'])
 def put_courses(course_id):
@@ -506,7 +594,6 @@ def put_courses(course_id):
     except Exception as err:
         return jsonify({"Error": "Error in updating course: " + str(err)}), 500
 
-
 @api.route('/view/courses/<int:course_id>', methods=['DELETE'])
 def delete_courses(course_id):
     try:
@@ -522,6 +609,9 @@ def delete_courses(course_id):
     except Exception as err:
         return jsonify({"Error": "Error in deleting course: " + str(err)}), 500
 
+
+
+#-----------------------MODULES------------------------#
 @api.route('/module/course', methods=['POST'])
 def post_module():
     try:
@@ -551,7 +641,6 @@ def post_module():
 
     except Exception as err:
         return jsonify({"Error": "Error in module Creation: " + str(err)}), 500
-
 
 @api.route('/module/course/', methods=['GET'])
 def get_modules():
