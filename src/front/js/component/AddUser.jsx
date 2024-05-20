@@ -8,7 +8,7 @@ export const AddUser = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const [isUsers, setIsUsers] = useState(true);
     const [certificate, setCertificate] = useState('');
-    const [counter, setCounter] = useState(5);
+    const [counter, setCounter] = useState(7);
     const [redirectPath, setRedirectPath] = useState('');
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
@@ -85,7 +85,7 @@ export const AddUser = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (store.error === '' && selectedRole !== '' && counter === 4) {
+                if (store.error === '' && selectedRole !== '' && counter === 6) {
                     setRedirectPath('/LogIn');
                     clearInterval(interval);
                 }
@@ -98,6 +98,7 @@ export const AddUser = () => {
 
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
 
     return (
         <div className='container'>
@@ -105,10 +106,10 @@ export const AddUser = () => {
             <div className='position-relative'>
                 <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x' style={{ zIndex: 1 }}>
                     {msgError === '' && selectedRole !== ''
-                        ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-success" : "d-none"}`}>
-                            {"Sign Up Successfully"}
+                        ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                            {msg}
                         </div>
-                        : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-danger" : "d-none"}`}>
+                        : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
                             {msgError || 'Error, Invalid Role'}
                         </div>}
                 </div>

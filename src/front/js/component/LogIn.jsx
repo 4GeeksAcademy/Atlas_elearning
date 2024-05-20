@@ -66,7 +66,7 @@ export const LogIn = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (prevCounter + 1 === 4 && store.error == '') {
+                if (prevCounter + 1 === 6 && store.error == '') {
                     setRedirectPath(`/${selectedRole}View`)
                     clearInterval(interval)
                 }
@@ -79,16 +79,17 @@ export const LogIn = () => {
 
     
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
 
     return (
         <div className=' position-relative'>
             {/* Msg */}
             <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
                 {msgError === ''
-                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-success" : "d-none"}`}>
-                        {"Log In Successfully"}
+                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                        {msg}
                     </div>
-                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-danger" : "d-none"}`}>
+                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
                         {msgError}
                     </div>}
             </div>

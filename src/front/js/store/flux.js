@@ -4,13 +4,15 @@ const getState = ({ getStore, getActions, setStore }) => {
       message: "",
       user: "",
       error: "",
+      msg: "",
       currentRole: "",
       spinner: false,
     },
     actions: {
       createUser: async (newUser, userRole) => {
         const store = getStore();
-        getActions().updateMsgError("");
+        getActions().updateMsgError("")
+        getActions().updateMsg("")
         getActions().spinner(true);
         try {
           const respCreateUser = await fetch(
@@ -22,14 +24,15 @@ const getState = ({ getStore, getActions, setStore }) => {
               },
               body: JSON.stringify(newUser),
             }
-          );
+          )
 
           if (!respCreateUser.ok) {
             const errorData = await respCreateUser.json();
             setStore({ ...store, error: errorData.Error });
             throw new Error(errorData.Error || "Error al crear el usuario");
           }
-          const dataCreateUser = await respCreateUser.json();
+          const dataCreateUser = await respCreateUser.json()
+          setStore({...store, msg: dataCreateUser.message})
         } catch (err) {
         } finally {
           getActions().spinner(false);
@@ -40,6 +43,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore();
         localStorage.setItem("userToLogin", JSON.stringify(userToLogin))
         getActions().updateMsgError("")
+        getActions().updateMsg("")
         getActions().spinner(true)
         try {
           const respLoginIn = await fetch(
@@ -63,6 +67,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           localStorage.setItem("jwt-token", dataLoginIn.access_token)
           localStorage.setItem("currentRole", userRole)
           setStore({ ...store, currentRole: userRole })
+          setStore({...store, msg: dataLoginIn.message})
           await getActions().getUser();
         } catch (err) {
           console.error(err)
@@ -74,6 +79,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       getUser: async (userRol) => {
         const store = getStore()
         getActions().updateMsgError("")
+        getActions().updateMsg("")
         getActions().spinner(true)
 
         try {
@@ -103,6 +109,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataGetUser = await respGetUsers.json()
           setStore({ ...store, user: dataGetUser })
+          setStore({...store, msg: dataGetUser.message})
         } catch (err) {
         } finally {
           getActions().spinner(false);
@@ -125,10 +132,53 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      resetPassword: async (email, userPassword) => {
+        const store = getStore()
+        getActions().updateMsgError("")
+        getActions().updateMsg("")
+        getActions().spinner(true)
+
+        console.log(email, userPassword)
+        try{
+          console.log(process.env.BACKEND_URL + `/api/forgot-password/` + userPassword)
+          const respResetPassword = await fetch(
+            process.env.BACKEND_URL + `/api/forgot-password/` + userPassword,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(email),
+            }
+          )
+          
+          
+          if(!respResetPassword.ok){
+            const errorData = await respResetPassword.json()
+            setStore({...store, error: errorData.Error})
+            throw new Error(errorData.Error || "Error in Reset")
+          }
+
+          const dataResetPassword = await respResetPassword.json();
+          setStore({...store, msg: dataResetPassword.message})
+        }
+        catch(err){
+
+        }finally{
+          getActions().spinner(false)
+        }
+      },
+
       updateMsgError: async (changesMsg) => {
         const store = getStore();
         setStore({ ...store, error: changesMsg });
       },
+
+      updateMsg: async (changesMsg) => {
+        const store = getStore();
+        setStore({ ...store, msg: changesMsg });
+      },
+
 
       spinner: (changesSpinner) => {
         const store = getStore();

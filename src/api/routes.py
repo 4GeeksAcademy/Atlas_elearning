@@ -69,7 +69,7 @@ def create_signup_user():
         msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
         mail.send(msg)
 
-        return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201
+        return jsonify({"message":"Student has been Created Successfully", "user_create": new_user.serialize()}), 201
 
     except Exception as err:
         return jsonify({"Error":"Error in User Creation:" + str(err)}), 500
@@ -123,7 +123,7 @@ def create_signup_teacher():
         msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
         mail.send(msg)
 
-        return jsonify({"Message": "Teacher Created Successfully", "teacher_create": new_teacher.serialize()}), 201
+        return jsonify({"message": "Teacher has been Created Successfully", "teacher_create": new_teacher.serialize()}), 201
     except Exception as e:
         return jsonify({"error": "Error posting teacher user" + str(e)})
 
@@ -170,7 +170,7 @@ def create_signup_manager():
         msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
         mail.send(msg)
         
-        return jsonify({"msg": "manager has been created successfully", "manager_create": new_manager.serialize()}), 201
+        return jsonify({"message": "Manager has been Created Successfully", "manager_create": new_manager.serialize()}), 201
     except Exception as e: 
         return jsonify({"Error": "Error in user manager creation" + str(e)}), 500
 
@@ -200,7 +200,7 @@ def get_token_login_user():
             expires = timedelta(days=1)
             user_id = login_user.id
             access_token = create_access_token(identity=user_id, expires_delta=expires)
-            return jsonify({"access_token": access_token}), 200
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
         else:
             return jsonify({"Error":"Invalid Password"}), 400
         
@@ -208,15 +208,15 @@ def get_token_login_user():
         return jsonify({"Error": "User not exists in Data Base", "Msg": str(e)}), 500
 
 
-@api.route('/forgot-password', methods=['POST'])
+@api.route('/forgot-password/user', methods=['POST'])
 def forgot_password():
     email = request.json.get('email')
     if not email:
-        return jsonify({"error": "Email is required"}), 400
+        return jsonify({"Error": "Email is required"}), 400
 
     user = User.query.filter_by(email=email).first()
     if not user:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"Error": "User not found"}), 404
 
     reset_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=1))
     reset_link = url_for('api.reset_password', token=reset_token, _external=True)
@@ -228,7 +228,7 @@ def forgot_password():
     return jsonify({"message": "Password reset link sent"}), 200
 
 # Ruta para resetear la contraseña
-@api.route('/reset-password/<token>', methods=['POST'])
+@api.route('/reset-password/user/<token>', methods=['POST'])
 def reset_password(token):
     try:
         decoded_token = decode_token(token)
@@ -236,17 +236,17 @@ def reset_password(token):
         user = User.query.get(user_id)
         
         if not user:
-            return jsonify({"error": "Invalid or expired token"}), 400
+            return jsonify({"Error": "Invalid or expired token"}), 400
 
         new_password = request.json.get('password')
         if not new_password:
-            return jsonify({"error": "Password is required"}), 400
+            return jsonify({"Error": "Password is required"}), 400
 
         user.password = generate_password_hash(new_password).decode('utf-8')
         db.session.commit()
         return jsonify({"message": "Password reset successful"}), 200
     except Exception as e:
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+        return jsonify({"Error": f"An error occurred: {str(e)}"}), 500
 
 
 
@@ -274,7 +274,7 @@ def get_token_login_manager():
             expires = timedelta(days=1)
             user_id = login_manager.id
             access_token = create_access_token(identity=user_id, expires_delta=expires)
-            return jsonify({"access_token": access_token}), 200
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
         else:
             return {"Error":"Invalid Password"}, 400
     except Exception as e:
@@ -303,7 +303,7 @@ def get_token_login_teacher():
             expires = timedelta(days=1)
             user_id = login_teacher.id
             access_token = create_access_token(identity=user_id, expires_delta=expires)
-            return jsonify({"access_token": access_token}), 200
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
         else:
             return jsonify({"Error":"Invalid Password"}), 400
     except Exception as e:
@@ -334,7 +334,7 @@ def show_view_user():
             user_list.append(user_dict)
 
 
-        return jsonify({"access_to_user": user_list}), 200
+        return jsonify({"access_to_user": user_list, "message": "Access to Student Successfully"}), 200
         
     else:
         return jsonify({"Error": "Token invalid or not exits"}), 401
@@ -381,7 +381,7 @@ def show_view_teacher():
             }
             teacher_list.append(teacher_dict)
 
-        return jsonify({"access_to_user": user_list, "access_to_teacher": teacher_list}), 200
+        return jsonify({"access_to_user": user_list, "access_to_teacher": teacher_list, "message": "Access to Student and Teacher Successfully"}), 200
         
     else:
         return jsonify({"Error": "Token invalid or not exits"}), 401
@@ -443,7 +443,7 @@ def show_view_manager():
             }
             manager_list.append(manager_dict)
 
-        return jsonify({"access_to_user": user_list, "access_to_teacher": teacher_list, "access_to_manager": manager_list}), 200
+        return jsonify({"access_to_user": user_list, "access_to_teacher": teacher_list, "access_to_manager": manager_list, "message": "Access to all User Successfully"}), 200
         
     else:
         return jsonify({"Error": "Token invalid or not exits"}), 401

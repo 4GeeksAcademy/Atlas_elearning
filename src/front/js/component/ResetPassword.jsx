@@ -32,8 +32,8 @@ export const ResetPassword = () => {
 
     async function handlerLogin(e) {
         e.preventDefault();
-        if (login.email !== '' && login.password !== '') {
-            await actions.loginIn(login, selectedRole)
+        if (login.email !== '') {
+            await actions.resetPassword(login, selectedRole)
             setCounter(0)
         } else {
             alert('Ingrese todo los campos')
@@ -44,7 +44,7 @@ export const ResetPassword = () => {
         navigate('/FormUser')
     }
 
-    function handlerResetPassword(){
+    function handlerResetPassword() {
         navigate('/ResetPassword')
     }
 
@@ -65,8 +65,8 @@ export const ResetPassword = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (prevCounter + 1 === 4 && store.error == '') {
-                    setRedirectPath(`/${selectedRole}View`)
+                if (prevCounter + 1 === 6 && store.error == '') {
+                    /* setRedirectPath(`/${selectedRole}View`) */
                     clearInterval(interval)
                 }
                 return prevCounter + 1;
@@ -77,99 +77,103 @@ export const ResetPassword = () => {
     }, [setRedirectPath, selectedRole])
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
 
-    return(
+    return (
         <div className=' position-relative'>
-        {/* Msg */}
-        <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-            {msgError === ''
-                ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-success" : "d-none"}`}>
-                    {"Log In Successfully"}
-                </div>
-                : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-danger" : "d-none"}`}>
-                    {msgError}
-                </div>}
-        </div>
-        {/* Título */}
-        <div className='row d-flex flex-row'>
-            <div className='col-md-12 col-lg-5 d-flex justify-content-center align-items-start'>
-                <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
-                    <div className="d-flex justify-content-center align-items-center position-relative mb-5">
-                        <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute top-0 start-0' onClick={handlerHome} style={{ cursor: "pointer" }}>
-                            <GoArrowLeft />
-                        </div> 
-                        <div className='d-flex justify-content-center align-items-center position-absolute top-0 start-50 translate-middle-x'>
-                            <h1>Reset Password</h1>
-                        </div>
+            {/* Msg */}
+            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
+                {msgError === ''
+                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                        {msg}
                     </div>
-                    <form className='mt-5 mb-5' onSubmit={handlerLogin}>
+                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                        {msgError}
+                    </div>}
+            </div>
+            {/* Título */}
+            <div className='row d-flex flex-row'>
+                <div className='col-md-12 col-lg-5 d-flex justify-content-center align-items-start'>
+                    <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
+                        <div className="d-flex justify-content-center align-items-center position-relative mb-5">
+                            <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute top-0 start-0' onClick={handlerHome} style={{ cursor: "pointer" }}>
+                                <GoArrowLeft />
+                            </div>
+                            <div className='d-flex justify-content-center align-items-center position-absolute top-0 start-50 translate-middle-x'>
+                                <h1>Reset Password</h1>
+                            </div>
+                        </div>
+                        <form className='mt-5 mb-5' onSubmit={handlerLogin}>
 
 
-                        {
-                            (active)
-                                ? <div>
-                                    {/* Email */}
-                                    <div className='col-md my-3'>
-                                        <label className='my-2'>Email</label>
-                                        <input
-                                            name='email'
-                                            value={login.email}
-                                            onChange={handlerChangeLogin}
-                                            type="text"
-                                            placeholder='Ingrese email'
-                                            className="form-control"
-                                        />
-                                    </div>
-                            
+                            {
+                                (active)
+                                    ? <div>
+                                        {/* Email */}
+                                        <div className='col-md my-3'>
+                                            <label className='my-2'>Email</label>
+                                            <input
+                                                name='email'
+                                                value={login.email}
+                                                onChange={handlerChangeLogin}
+                                                type="text"
+                                                placeholder='Ingrese email'
+                                                className="form-control"
+                                            />
+                                        </div>
 
-                                    <div className='col-md' style={{ marginTop: '80px' }}>
-                                        <button className='btn btn-primary w-100' onClick={handlerLogin}>{
-                                            (store.spinner)
-                                                ? <div className="spinner-border" role="status">
-                                                    <span className="visually-hidden">Loading...</span>
-                                                </div>
-                                                : <div className="row align-items-center">
-                                                    <div className="col align-self-center text-center fs-4">
-                                                        <span>Reset Password</span>
+
+                                        <div className='col-md' style={{ marginTop: '80px' }}>
+                                            <button className='btn btn-primary w-100' onClick={handlerLogin}>{
+                                                (store.spinner)
+                                                    ? <div className="spinner-border" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
                                                     </div>
-                                                </div>
+                                                    : <div className="row align-items-center">
+                                                        <div className="col align-self-center text-center fs-4">
+                                                            <span>Reset Password</span>
+                                                        </div>
+                                                    </div>
                                             }
-                                        </button>
-                                    </div>
-                                    <div className='col-md my-3 text-center'>
-                                        <p className='text-decoration-underline' onClick={handlerResetPassword} style={{ cursor: "pointer" }}>Go To Home</p>
-                                    </div>
-                                </div>
-                                : <div className='d-flex justify-content-center my-5'>
-                                    <div className='col-md-8 my-3'>
-                                        <div className='text-center'>
-                                            <label className="form-label fw-bold">Role</label>
+                                            </button>
                                         </div>
-
-                                        <div className="input-group has-validation">
-                                            <select className="form-select" name='isPeople' onChange={handlerChangeLogin} value={selectedRole} required>
-                                                <option value="">--Choose--</option>
-                                                <option value='teacher'>Teacher</option>
-                                                <option value='user'>Student</option>
-                                                <option value='manager'>Manager</option>
-                                            </select>
+                                        <div className='col-md my-3 text-center'>
+                                            <p className='text-decoration-underline' onClick={handlerResetPassword} style={{ cursor: "pointer" }}>Go To Home</p>
+                                        </div>
+                                        <div className='col-md my-3 text-center'>
+                                            <p className='text-decoration-underline' onClick={handlerChangeActive} style={{ cursor: "pointer" }}>Do you want to change roles?</p>
                                         </div>
                                     </div>
-                                </div>
-                        }
+                                    : <div className='d-flex justify-content-center my-5'>
+                                        <div className='col-md-8 my-3'>
+                                            <div className='text-center'>
+                                                <label className="form-label fw-bold">Role</label>
+                                            </div>
 
-                    </form>
+                                            <div className="input-group has-validation">
+                                                <select className="form-select" name='isPeople' onChange={handlerChangeLogin} value={selectedRole} required>
+                                                    <option value="">--Choose--</option>
+                                                    <option value='teacher'>Teacher</option>
+                                                    <option value='user'>Student</option>
+                                                    <option value='manager'>Manager</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+
+                        </form>
+                    </div>
+                </div>
+                <div className='col-lg-7 d-sm-none d-md-none d-lg-block d-flex justify-content-center align-items-center'>
+                    <img
+                        src="https://media.kasperskydaily.com/wp-content/uploads/sites/85/2015/12/05131456/passwords-10x10-featured.jpg"
+                        alt="imgLogInEducation"
+                        className='img-fluid'
+                        style={{ height: "100vh", width: 'auto' }}
+                    />
                 </div>
             </div>
-            <div className='col-lg-7 d-sm-none d-md-none d-lg-block d-flex justify-content-center align-items-center'>
-                <img
-                    src="https://www.ceac.es/sites/default/files/2020-08/estudiar-online-ceac.jpg.webp"
-                    alt="imgLogInEducation"
-                    className='img-fluid'
-                    style={{ height: "100vh", width: 'auto' }}
-                />
-            </div>
         </div>
-    </div>
     )
 }
