@@ -9,7 +9,10 @@ from flask_cors import CORS
 from flask_bcrypt import bcrypt, generate_password_hash, check_password_hash 
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from datetime import timedelta
-import re
+
+from flask_mail import Message
+from app import mail
+
 
 api = Blueprint('api', __name__)
 
@@ -59,6 +62,12 @@ def create_signup_user():
         )
         db.session.add(new_user)
         db.session.commit()
+
+        # Enviar correo de bienvenida
+        msg = Message('Welcome to Our Platform', recipients=[email])
+        msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
+        mail.send(msg)
+
         return jsonify({"Message":"User Created Successfully", "user_create": new_user.serialize()}), 201
 
     except Exception as err:
@@ -107,6 +116,12 @@ def create_signup_teacher():
         )
         db.session.add(new_teacher)
         db.session.commit()
+
+        # Enviar correo de bienvenida
+        msg = Message('Welcome to Our Platform, TEACHER', recipients=[email])
+        msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
+        mail.send(msg)
+
         return jsonify({"Message": "Teacher Created Successfully", "teacher_create": new_teacher.serialize()}), 201
     except Exception as e:
         return jsonify({"error": "Error posting teacher user" + str(e)})
@@ -148,6 +163,11 @@ def create_signup_manager():
         )
         db.session.add(new_manager)
         db.session.commit()
+
+        # Enviar correo de bienvenida
+        msg = Message('Welcome to Our Platform, MANAGER', recipients=[email])
+        msg.body = f"Hello {name},\n\nThank you for signing up on our platform. We're excited to have you on board!"
+        mail.send(msg)
         
         return jsonify({"msg": "manager has been created successfully", "manager_create": new_manager.serialize()}), 201
     except Exception as e: 
