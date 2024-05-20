@@ -44,6 +44,10 @@ export const LogIn = () => {
         navigate('/FormUser')
     }
 
+    function handlerResetPassword(){
+        navigate('/ResetPassword')
+    }
+
     function handlerChangeActive() {
         setActive(false)
     }
@@ -151,6 +155,9 @@ export const LogIn = () => {
                                         <div className='col-md my-3 text-center'>
                                             <p className='text-decoration-underline' onClick={handlerChangeActive} style={{ cursor: "pointer" }}>Do you want to change roles?</p>
                                         </div>
+                                        <div className='col-md my-3 text-center'>
+                                            <p className='text-decoration-underline' onClick={handlerResetPassword} style={{ cursor: "pointer" }}>Reset your Password</p>
+                                        </div>
                                     </div>
                                     : <div className='d-flex justify-content-center my-5'>
                                         <div className='col-md-8 my-3'>
@@ -183,6 +190,5 @@ export const LogIn = () => {
                 </div>
             </div>
         </div>
-
     );
 };

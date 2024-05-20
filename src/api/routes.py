@@ -5,9 +5,10 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Manager, Teacher, Course, Orders, Payment, Modules, Request 
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from werkzeug.security import check_password_hash
 
-from flask_bcrypt import bcrypt, generate_password_hash, check_password_hash 
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_bcrypt import bcrypt, generate_password_hash, check_password_hash
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
 
 from flask_mail import Message
@@ -174,6 +175,8 @@ def create_signup_manager():
         return jsonify({"Error": "Error in user manager creation" + str(e)}), 500
 
 
+
+
 @api.route('/login/user', methods=['POST'])
 def get_token_login_user():
     try:
@@ -182,17 +185,16 @@ def get_token_login_user():
         if not email or not password:
             return jsonify({"Error": "Email and Password are required"}), 400
         
-        #buscamos el user con ese correo
-        login_user = User.query.filter_by(email=request.json['email']).one()
+        # Buscar el usuario con ese correo
+        login_user = User.query.filter_by(email=email).first()
         if not login_user:
             return jsonify({'Error': 'Invalid Email'}), 400
-        
 
+        # Obtener la contraseña desde la base de datos
         password_from_db = login_user.password
-        hashed_password_hex = password_from_db
-        hashed_password_bin = bytes.fromhex(hashed_password_hex[2:])
-        true_or_false = check_password_hash(hashed_password_bin, password)
 
+        # Verificar la contraseña
+        true_or_false = check_password_hash(password_from_db, password)
 
         if true_or_false:
             expires = timedelta(days=1)
@@ -200,11 +202,54 @@ def get_token_login_user():
             access_token = create_access_token(identity=user_id, expires_delta=expires)
             return jsonify({"access_token": access_token}), 200
         else:
-            return {"Error":"Invalid Password"}, 400
-        
+            return jsonify({"Error":"Invalid Password"}), 400
         
     except Exception as e:
         return jsonify({"Error": "User not exists in Data Base", "Msg": str(e)}), 500
+
+
+@api.route('/forgot-password', methods=['POST'])
+def forgot_password():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    reset_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=1))
+    reset_link = url_for('api.reset_password', token=reset_token, _external=True)
+
+    msg = Message('Password Reset Request', recipients=[email])
+    msg.body = f"To reset your password, click the following link: {reset_link}"
+    mail.send(msg)
+
+    return jsonify({"message": "Password reset link sent"}), 200
+
+# Ruta para resetear la contraseña
+@api.route('/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    try:
+        decoded_token = decode_token(token)
+        user_id = decoded_token['sub']
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({"error": "Invalid or expired token"}), 400
+
+        new_password = request.json.get('password')
+        if not new_password:
+            return jsonify({"error": "Password is required"}), 400
+
+        user.password = generate_password_hash(new_password).decode('utf-8')
+        db.session.commit()
+        return jsonify({"message": "Password reset successful"}), 200
+    except Exception as e:
+        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+
+
+
 
 @api.route('/login/manager', methods=['POST'])
 def get_token_login_manager():
