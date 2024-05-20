@@ -385,7 +385,7 @@ def show_view_manager():
 
 
 @api.route('/view/courses', methods=['POST'])
-def create_courses():
+def post_courses():
     try:
         
         title =  request.json.get('title')
@@ -406,12 +406,12 @@ def create_courses():
         course = Course(title=title, category_title=category_title, modules_length=modules_length, certificate=certificate)
         db.session.add(course)
         db.session.commit()
-        return jsonify({"Msg":"Curso creado exitosamente", "Course":course.serialize()}), 200
+        return jsonify({"Msg":"Course create", "Course":course.serialize()}), 200
 
     except Exception as err:
         return jsonify({"Error":"Error in Course Creation:" + str(err)}), 500
 
-#Get cursos
+
 @api.route('/view/courses', methods=['GET'])
 def get_courses():
     try:
@@ -422,7 +422,7 @@ def get_courses():
     except Exception as err:
         return jsonify({"Error": "Error in fetching courses: " + str(err)}), 500
 
-#Put cursos
+
 @api.route('/view/courses/<int:course_id>', methods=['PUT'])
 def put_courses(course_id):
     try:
@@ -439,7 +439,7 @@ def put_courses(course_id):
     except Exception as err:
         return jsonify({"Error": "Error in updating course: " + str(err)}), 500
 
-#Delete cursos
+
 @api.route('/view/courses/<int:course_id>', methods=['DELETE'])
 def delete_courses(course_id):
     try:
