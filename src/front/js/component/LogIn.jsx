@@ -44,7 +44,7 @@ export const LogIn = () => {
         navigate('/FormUser')
     }
 
-    function handlerResetPassword(){
+    function handlerResetPassword() {
         navigate('/ResetPassword')
     }
 
@@ -77,7 +77,7 @@ export const LogIn = () => {
         return () => clearInterval(interval)
     }, [setRedirectPath, selectedRole])
 
-    
+
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
 
@@ -100,12 +100,12 @@ export const LogIn = () => {
                         <div className="d-flex justify-content-center align-items-center position-relative mb-5">
                             <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute top-0 start-0' onClick={handlerHome} style={{ cursor: "pointer" }}>
                                 <GoArrowLeft />
-                            </div> 
+                            </div>
                             <div className='d-flex justify-content-center align-items-center position-absolute top-0 start-50 translate-middle-x'>
                                 <h1>Log In</h1>
                             </div>
                         </div>
-                        <form className='mt-5 mb-5' onSubmit={handlerLogin}>
+                        <form className='mt-5 mb-5 was-validated' onSubmit={handlerLogin}>
 
 
                             {
@@ -122,6 +122,9 @@ export const LogIn = () => {
                                                 placeholder='Ingrese email'
                                                 className="form-control"
                                             />
+                                            <div class="invalid-feedback">
+                                                Please enter your information.
+                                            </div>
                                         </div>
                                         {/* Password */}
                                         <div className='col-md my-3'>
@@ -134,6 +137,9 @@ export const LogIn = () => {
                                                 placeholder='Ingrese password'
                                                 className="form-control"
                                             />
+                                            <div class="invalid-feedback">
+                                                Please enter your information.
+                                            </div>
                                         </div>
 
                                         <div className='col-md' style={{ marginTop: '80px' }}>
@@ -147,7 +153,7 @@ export const LogIn = () => {
                                                             <span>Login In</span>
                                                         </div>
                                                     </div>
-                                                }
+                                            }
                                             </button>
                                         </div>
                                         <div className='col-md my-3 text-center'>

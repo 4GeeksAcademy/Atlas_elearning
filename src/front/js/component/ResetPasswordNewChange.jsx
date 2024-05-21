@@ -74,7 +74,7 @@ export const ResetPasswordNewChange = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
-console.log(msg, msgError)
+    console.log(msg, msgError)
     return (
         <div className=' position-relative'>
             {/* Msg */}
@@ -99,7 +99,7 @@ console.log(msg, msgError)
                                 <h1>Reset Password</h1>
                             </div>
                         </div>
-                        <form className='mt-5 mb-5' onSubmit={handlerLogin}>
+                        <form className='mt-5 mb-5 was-validated' onSubmit={handlerLogin}>
 
 
                             {
@@ -116,6 +116,9 @@ console.log(msg, msgError)
                                                 placeholder='Ingrese password'
                                                 className="form-control"
                                             />
+                                            <div class="invalid-feedback">
+                                                Please enter your information.
+                                            </div>
                                         </div>
 
 

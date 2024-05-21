@@ -100,7 +100,7 @@ export const ResetPassword = () => {
                                 <h1>Reset Password</h1>
                             </div>
                         </div>
-                        <form className='mt-5 mb-5' onSubmit={handlerLogin}>
+                        <form className='mt-5 mb-5 was-validated' onSubmit={handlerLogin}>
 
 
                             {
@@ -117,6 +117,9 @@ export const ResetPassword = () => {
                                                 placeholder='Ingrese email'
                                                 className="form-control"
                                             />
+                                            <div class="invalid-feedback">
+                                                Please enter your information.
+                                            </div>
                                         </div>
 
 
