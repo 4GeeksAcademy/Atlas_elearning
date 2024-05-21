@@ -28,12 +28,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           if (!respCreateUser.ok) {
             const errorData = await respCreateUser.json();
+            console.log(errorData)
             setStore({ ...store, error: errorData.Error });
             throw new Error(errorData.Error || "Error al crear el usuario");
           }
           const dataCreateUser = await respCreateUser.json()
           setStore({...store, msg: dataCreateUser.message})
         } catch (err) {
+          console.log(err)
         } finally {
           getActions().spinner(false);
         }

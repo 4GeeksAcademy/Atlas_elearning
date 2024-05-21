@@ -126,7 +126,7 @@ def create_signup_teacher():
 
         return jsonify({"message": "Teacher has been Created Successfully", "teacher_create": new_teacher.serialize()}), 201
     except Exception as e:
-        return jsonify({"error": "Error posting teacher user" + str(e)})
+        return jsonify({"Error": "Error posting teacher user", "error code": str(e)})
 
 @api.route('/signup/manager', methods=['POST'])
 def create_signup_manager():
