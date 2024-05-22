@@ -107,7 +107,7 @@ class Course(db.Model):
     category_title = db.Column(db.String(250), nullable=False)
     modules_length = db.Column(db.Integer, nullable=False)
     certificate = db.Column(db.String(250), nullable=False)
-    price = db.Column(db.Integer, nullable=False)  # Nuevo campo
+    price = db.Column(db.Integer, nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     manager_id = db.Column(db.Integer, db.ForeignKey('manager.id'), nullable=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
