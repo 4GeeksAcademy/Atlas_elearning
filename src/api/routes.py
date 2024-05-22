@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, decode_token
 from datetime import timedelta
-
+from datetime import datetime
 from flask_mail import Message
 from app import mail
 import os
@@ -546,11 +546,12 @@ def post_courses():
         title =  request.json.get('title')
         category_title = request.json.get('categoryTitle')
         modules_length = request.json.get('modulesLength')
-        certificate = request.json.get('certificate') 
+        certificate = request.json.get('certificate')
+        prices = request.json.get('prices') 
 
         #Verificacion de campos vacios
-        if not title or not category_title or not modules_length or not certificate :
-            return({"Error":"title, category_title, modules_length and certificate  are required"}), 400
+        if not title or not category_title or not modules_length or not certificate or not prices:
+            return({"Error":"title, category_title, modules_length, prices and certificate are required"}), 400
         
         #Verificacion de existencia de titulo en la base de datos
         existing_course = Course.query.filter_by(title=title).first()
@@ -558,10 +559,10 @@ def post_courses():
             return jsonify({"Error":"Title already exists."}), 409
         
         
-        course = Course(title=title, category_title=category_title, modules_length=modules_length, certificate=certificate)
+        course = Course(title=title, category_title=category_title, modules_length=modules_length, certificate=certificate, prices=prices)
         db.session.add(course)
         db.session.commit()
-        return jsonify({"Msg":"Course create", "Course":course.serialize()}), 200
+        return jsonify({"message":"Course has been Create Successfully", "Course": course.serialize()}), 200
 
     except Exception as err:
         return jsonify({"Error":"Error in Course Creation:" + str(err)}), 500

@@ -60,7 +60,9 @@ export const ManagerDashboard = () => {
                     <h1>Welcome!</h1>
                     <h5>Manager</h5>
                 </div>
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyCourses}>Courses</button>
+                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyCourses}>Create Courses</button>
+
+                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyCourses}>View Courses</button>
 
                 <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyProfile}>Profile</button>
 

@@ -226,20 +226,60 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ ...store, spinner: changesSpinner });
       },
 
-      addCourseToTrolley: async (courseData) => {
+      createCourseNew: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+            const respCreateCourse = await fetch(
+                process.env.BACKEND_URL + '/api/trolley/courses',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      "course_id": 1,
+                      "user_id": 1,
+                      "manager_id": 1
+                  }),
+                }
+            );
+            if (!respCreateCourse.ok) {
+                const errorData = await respCreateCourse.json();
+                console.log(errorData);
+                setStore({ ...store, error: errorData.error });
+                throw new Error(errorData.error || "Error al añadir el curso al carrito");
+            }
+            const dataCreateCourse = await respCreateCourse.json();
+            setStore({ ...store, msg: dataCreateCourse.message });
+            console.log(dataCreateCourse)
+        } catch (err) {
+            console.log(err);
+        } finally {
+            getActions().spinner(false);
+        }
+    },
+
+      addCourseToTrolley: async () => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
             const respAddCourse = await fetch(
-                process.env.BACKEND_URL + '/trolley/courses',
+                process.env.BACKEND_URL + '/api/trolley/courses',
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(courseData),
+                    body: JSON.stringify({
+                      "course_id": 1,
+                      "user_id": 1,
+                      "manager_id": 1
+                  }),
                 }
             );
             if (!respAddCourse.ok) {
@@ -250,6 +290,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
             const dataAddCourse = await respAddCourse.json();
             setStore({ ...store, msg: dataAddCourse.message });
+            console.log(dataAddCourse)
         } catch (err) {
             console.log(err);
         } finally {
