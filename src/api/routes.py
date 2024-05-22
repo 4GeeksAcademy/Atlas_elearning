@@ -539,19 +539,19 @@ def show_view_manager():
 
 
 #-----------------------COURSES------------------------#
-@api.route('/view/courses', methods=['POST'])
+@api.route('/create/courses', methods=['POST'])
 def post_courses():
     try:
         
         title =  request.json.get('title')
         category_title = request.json.get('categoryTitle')
         modules_length = request.json.get('modulesLength')
-        certificate = request.json.get('certificate')
-        prices = request.json.get('prices') 
+        certificate = request.json.get('certificate') 
+        price = request.json.get('price')
 
         #Verificacion de campos vacios
-        if not title or not category_title or not modules_length or not certificate or not prices:
-            return({"Error":"title, category_title, modules_length, prices and certificate are required"}), 400
+        if not title or not category_title or not modules_length or not certificate or not price:
+            return({"Error":"title, category_title, modules_length, certificate and price are required"}), 400
         
         #Verificacion de existencia de titulo en la base de datos
         existing_course = Course.query.filter_by(title=title).first()
@@ -559,7 +559,7 @@ def post_courses():
             return jsonify({"Error":"Title already exists."}), 409
         
         
-        course = Course(title=title, category_title=category_title, modules_length=modules_length, certificate=certificate, prices=prices)
+        course = Course(title=title, category_title=category_title, modules_length=modules_length, certificate=certificate, price=price)
         db.session.add(course)
         db.session.commit()
         return jsonify({"message":"Course has been Create Successfully", "Course": course.serialize()}), 200

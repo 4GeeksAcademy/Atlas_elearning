@@ -11,8 +11,8 @@ const getState = ({ getStore, getActions, setStore }) => {
     actions: {
       createUser: async (newUser, userRole) => {
         const store = getStore();
-        getActions().updateMsgError("")
-        getActions().updateMsg("")
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
         getActions().spinner(true);
         try {
           const respCreateUser = await fetch(
@@ -24,18 +24,18 @@ const getState = ({ getStore, getActions, setStore }) => {
               },
               body: JSON.stringify(newUser),
             }
-          )
+          );
 
           if (!respCreateUser.ok) {
             const errorData = await respCreateUser.json();
-            console.log(errorData)
+            console.log(errorData);
             setStore({ ...store, error: errorData.Error });
             throw new Error(errorData.Error || "Error al crear el usuario");
           }
-          const dataCreateUser = await respCreateUser.json()
-          setStore({...store, msg: dataCreateUser.message})
+          const dataCreateUser = await respCreateUser.json();
+          setStore({ ...store, msg: dataCreateUser.message });
         } catch (err) {
-          console.log(err)
+          console.log(err);
         } finally {
           getActions().spinner(false);
         }
@@ -43,10 +43,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       loginIn: async (userToLogin, userRole) => {
         const store = getStore();
-        localStorage.setItem("userToLogin", JSON.stringify(userToLogin))
-        getActions().updateMsgError("")
-        getActions().updateMsg("")
-        getActions().spinner(true)
+        localStorage.setItem("userToLogin", JSON.stringify(userToLogin));
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
         try {
           const respLoginIn = await fetch(
             process.env.BACKEND_URL + `/api/login/` + userRole,
@@ -60,33 +60,33 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
 
           if (!respLoginIn.ok) {
-            const errorData = await respLoginIn.json()
-            setStore({ ...store, error: errorData.Error })
-            throw new Error(errorData.Error || "Error al iniciar sesión")
+            const errorData = await respLoginIn.json();
+            setStore({ ...store, error: errorData.Error });
+            throw new Error(errorData.Error || "Error al iniciar sesión");
           }
 
-          const dataLoginIn = await respLoginIn.json()
-          localStorage.setItem("jwt-token", dataLoginIn.access_token)
-          localStorage.setItem("currentRole", userRole)
-          setStore({ ...store, currentRole: userRole })
-          setStore({...store, msg: dataLoginIn.message})
+          const dataLoginIn = await respLoginIn.json();
+          localStorage.setItem("jwt-token", dataLoginIn.access_token);
+          localStorage.setItem("currentRole", userRole);
+          setStore({ ...store, currentRole: userRole });
+          setStore({ ...store, msg: dataLoginIn.message });
           await getActions().getUser();
         } catch (err) {
-          console.error(err)
+          console.error(err);
         } finally {
           getActions().spinner(false);
         }
       },
 
       getUser: async (userRol) => {
-        const store = getStore()
-        getActions().updateMsgError("")
-        getActions().updateMsg("")
-        getActions().spinner(true)
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
 
         try {
-          const token = localStorage.getItem("jwt-token")
-          if (!token) throw new Error("No token found")
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
 
           const respGetUsers = await fetch(
             process.env.BACKEND_URL +
@@ -102,16 +102,16 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
 
           if (!respGetUsers.ok) {
-            const errorData = await respGetUsers.json()
-            setStore({ ...store, error: errorData.Error })
+            const errorData = await respGetUsers.json();
+            setStore({ ...store, error: errorData.Error });
             throw new Error(
               errorData.Error || "Error al obtener los datos del usuario"
             );
           }
 
-          const dataGetUser = await respGetUsers.json()
-          setStore({ ...store, user: dataGetUser })
-          setStore({...store, msg: dataGetUser.message})
+          const dataGetUser = await respGetUsers.json();
+          setStore({ ...store, user: dataGetUser });
+          setStore({ ...store, msg: dataGetUser.message });
         } catch (err) {
         } finally {
           getActions().spinner(false);
@@ -121,28 +121,30 @@ const getState = ({ getStore, getActions, setStore }) => {
       checkUserSession: async () => {
         const store = getStore();
         try {
-          const token = localStorage.getItem("jwt-token")
-          const userRole = localStorage.getItem("currentRole")
-          const userToLogin = JSON.parse(localStorage.getItem("userToLogin"))
+          const token = localStorage.getItem("jwt-token");
+          const userRole = localStorage.getItem("currentRole");
+          const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
           if (token && userRole && userToLogin) {
-            setStore({ currentRole: userRole })
-            await getActions().getUser(userRole)
+            setStore({ currentRole: userRole });
+            await getActions().getUser(userRole);
           }
         } catch (err) {
-          setStore({ ...store, error: "Error checking user session" })
-          console.error("Error checking user session: ", err)
+          setStore({ ...store, error: "Error checking user session" });
+          console.error("Error checking user session: ", err);
         }
       },
 
       resetPassword: async (email, userPassword) => {
-        const store = getStore()
-        getActions().updateMsgError("")
-        getActions().updateMsg("")
-        getActions().spinner(true)
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
 
-        console.log(email, userPassword)
-        try{
-          console.log(process.env.BACKEND_URL + `/api/forgot-password/` + userPassword)
+        console.log(email, userPassword);
+        try {
+          console.log(
+            process.env.BACKEND_URL + `/api/forgot-password/` + userPassword
+          );
           const respResetPassword = await fetch(
             process.env.BACKEND_URL + `/api/forgot-password/` + userPassword,
             {
@@ -152,39 +154,45 @@ const getState = ({ getStore, getActions, setStore }) => {
               },
               body: JSON.stringify(email),
             }
-          )
-          
-          
-          if(!respResetPassword.ok){
-            const errorData = await respResetPassword.json()
-            setStore({...store, error: errorData.Error})
-            throw new Error(errorData.Error || "Error in Reset")
+          );
+
+          if (!respResetPassword.ok) {
+            const errorData = await respResetPassword.json();
+            setStore({ ...store, error: errorData.Error });
+            throw new Error(errorData.Error || "Error in Reset");
           }
 
-          const dataResetPassword = await respResetPassword.json()
-          localStorage.setItem("jwt-token-reset", dataResetPassword.access_token)
-          setStore({...store, msg: dataResetPassword.message})
-        }
-        catch(err){
-
-        }finally{
-          getActions().spinner(false)
+          const dataResetPassword = await respResetPassword.json();
+          localStorage.setItem(
+            "jwt-token-reset",
+            dataResetPassword.access_token
+          );
+          setStore({ ...store, msg: dataResetPassword.message });
+        } catch (err) {
+        } finally {
+          getActions().spinner(false);
         }
       },
 
       resetPasswordNewChange: async (password, userRol) => {
-        const store = getStore()
-        getActions().updateMsgError("")
-        getActions().updateMsg("")
-        getActions().spinner(true)
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
 
-        try{
-          console.log(process.env.BACKEND_URL + `/api/forgot-password/` + tokenPassword)
-          const tokenPassword = localStorage.getItem("jwt-token-reset")
-          if (!tokenPassword) throw new Error("No token found")
+        try {
+          console.log(
+            process.env.BACKEND_URL + `/api/forgot-password/` + tokenPassword
+          );
+          const tokenPassword = localStorage.getItem("jwt-token-reset");
+          if (!tokenPassword) throw new Error("No token found");
 
           const respResetPassword = await fetch(
-            process.env.BACKEND_URL + `/api/reset-password/` + userRol + "/" + tokenPassword,
+            process.env.BACKEND_URL +
+              `/api/reset-password/` +
+              userRol +
+              "/" +
+              tokenPassword,
             {
               method: "POST",
               headers: {
@@ -192,22 +200,19 @@ const getState = ({ getStore, getActions, setStore }) => {
               },
               body: JSON.stringify(password),
             }
-          )
-          
-          
-          if(!respResetPassword.ok){
-            const errorData = await respResetPassword.json()
-            setStore({...store, error: errorData.Error})
-            throw new Error(errorData.Error || "Error in Reset")
+          );
+
+          if (!respResetPassword.ok) {
+            const errorData = await respResetPassword.json();
+            setStore({ ...store, error: errorData.Error });
+            throw new Error(errorData.Error || "Error in Reset");
           }
 
           const dataResetPassword = await respResetPassword.json();
-          setStore({...store, msg: dataResetPassword.message})
-        }
-        catch(err){
-
-        }finally{
-          getActions().spinner(false)
+          setStore({ ...store, msg: dataResetPassword.message });
+        } catch (err) {
+        } finally {
+          getActions().spinner(false);
         }
       },
 
@@ -226,41 +231,37 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ ...store, spinner: changesSpinner });
       },
 
-      createCourseNew: async () => {
+      createCourseNew: async (dataCourse) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
-            const respCreateCourse = await fetch(
-                process.env.BACKEND_URL + '/api/trolley/courses',
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      "course_id": 1,
-                      "user_id": 1,
-                      "manager_id": 1
-                  }),
-                }
+          const url = process.env.BACKEND_URL + "/api/create/courses";
+          const respCreateCourse = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataCourse),
+          });
+          if (!respCreateCourse.ok) {
+            const errorData = await respCreateCourse.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error al añadir el curso al carrito"
             );
-            if (!respCreateCourse.ok) {
-                const errorData = await respCreateCourse.json();
-                console.log(errorData);
-                setStore({ ...store, error: errorData.error });
-                throw new Error(errorData.error || "Error al añadir el curso al carrito");
-            }
-            const dataCreateCourse = await respCreateCourse.json();
-            setStore({ ...store, msg: dataCreateCourse.message });
-            console.log(dataCreateCourse)
+          }
+          const dataCreateCourse = await respCreateCourse.json();
+          setStore({ ...store, msg: dataCreateCourse.message });
+          console.log(dataCreateCourse);
         } catch (err) {
-            console.log(err);
+          console.log(err);
         } finally {
-            getActions().spinner(false);
+          getActions().spinner(false);
         }
-    },
+      },
 
       addCourseToTrolley: async () => {
         const store = getStore();
@@ -268,35 +269,37 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
-            const respAddCourse = await fetch(
-                process.env.BACKEND_URL + '/api/trolley/courses',
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      "course_id": 1,
-                      "user_id": 1,
-                      "manager_id": 1
-                  }),
-                }
-            );
-            if (!respAddCourse.ok) {
-                const errorData = await respAddCourse.json();
-                console.log(errorData);
-                setStore({ ...store, error: errorData.error });
-                throw new Error(errorData.error || "Error al añadir el curso al carrito");
+          const respAddCourse = await fetch(
+            process.env.BACKEND_URL + "/api/trolley/courses",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                course_id: 1,
+                user_id: 1,
+                manager_id: 1,
+              }),
             }
-            const dataAddCourse = await respAddCourse.json();
-            setStore({ ...store, msg: dataAddCourse.message });
-            console.log(dataAddCourse)
+          );
+          if (!respAddCourse.ok) {
+            const errorData = await respAddCourse.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error al añadir el curso al carrito"
+            );
+          }
+          const dataAddCourse = await respAddCourse.json();
+          setStore({ ...store, msg: dataAddCourse.message });
+          console.log(dataAddCourse);
         } catch (err) {
-            console.log(err);
+          console.log(err);
         } finally {
-            getActions().spinner(false);
+          getActions().spinner(false);
         }
-    },
+      },
 
       /* getMessage: async () => {
         try {
