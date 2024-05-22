@@ -767,7 +767,7 @@ def add_course_to_trolley():
         data = request.json
 
         course_id = data.get('course_id')
-        user_id = data.get('user_id')
+        user_id = data.get('use_rid')
         manager_id = data.get('manager_id')
 
         if not course_id or not user_id or not manager_id:
