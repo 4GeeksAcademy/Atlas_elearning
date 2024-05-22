@@ -51,7 +51,7 @@ export const PostCourseM = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
-    console.log(msg)
+    
     return (
         <div className='position-relative'>
             {/* Msg */}

@@ -24,6 +24,7 @@ export const ManagerDashboard = () => {
 
     const handleMyCourses = () => {
         setButtonSelected(<ManagerCourses />)
+        actions.getCourse()
     }
 
     const handleMyProfile = () => {

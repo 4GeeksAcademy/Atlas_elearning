@@ -11,6 +11,10 @@ export const Navbar = () => {
         navigate('/SignOut')
     }
 
+    function handleAddTrolley() {
+        actions.addCourseToTrolley()
+    }
+
     const userToLogin = JSON.parse(localStorage.getItem("userToLogin"))
 
     return (
@@ -96,7 +100,7 @@ export const Navbar = () => {
 
 
 
-                                <button className='btn btn-outline-success m-1'><i className="fa-solid fa-cart-shopping fa-fade" style={{ color: "#13ec49" }}></i></button>
+                                <button className='btn btn-outline-success m-1' onClick={handleAddTrolley}><i className="fa-solid fa-cart-shopping fa-fade" style={{ color: "#13ec49" }}></i></button>
                             </div>
                         </div>
                     </nav>

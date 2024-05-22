@@ -124,11 +124,11 @@ class Course(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "user_id": self.user_id,
-            "manager_id": self.manager_id,
-            "teacher_id": self.teacher_id,
-            "category_title": self.category_title,
-            "modules_length": self.modules_length,
+            "userId": self.user_id,
+            "managerId": self.manager_id,
+            "teacherId": self.teacher_id,
+            "categoryTitle": self.category_title,
+            "modulesLength": self.modules_length,
             "certificate": self.certificate,
             "price": self.price  # Nuevo campo en la serialización
         }

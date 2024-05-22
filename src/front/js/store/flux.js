@@ -5,10 +5,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       user: "",
       error: "",
       msg: "",
+      course: "",
       currentRole: "",
       spinner: false,
     },
     actions: {
+
       createUser: async (newUser, userRole) => {
         const store = getStore();
         getActions().updateMsgError("");
@@ -126,7 +128,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
           if (token && userRole && userToLogin) {
             setStore({ currentRole: userRole });
-            await getActions().getUser(userRole);
+            await getActions().getUser(userRole)
+            await getActions().getCourse()
           }
         } catch (err) {
           setStore({ ...store, error: "Error checking user session" });
@@ -237,7 +240,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
-          const url = process.env.BACKEND_URL + "/api/create/courses";
+          const url = process.env.BACKEND_URL + "/api/create/courses"
           const respCreateCourse = await fetch(url, {
             method: "POST",
             headers: {
@@ -254,8 +257,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             );
           }
           const dataCreateCourse = await respCreateCourse.json();
-          setStore({ ...store, msg: dataCreateCourse.message });
-          console.log(dataCreateCourse);
+          setStore({ ...store, msg: dataCreateCourse.message})
+       
         } catch (err) {
           console.log(err);
         } finally {
@@ -263,24 +266,52 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      addCourseToTrolley: async () => {
+      getCourse: async () => {
+        const store = getStore();
+        getActions().updateMsgError("")
+        getActions().updateMsg("")
+        getActions().spinner(true)
+        try {
+          const url = process.env.BACKEND_URL + "/api/view/courses"
+          const respGetCourse = await fetch(url)
+
+          if (!respGetCourse.ok) {
+            const errorData = await respGetCourse.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error al Obtener el Curso"
+            );
+          }
+
+          const dataGetCourse = await respGetCourse.json();
+          setStore({ 
+            ...store, 
+            msg: dataGetCourse.message,
+            course: dataGetCourse 
+          })
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      addCourseToTrolley: async (dataAddCourse) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
-          const respAddCourse = await fetch(
-            process.env.BACKEND_URL + "/api/trolley/courses",
+          const url = process.env.BACKEND_URL + "/api/trolley/courses"
+          const respAddCourse = await fetch(url,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({
-                course_id: 1,
-                user_id: 1,
-                manager_id: 1,
-              }),
+              body: JSON.stringify(dataAddCourse),
             }
           );
           if (!respAddCourse.ok) {
@@ -310,6 +341,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.log("Error loading message from backend", error);
         }
+
+,
+            course: [...store.course, dataCreateCourse.Course]
+
       }, */
     },
   };

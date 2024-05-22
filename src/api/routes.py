@@ -567,15 +567,17 @@ def post_courses():
     except Exception as err:
         return jsonify({"Error":"Error in Course Creation:" + str(err)}), 500
 
-@api.route('/view/courses', methods=['GET'])
+@api.route('/view/courses')
 def get_courses():
     try:
         courses = Course.query.all()
-        serialized_courses = [course.serialize() for course in courses]
-        return jsonify({"courses": serialized_courses}), 200
-    
+        course_list = [course.serialize() for course in courses]
+
+        return jsonify({"access_to_courses": course_list, "message": "Access to Course List Successfully"}), 200
+
     except Exception as err:
-        return jsonify({"error": f"Error fetching courses: {str(err)}"}), 500
+        return jsonify({"Error": "Error fetching courses", "errorFetching": str(err)}), 500
+
 
 @api.route('/viewManager/courses', methods=['PUT'])
 def update_course():
@@ -768,6 +770,8 @@ def add_course_to_trolley():
         course_id = data.get('course_id')
         user_id = data.get('user_id')
         manager_id = data.get('manager_id')
+        
+        print(course_id, user_id, manager_id)
 
         if not course_id or not user_id or not manager_id:
             return jsonify({"error": "Course ID, User ID, and Manager ID are required"}), 400
