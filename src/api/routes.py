@@ -779,7 +779,7 @@ def add_course_to_trolley():
         new_order = Orders(
             user_id=user_id,
             manager_id=manager_id,
-            payment_id=None,
+            payment_id=1,
             title_order=course.title,
             price=course.price,
             date=current_date

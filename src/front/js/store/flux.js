@@ -227,6 +227,42 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ ...store, spinner: changesSpinner });
       },
 
+      addCourseToTrolley: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+            const respAddCourse = await fetch(
+                process.env.BACKEND_URL + '/api/trolley/courses',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      "course_id": 1,
+                      "user_id": 1,
+                      "manager_id": 1
+                  }),
+                }
+            );
+            if (!respAddCourse.ok) {
+                const errorData = await respAddCourse.json();
+                console.log(errorData);
+                setStore({ ...store, error: errorData.error });
+                throw new Error(errorData.error || "Error al añadir el curso al carrito");
+            }
+            const dataAddCourse = await respAddCourse.json();
+            setStore({ ...store, msg: dataAddCourse.message });
+            console.log(dataAddCourse)
+        } catch (err) {
+            console.log(err);
+        } finally {
+            getActions().spinner(false);
+        }
+    },
+
       /* getMessage: async () => {
         try {
           const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
