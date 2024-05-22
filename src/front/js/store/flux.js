@@ -221,11 +221,41 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ ...store, msg: changesMsg });
       },
 
-
       spinner: (changesSpinner) => {
         const store = getStore();
         setStore({ ...store, spinner: changesSpinner });
       },
+
+      addCourseToTrolley: async (courseData) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+            const respAddCourse = await fetch(
+                process.env.BACKEND_URL + '/trolley/courses',
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(courseData),
+                }
+            );
+            if (!respAddCourse.ok) {
+                const errorData = await respAddCourse.json();
+                console.log(errorData);
+                setStore({ ...store, error: errorData.error });
+                throw new Error(errorData.error || "Error al añadir el curso al carrito");
+            }
+            const dataAddCourse = await respAddCourse.json();
+            setStore({ ...store, msg: dataAddCourse.message });
+        } catch (err) {
+            console.log(err);
+        } finally {
+            getActions().spinner(false);
+        }
+    },
 
       /* getMessage: async () => {
         try {
