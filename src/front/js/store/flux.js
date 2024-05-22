@@ -241,7 +241,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({course_id, user_id, manager_id}),
+                    body: JSON.stringify({course_id:"1", user_id:"1", manager_id:"1"}),
                 }
             );
     
@@ -254,6 +254,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     
             const dataAddCourse = await respAddCourse.json();
             setStore({ ...store, msg: dataAddCourse.message });
+            console.log(dataAddCourse)
         } catch (err) {
             console.log(err);
         } finally {
