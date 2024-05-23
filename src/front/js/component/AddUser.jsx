@@ -8,7 +8,7 @@ export const AddUser = () => {
     const [selectedRole, setSelectedRole] = useState('');
     const [isUsers, setIsUsers] = useState(true);
     const [certificate, setCertificate] = useState('');
-    const [counter, setCounter] = useState(5);
+    const [counter, setCounter] = useState(7);
     const [redirectPath, setRedirectPath] = useState('');
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
@@ -85,10 +85,14 @@ export const AddUser = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (store.error === '' && counter === 4) {
-                    setRedirectPath('/LogIn');
-                    clearInterval(interval);
+                if (msgError === '' && msg === ''){
+                    return
+                      
+                }else if(store.error === '' && selectedRole !== '' && counter === 7){
+                    setRedirectPath(`/${selectedRole}View`)
+                    clearInterval(interval)
                 }
+                
                 return prevCounter + 1;
             });
         }, 500);
@@ -98,22 +102,29 @@ export const AddUser = () => {
 
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
-
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
+    console.log(msg, msgError)
     return (
         <div className='container'>
             {/* Msg */}
             <div className='position-relative'>
-                <div className='d-flex justify-content-center position-absolute top-0 start-50 translate-middle-x' style={{ zIndex: 1 }}>
-                    {msgError === ''
-                        ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-success" : "d-none"}`}>
-                            {"Sign Up Successfully"}
+                <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x' style={{ zIndex: 1 }}>
+                    {(msgError === '' && msg === '') ? (
+                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                            {"Internet or server connection failure"}
                         </div>
-                        : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 3) ? "alert alert-danger" : "d-none"}`}>
+                    ) : (msgError === '') ? (
+                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                            {msg}
+                        </div>
+                    ) : (
+                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
                             {msgError}
-                        </div>}
+                        </div>
+                    )}
                 </div>
             </div>
-            
+
             <div className="d-flex justify-content-center align-items-center position-relative mt-3 mb-5" style={{ zIndex: 0 }}>
                 <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute start-0'
                     onClick={handlerHome}
@@ -127,7 +138,7 @@ export const AddUser = () => {
 
 
 
-            <form className=" mt-5 mb-5 row g-3 needs-validation" onSubmit={handleSubmit} noValidate>
+            <form className=" mt-5 mb-5 row g-3 was-validated" onSubmit={handleSubmit} noValidate>
 
                 {/* Role */}
                 <div className='col-12'>
@@ -140,9 +151,12 @@ export const AddUser = () => {
                             <option value='manager'>Manager</option>
                         </select>
                     </div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Name */}
-                <div className='col-md-6'>
+                <div className='col-lg-6'>
                     <label className="form-label">Name</label>
                     <input
                         type="text"
@@ -151,9 +165,13 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.name}
                         required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
+
                 </div>
                 {/* Last Name */}
-                <div className='col-md-6'>
+                <div className='col-lg-6'>
                     <label className="form-label">Last name</label>
                     <input
                         type="text"
@@ -162,9 +180,12 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.lastName}
                         required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Username */}
-                <div className={`${(selectedRole === 'teacher' || selectedRole === 'user') ? 'd-block col-md-12' : 'd-none'}`}>
+                <div className={`${(selectedRole === 'teacher' || selectedRole === 'user') ? 'd-block col-lg-12' : 'd-none'}`}>
                     <label className="form-label">Username</label>
                     <div className="input-group has-validation">
                         <input
@@ -175,9 +196,12 @@ export const AddUser = () => {
                             value={userData.username}
                             required />
                     </div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Number Document */}
-                <div className={`col-md-3 ${(selectedRole === 'manager') ? 'd-none' : 'd-block'}`}>
+                <div className={`col-lg-3 ${(selectedRole === 'manager') ? 'd-none' : 'd-block'}`}>
                     <label className="form-label">Number Document</label>
                     <input
                         type="text"
@@ -186,19 +210,24 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.numberDocument}
                         required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Gender */}
-                <div className={`col-md-3 ${(selectedRole === 'manager') ? 'd-none' : 'd-block col-md-3'}`}>
+                <div className={`col-lg-3 ${(selectedRole === 'manager') ? 'd-none' : 'd-block col-lg-3'}`}>
                     <label className="form-label">Gender</label>
                     <select className="form-select" name='gender' onChange={handleChange} value={userData.gender} required>
                         <option value="">--Choose--</option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
                     </select>
-                    <div className="invalid-tooltip">Please select a Gender</div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Phone */}
-                <div className={`${(selectedRole === 'manager') ? 'd-block col-md-4' : 'd-block col-md-3'}`}>
+                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'd-block col-lg-3'}`}>
                     <label className="form-label">Phone</label>
                     <input
                         type="phone"
@@ -207,10 +236,12 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.phone}
                         required />
-                    <div className="invalid-tooltip">Please provide a valid Phone.</div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Age */}
-                <div className={`${(selectedRole === 'manager') ? 'd-none' : 'd-block col-md-3 '}`}>
+                <div className={`${(selectedRole === 'manager') ? 'd-none' : 'd-block col-lg-3 '}`}>
                     <label className="form-label">Age</label>
                     <input
                         type="number"
@@ -219,10 +250,12 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.age}
                         required />
-                    <div className="invalid-tooltip">Please provide a valid Age.</div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Certificate */}
-                <div className={`${(selectedRole === 'teacher') ? 'd-block col-md-12' : 'd-none'}`}>
+                <div className={`${(selectedRole === 'teacher') ? 'd-block col-lg-12' : 'd-none'}`}>
                     <label className="form-label">Do you have a Certificate?</label>
                     <input
                         type="text"
@@ -231,10 +264,12 @@ export const AddUser = () => {
                         onChange={(eve) => { setCertificate(eve.target.value) }}
                         value={certificate}
                         required />
-                    <div className="invalid-tooltip">Please provide a valid certificate.</div>
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
                 {/* Email */}
-                <div className={`${(selectedRole === 'manager') ? 'd-block col-md-4' : 'col-md-6 '}`}>
+                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'col-lg-6 '}`}>
                     <label className="form-label">Email address</label>
                     <input
                         type="email"
@@ -243,10 +278,13 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.email}
                         required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                     <div className="form-text">We'll never share your email with anyone else.</div>
                 </div>
                 {/* Password */}
-                <div className={`${(selectedRole === 'manager') ? 'd-block col-md-4' : 'col-md-6'}`}>
+                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'col-lg-6'}`}>
                     <label className="form-label">Password</label>
                     <input
                         type="password"
@@ -255,6 +293,9 @@ export const AddUser = () => {
                         onChange={handleChange}
                         value={userData.password}
                         required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
                 </div>
 
                 <button
@@ -274,7 +315,7 @@ export const AddUser = () => {
                     }
                 </button>
 
-                <div className='col-md my-3 text-center text-decoration-underline' style={{ cursor: "pointer" }}>
+                <div className='col-lg my-3 text-center text-decoration-underline' style={{ cursor: "pointer" }}>
                     <a onClick={handlerGoToLogIn}>You already have an account.</a>
                 </div>
             </form>
