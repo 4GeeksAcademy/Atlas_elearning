@@ -167,7 +167,6 @@ def create_signup_manager():
             last_name=last_name,
             number_document=number_document,
             phone=phone,
-            number_document=number_document,
             user_id=user_id,
             teacher_id=teacher_id
         )
