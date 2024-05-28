@@ -146,7 +146,7 @@ def create_signup_manager():
         if len(email) > 80:
             return jsonify({"Error": "Email too long"}), 400
 
-        if not email or not password or not is_manager or not name or not last_name or not phone or not number_document or not user_id or not teacher_id  :
+        if not email or not password or not is_manager or not name or not last_name or not number_document or not phone  :
             return jsonify({"msg": "email, password, is_manager, name, last_name, phone, number_document, user_id and teacher_id are required"})
         
         existing_manager = Manager.query.filter_by(email=email).first()
@@ -243,7 +243,35 @@ def get_token_login_teacher():
 
  
 
+@api.route('/login/manager', methods=['POST'])
+def get_token_login_manager():
+    try:
+        email = request.json.get('email')
+        password = request.json.get('password')
+        if not email or not password:
+            return jsonify({"Error": "Email and Password are required"}), 400
 
+       # Buscar el usuario con ese correo
+        login_manager = Manager.query.filter_by(email=email).first()
+        if not login_manager:
+            return jsonify({'Error': 'Invalid Email'}), 400
+
+        # Obtener la contraseña desde la base de datos
+        password_from_db = login_manager.password
+
+        # Verificar la contraseña
+        true_or_false = check_password_hash(password_from_db, password)
+
+        if true_or_false:
+            expires = timedelta(days=1)
+            manager_id = login_manager.id
+            access_token = create_access_token(identity=manager_id, expires_delta=expires)
+            return jsonify({"access_token": access_token, "message": "Log In Successfully"}), 200
+        else:
+            return jsonify({"Error":"Invalid Password"}), 400
+        
+    except Exception as e:
+        return jsonify({"Error": "Manager not exists in Data Base" , "Msg": str(e)}), 500
 
 #-----------------------RESET PASSWORD DE USERS------------------------#
 @api.route('/forgot-password/user', methods=['POST'])

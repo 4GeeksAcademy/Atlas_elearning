@@ -35,6 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
           const dataCreateUser = await respCreateUser.json();
           setStore({ ...store, msg: dataCreateUser.message });
+          console.log(dataCreateUser)
         } catch (err) {
           console.log(err);
         } finally {
