@@ -18,8 +18,7 @@ export const ModuleCourse = () => {
         courseId: ''
     });
 
-    const [formData, setFormData] = useState(initialFormState);
-    const [moduleCreated, setModuleCreated] = useState(false); // Nuevo estado
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -102,11 +101,6 @@ export const ModuleCourse = () => {
             </div>
 
             <h2>Create Course Module</h2>
-            {moduleCreated && ( // Mostrar la alerta si el módulo se ha creado correctamente
-                <div className="alert alert-success" role="alert">
-                    Module created successfully!
-                </div>
-            )}
             <form onSubmit={handleSubmit}>
                 <div className="container">
                     <h2 className="text-center my-4">Upload Media</h2>
@@ -214,4 +208,4 @@ export const ModuleCourse = () => {
             </button> */}
         </div>
     );
-};
+};pipenv
