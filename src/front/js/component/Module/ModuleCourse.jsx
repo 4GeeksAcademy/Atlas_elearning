@@ -5,7 +5,9 @@ import { GoArrowLeft } from "react-icons/go";
 
 export const ModuleCourse = () => {
     const { actions } = useContext(Context);
-    const [formData, setFormData] = useState({
+    const navigate = useNavigate();
+
+    const initialFormState = {
         courseId: '',
         descriptionContent: '',
         typeFile: '',
@@ -17,9 +19,10 @@ export const ModuleCourse = () => {
         imageId: '',
         typeImage: '',
         totalVideo: '',
-    });
+    };
 
-    const navigate = useNavigate();
+    const [formData, setFormData] = useState(initialFormState);
+    const [moduleCreated, setModuleCreated] = useState(false); // Nuevo estado
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -34,131 +37,50 @@ export const ModuleCourse = () => {
         try {
             const response = await actions.postModule(formData);
             console.log(response);
-            navigate('/success'); // Navegar a una página de éxito o realizar otra acción
+            setModuleCreated(true); // Actualizar el estado para indicar que se ha creado el módulo
+            navigate('/success'); 
         } catch (error) {
-          
+            console.error(error);
         }
     };
+
+    const formFields = [
+        { label: "Course ID", name: "courseId", type: "text", required: true },
+        { label: "Description Content", name: "descriptionContent", type: "text", required: true },
+        { label: "Type of File", name: "typeFile", type: "text", required: true },
+        { label: "Title", name: "title", type: "text", required: true },
+        { label: "Video ID", name: "videoId", type: "text" },
+        { label: "Type of Video", name: "typeVideo", type: "text" },
+        { label: "Text ID", name: "textId", type: "text" },
+        { label: "Type of Text", name: "typeText", type: "text" },
+        { label: "Image ID", name: "imageId", type: "text" },
+        { label: "Type of Image", name: "typeImage", type: "text" },
+        { label: "Total Video", name: "totalVideo", type: "text" },
+    ];
 
     return (
         <div className="container">
             <h2>Create Course Module</h2>
+            {moduleCreated && ( // Mostrar la alerta si el módulo se ha creado correctamente
+                <div className="alert alert-success" role="alert">
+                    Module created successfully!
+                </div>
+            )}
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Course ID</label>
-                    <input
-                        type="text"
-                        name="courseId"
-                        value={formData.courseId}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Description Content</label>
-                    <input
-                        type="text"
-                        name="descriptionContent"
-                        value={formData.descriptionContent}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Type of File</label>
-                    <input
-                        type="text"
-                        name="typeFile"
-                        value={formData.typeFile}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Title</label>
-                    <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Video ID</label>
-                    <input
-                        type="text"
-                        name="videoId"
-                        value={formData.videoId}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Type of Video</label>
-                    <input
-                        type="text"
-                        name="typeVideo"
-                        value={formData.typeVideo}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Text ID</label>
-                    <input
-                        type="text"
-                        name="textId"
-                        value={formData.textId}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Type of Text</label>
-                    <input
-                        type="text"
-                        name="typeText"
-                        value={formData.typeText}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Image ID</label>
-                    <input
-                        type="text"
-                        name="imageId"
-                        value={formData.imageId}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Type of Image</label>
-                    <input
-                        type="text"
-                        name="typeImage"
-                        value={formData.typeImage}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Total Video</label>
-                    <input
-                        type="text"
-                        name="totalVideo"
-                        value={formData.totalVideo}
-                        onChange={handleChange}
-                        className="form-control"
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Create Module</button>
+                {formFields.map((field) => (
+                    <div className="form-group" key={field.name}>
+                        <label>{field.label}</label>
+                        <input
+                            type={field.type}
+                            name={field.name}
+                            value={formData[field.name]}
+                            onChange={handleChange}
+                            className="form-control"
+                            required={field.required}
+                        />
+                    </div>
+                ))}
+                <button type="submit" className="btn btn-primary">Create Modul e</button>
             </form>
             <button onClick={() => navigate(-1)} className="btn btn-secondary">
                 <GoArrowLeft /> Back

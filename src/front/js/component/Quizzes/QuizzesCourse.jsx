@@ -10,9 +10,6 @@ export const QuizzesCourse = () => {
         answerTeacher: '',
         answerUser: '',
         approved: '',
-        approvalPercentageUser: '',
-        approvalPercentageNumber: '',
-        approvalPercentage: '',
         moduleId: '',
     });
 
@@ -85,39 +82,7 @@ export const QuizzesCourse = () => {
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Approval Percentage User</label>
-                    <input
-                        type="text"
-                        name="approvalPercentageUser"
-                        value={formData.approvalPercentageUser}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Approval Percentage Number</label>
-                    <input
-                        type="text"
-                        name="approvalPercentageNumber"
-                        value={formData.approvalPercentageNumber}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Approval Percentage</label>
-                    <input
-                        type="text"
-                        name="approvalPercentage"
-                        value={formData.approvalPercentage}
-                        onChange={handleChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
+                
                 <div className="form-group">
                     <label>Module ID</label>
                     <input
