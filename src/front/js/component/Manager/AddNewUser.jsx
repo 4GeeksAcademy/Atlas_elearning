@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Context } from '../store/appContext';
+import { Context } from '../../store/appContext.js';
 import { useNavigate } from 'react-router-dom';
 import { GoArrowLeft } from "react-icons/go"
 
-export const AddUser = () => {
+export const AddNewUser = () => {
     const { store, actions } = useContext(Context);
     const [selectedRole, setSelectedRole] = useState('');
     const [isUsers, setIsUsers] = useState(true);
@@ -45,15 +45,7 @@ export const AddUser = () => {
                     isManager: undefined,
                     certificateTeacher: certificate
                 }));
-            } else if (value === 'manager') {
-                updatedData = { isManager: isUsers };
-                setUserData(prevState => ({
-                    ...prevState,
-                    ...updatedData,
-                    isUser: undefined,
-                    isTeacher: undefined
-                }));
-            }
+            } 
         } else {
             setUserData(prevState => ({
                 ...prevState,
@@ -89,7 +81,7 @@ export const AddUser = () => {
                     return
                       
                 }else if(store.error === '' && selectedRole !== '' && counter === 7){
-                    setRedirectPath(`/${selectedRole}View`)
+                    /* setRedirectPath(`/${selectedRole}View`) */
                     clearInterval(interval)
                 }
                 
@@ -148,7 +140,7 @@ export const AddUser = () => {
                             <option value="">--Choose--</option>
                             <option value='teacher'>Teacher</option>
                             <option value='user'>Student</option>
-                            <option value='manager'>Manager</option>
+                            {/* <option value='manager'>Manager</option> */}
                         </select>
                     </div>
                     <div className="invalid-feedback">

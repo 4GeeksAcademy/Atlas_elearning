@@ -11,9 +11,11 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 
+
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
+#-------------------------EMAIL-----------------------------#
 # Configuración de Flask-Mail
 #clave ffyi grea agyd alfc
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -26,15 +28,12 @@ app.config['MAIL_DEFAULT_SENDER'] = 'Soporte Altas'
 
 mail = Mail(app)
 
-""" @app.route('/send-mail')
-def send_mail():
-    try:
-        msg = Message("Test Email", recipients=["jonaikelmorilloj@gmail.com"])
-        msg.body = "This is a test email sent from Flask-Mail."
-        mail.send(msg)
-        return "Mail sent!"
-    except Exception as e:
-        return str(e) """
+#----------------------PAYPAL-------------------------#
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
+PAYPAL_CLIENT_SECRET = os.getenv("PAYPAL_CLIENT_SECRET")
+BASE_URL = "https://api-m.sandbox.paypal.com"
+PORT = int(os.getenv("PORT", 8888))
+
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(

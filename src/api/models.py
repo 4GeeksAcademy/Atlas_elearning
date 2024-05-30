@@ -22,11 +22,11 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "is_user": self.is_user,
+            "isUser": self.is_user,
             "name": self.name,
-            "last_name": self.last_name,
+            "lastame": self.last_name,
             "username": self.username,
-            "number_document": self.number_document,
+            "numberDocument": self.number_document,
             "phone": self.phone,
             "age": self.age,
             "gender": self.gender
@@ -41,8 +41,11 @@ class Manager(db.Model):
     name = db.Column(db.String(250), nullable=False)
     last_name = db.Column(db.String(250), nullable=False)
     phone = db.Column(db.String(250), nullable=False)
+    number_document = db.Column(db.String(250), unique=True, nullable=False)
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
+
     #Relations
     user = db.relationship('User', backref=db.backref('managers', lazy=True))
     teacher = db.relationship('Teacher', backref=db.backref('managers', lazy=True))
@@ -54,12 +57,13 @@ class Manager(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "is_manager": self.is_manager,
-            "user_id": self.user_id,
+            "isManager": self.is_manager,
+            "userId": self.user_id,
             "name": self.name,
-            "last_name": self.last_name,
+            "lastName": self.last_name,
             "phone": self.phone,
-            "teacher_id": self.teacher_id
+            "numberDocument": self.number_document,
+            "teacherId": self.teacher_id
             # do not serialize the password, it's a security breach
         }
 
@@ -88,16 +92,16 @@ class Teacher(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "is_teacher": self.is_teacher,
+            "isTeacher": self.is_teacher,
             "name": self.name,
-            "last_name": self.last_name,
+            "lastName": self.last_name,
             "username": self.username,
-            "number_document": self.number_document,
+            "numberDocument": self.number_document,
             "phone": self.phone,
             "age": self.age,
             "gender": self.gender,
-            "user_id": self.user_id,
-            "certificate_teacher": self.certificate_teacher
+            "userId": self.user_id,
+            "certificateTeacher": self.certificate_teacher
             # do not serialize the password, it's a security breach
         }
 
@@ -106,8 +110,16 @@ class Course(db.Model):
     title = db.Column(db.String(250), nullable=False)
     category_title = db.Column(db.String(250), nullable=False)
     modules_length = db.Column(db.Integer, nullable=False)
-    certificate = db.Column(db.String(250), nullable=False)
-    price = db.Column(db.Integer, nullable=False)  # Nuevo campo
+    title_certificate_to_get = db.Column(db.String(250), nullable=False)
+    price = db.Column(db.Integer, nullable=False)  
+    description = db.Column(db.String(500), nullable=False)
+    assessment = db.Column(db.Integer, nullable=True) 
+    create_date = db.Column(db.String(300), unique=False, nullable=True)
+    title_Teacher = db.Column(db.String(250), nullable=False)
+    date_expiration = db.Column(db.String(300), unique=False, nullable=True)
+    title_url_media = db.Column(db.String(1024), nullable=False) 
+
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     manager_id = db.Column(db.Integer, db.ForeignKey('manager.id'), nullable=True)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
@@ -124,28 +136,69 @@ class Course(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "user_id": self.user_id,
-            "manager_id": self.manager_id,
-            "teacher_id": self.teacher_id,
-            "category_title": self.category_title,
-            "modules_length": self.modules_length,
-            "certificate": self.certificate,
-            "price": self.price  # Nuevo campo en la serialización
+            "userId": self.user_id,
+            "managerId": self.manager_id,
+            "teacherId": self.teacher_id,
+            "categoryTitle": self.category_title,
+            "modulesLength": self.modules_length,
+            "titleCertificateToGet": self.title_certificate_to_get,
+            "price": self.price,
+            "description": self.description,
+            "assessment": self.assessment,
+            "createDate": self.create_date,
+            "titleTeacher": self.title_Teacher,
+            "dateExpiration": self.date_expiration,
+            "titleUrlMedia": self.title_url_media
+
+        }
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title_category = db.Column(db.String(250), nullable=False)
+    sub_category = db.Column(db.String(250), nullable=False)
+    category_length = db.Column(db.String(300), nullable=False)
+    create_date = db.Column(db.String(300), unique=False, nullable=True)
+    course_more_current = db.Column(db.String(250), nullable=False)
+    course_more_sold = db.Column(db.String(250), nullable=False)  
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    manager_id = db.Column(db.Integer, db.ForeignKey('manager.id'), nullable=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
+   
+    # Relations
+    user = db.relationship('User', backref=db.backref('categories', lazy=True))
+    manager = db.relationship('Manager', backref=db.backref('categories', lazy=True))
+    teacher = db.relationship('Teacher', backref=db.backref('categories', lazy=True))
+    
+    def __repr__(self):
+        return f'<Category {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "titleCategory": self.title_category,
+            "subCategory": self.sub_category,
+            "userId": self.user_id,
+            "managerId": self.manager_id,
+            "teacherId": self.teacher_id,
+            "categoryLength": self.category_length,
+            "course_more_current": self.course_more_current,
+            "course_more_sold": self.course_more_sold
         }
 
 class Orders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    manager_id = db.Column(db.Integer, db.ForeignKey('manager.id'), nullable=False)
-    payment_id = db.Column(db.Integer, db.ForeignKey('payment.id'), nullable=False)
     title_order = db.Column(db.String(250), nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Integer, unique=False, nullable=False)
     date = db.Column(db.String(250), nullable=False)
+    total = db.Column(db.String(250), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+   
 
     #Relations
     user = db.relationship('User', backref=db.backref('orders', lazy=True))
-    manager = db.relationship('Manager', backref=db.backref('orders', lazy=True))
-    payment = db.relationship('Payment', backref=db.backref('orders', lazy=True))
+    
 
     def __repr__(self):
         return f'<Orders {self.id}>'
@@ -153,19 +206,29 @@ class Orders(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user_id": self.user_id,
-            "manager_id": self.manager_id,
-            "payment_id": self.payment_id,
-            "title_order": self.title_order,
+            "titleOrder": self.title_order,
             "price": self.price,
-            "date": self.date
+            "date": self.date,
+            "total": self.total,
+            "userId": self.user_id,
+            
             # do not serialize the password, it's a security breach
         }
     
 class Trolley(db.Model):
     id = db.Column (db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
-    order = db.relationship ('Orders', backref=db.backref('Trolley', lazy=True))
+    title_course = db.Column(db.String(250), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.String(250), unique=False, nullable=False)
+
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    
+
+    #Relations
+    course = db.relationship('Course', backref=db.backref('Trolley', lazy=True))
+    user = db.relationship('User', backref=db.backref('Trolley', lazy=True))
+    
 
     def __repr__(self):
         return f'<Trolley {self.id}>'
@@ -173,12 +236,20 @@ class Trolley(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "order_id": self.order_id
+            "titleCourse": self.title_course,
+            "price": self.price,
+            "date": self.date,
+            "course_id": self.course_id,
+            "user_id": self.user_id,
         }
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(250), nullable=False)
+    date = db.Column(db.String(250), unique=False, nullable=False)
+    title_course = db.Column(db.String(250), nullable=False)
+    pad_amount = db.Column(db.String(250), nullable=False)
+    type_payment = db.Column(db.String(250), nullable=False) 
+
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     manager_id = db.Column(db.Integer, db.ForeignKey('manager.id'), nullable=False)
     
@@ -193,22 +264,27 @@ class Payment(db.Model):
         return{
             "id": self.id,
             "date": self.date,
-            "user_id": self.user_id,
-            "manager_id": self.manager_id
+            "titleCourse": self.title_course,
+            "padAmount": self.pad_amount,
+            "typePayment": self.type_payment,
+
+            "userId": self.user_id,
+            "managerId": self.manager_id
         }
 
 class Modules(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    type_file = db.Column(db.String(250), nullable=False)
+    description_content = db.Column(db.String(500), nullable=False)
     title = db.Column(db.String(250), nullable=False)
-    video_id = db.Column(db.Integer, nullable=True)
-    type_video = db.Column(db.String(250), nullable=False)
-    text_id= db.Column(db.Integer, nullable=True)
-    type_text = db.Column(db.String(250), nullable=False)
-    image_id = db.Column(db.Integer, nullable=True)
-    type_image = db.Column(db.String(250), nullable=False)
-    #Relations
+    url_video = db.Column(db.String(1024), nullable=False)  
+    video_id = db.Column(db.String(250), nullable=True)
+    image_id = db.Column(db.String(250), nullable=True)
+    total_video = db.Column(db.String(250), nullable=True)
+    date_create = db.Column(db.String(250), nullable=False)
+    token_module = db.Column(db.String(1024), nullable=True)
+
+    #String(250)ns
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     course = db.relationship('Course', backref=db.backref('modules', lazy=True))
 
     def __repr__(self):
@@ -217,40 +293,27 @@ class Modules(db.Model):
     def serialize(self):
         return{
             "id": self.id,
-            "course_id": self.course_id,
-            "type_file": self.type_file,
+            "courseId": self.course_id,
+            "descriptionContent": self.description_content,
             "title": self.title,
-            "video_id": self.video_id,
-            "type_video": self.type_video,
-            "text_id": self.text_id,
-            "type_text": self.type_text,
-            "image_id": self.image_id,
-            "type_image": self.type_image
-        }
-
-class Request(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    #Relations
-    course = db.relationship('Course', backref=db.backref('requests', lazy=True))
-    user = db.relationship('User', backref=db.backref('requests', lazy=True))
-
-    def __repr__(self):
-        return f'<Request {self.id}>'
-        
-    def serialize(self):
-        return{
-            "id": self.id,
-            "course_id": self.course_id,
-            "user_id": self.user_id,
+            "urlVideo": self.url_video,
+            "videoId": self.video_id,
+            "imageId": self.image_id,
+            "totalVideo": self.total_video,
+            "dateCreate": self. date_create,
+            "tokenModule": self.token_module
         }
     
 class Quizzes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_title = db.Column(db.String(250), nullable=False)
-    answer = db.Column(db.String(800), nullable=False)
+    answer_teacher = db.Column(db.String(800), nullable=False)
+    answer_user = db.Column(db.Boolean(), unique=False, nullable=False)
+    approved = db.Column(db.Boolean(), unique=False, nullable=False)
+    approval_percentage_user = db.Column(db.String(800), nullable=False)
+    approval_percentage_number = db.Column(db.String(800), nullable=False)
+    approval_percentage = db.Column(db.Boolean(), unique=False, nullable=False)
+
     module_id = db.Column(db.Integer, db.ForeignKey('modules.id'), nullable=True)
 
     #Relations
@@ -263,6 +326,11 @@ class Quizzes(db.Model):
         return {
             "id": self.id,
             "question_title": self.question_title,
-            "answer": self.answer,
-            "module_id": self.module_id,
+            "answerTeacher": self.answer_teacher,
+            "answerUser": self.answer_user,
+            "approved": self.approved,
+            "approvalPorcentageUser": self.approval_percentage_user,
+            "approvalPorcentageNumber": self.approval_percentage_number,
+            "approvalPorcentage": self.approval_percentage,
+            "moduleId": self.module_id
         }

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1227f12bfbe8
+Revision ID: afe2897c0c60
 Revises: 
-Create Date: 2024-05-22 16:40:35.788045
+Create Date: 2024-05-29 16:10:03.838794
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1227f12bfbe8'
+revision = 'afe2897c0c60'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,6 +34,16 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('number_document'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('orders',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title_order', sa.String(length=250), nullable=False),
+    sa.Column('price', sa.Integer(), nullable=False),
+    sa.Column('date', sa.String(length=250), nullable=False),
+    sa.Column('total', sa.String(length=250), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('teacher',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -63,20 +73,43 @@ def upgrade():
     sa.Column('name', sa.String(length=250), nullable=False),
     sa.Column('last_name', sa.String(length=250), nullable=False),
     sa.Column('phone', sa.String(length=250), nullable=False),
+    sa.Column('number_document', sa.String(length=250), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('teacher_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('number_document')
+    )
+    op.create_table('category',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title_category', sa.String(length=250), nullable=False),
+    sa.Column('sub_category', sa.String(length=250), nullable=False),
+    sa.Column('category_length', sa.String(length=300), nullable=False),
+    sa.Column('create_date', sa.String(length=300), nullable=True),
+    sa.Column('course_more_current', sa.String(length=250), nullable=False),
+    sa.Column('course_more_sold', sa.String(length=250), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('manager_id', sa.Integer(), nullable=True),
+    sa.Column('teacher_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['manager_id'], ['manager.id'], ),
+    sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('course',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=250), nullable=False),
     sa.Column('category_title', sa.String(length=250), nullable=False),
     sa.Column('modules_length', sa.Integer(), nullable=False),
-    sa.Column('certificate', sa.String(length=250), nullable=False),
+    sa.Column('title_certificate_to_get', sa.String(length=250), nullable=False),
     sa.Column('price', sa.Integer(), nullable=False),
+    sa.Column('description', sa.String(length=500), nullable=False),
+    sa.Column('assessment', sa.Integer(), nullable=True),
+    sa.Column('create_date', sa.String(length=300), nullable=True),
+    sa.Column('title_Teacher', sa.String(length=250), nullable=False),
+    sa.Column('date_expiration', sa.String(length=300), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('manager_id', sa.Integer(), nullable=True),
     sa.Column('teacher_id', sa.Integer(), nullable=True),
@@ -88,6 +121,9 @@ def upgrade():
     op.create_table('payment',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.String(length=250), nullable=False),
+    sa.Column('title_course', sa.String(length=250), nullable=False),
+    sa.Column('pad_amount', sa.String(length=250), nullable=False),
+    sa.Column('type_payment', sa.String(length=250), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('manager_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['manager_id'], ['manager.id'], ),
@@ -96,7 +132,7 @@ def upgrade():
     )
     op.create_table('modules',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('course_id', sa.Integer(), nullable=False),
+    sa.Column('description_content', sa.String(length=500), nullable=False),
     sa.Column('type_file', sa.String(length=250), nullable=False),
     sa.Column('title', sa.String(length=250), nullable=False),
     sa.Column('video_id', sa.Integer(), nullable=True),
@@ -105,26 +141,18 @@ def upgrade():
     sa.Column('type_text', sa.String(length=250), nullable=False),
     sa.Column('image_id', sa.Integer(), nullable=True),
     sa.Column('type_image', sa.String(length=250), nullable=False),
+    sa.Column('total_video', sa.String(length=250), nullable=True),
+    sa.Column('course_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('orders',
+    op.create_table('trolley',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('manager_id', sa.Integer(), nullable=False),
-    sa.Column('payment_id', sa.Integer(), nullable=False),
-    sa.Column('title_order', sa.String(length=250), nullable=False),
+    sa.Column('title_course', sa.String(length=250), nullable=False),
     sa.Column('price', sa.Integer(), nullable=False),
     sa.Column('date', sa.String(length=250), nullable=False),
-    sa.ForeignKeyConstraint(['manager_id'], ['manager.id'], ),
-    sa.ForeignKeyConstraint(['payment_id'], ['payment.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('request',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('course_id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('course_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['course_id'], ['course.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -132,15 +160,14 @@ def upgrade():
     op.create_table('quizzes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('question_title', sa.String(length=250), nullable=False),
-    sa.Column('answer', sa.String(length=800), nullable=False),
+    sa.Column('answer_teacher', sa.String(length=800), nullable=False),
+    sa.Column('answer_user', sa.Boolean(), nullable=False),
+    sa.Column('approved', sa.Boolean(), nullable=False),
+    sa.Column('approval_percentage_user', sa.String(length=800), nullable=False),
+    sa.Column('approval_percentage_number', sa.String(length=800), nullable=False),
+    sa.Column('approval_percentage', sa.Boolean(), nullable=False),
     sa.Column('module_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['module_id'], ['modules.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('trolley',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('order_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['order_id'], ['orders.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -148,14 +175,14 @@ def upgrade():
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('trolley')
     op.drop_table('quizzes')
-    op.drop_table('request')
-    op.drop_table('orders')
+    op.drop_table('trolley')
     op.drop_table('modules')
     op.drop_table('payment')
     op.drop_table('course')
+    op.drop_table('category')
     op.drop_table('manager')
     op.drop_table('teacher')
+    op.drop_table('orders')
     op.drop_table('user')
     # ### end Alembic commands ###

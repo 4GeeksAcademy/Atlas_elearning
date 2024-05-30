@@ -1,18 +1,37 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Context } from '../store/appContext';
-import { useNavigate } from 'react-router-dom';
-import { GoArrowLeft } from "react-icons/go"
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Context } from '../../store/appContext';
 
-export const AddUser = () => {
-    const { store, actions } = useContext(Context);
-    const [selectedRole, setSelectedRole] = useState('');
+import { GrFormPreviousLink } from "react-icons/gr";
+import { GoHome } from "react-icons/go";
+import { IoAddCircleOutline } from "react-icons/io5";
+
+export const UpdateUser = () => {
+    const { actions, store } = useContext(Context);
+    const [selectedRole, setSelectedRole] = useState('')
+    const [certificate, setCertificate] = useState('')
     const [isUsers, setIsUsers] = useState(true);
-    const [certificate, setCertificate] = useState('');
-    const [counter, setCounter] = useState(7);
     const [redirectPath, setRedirectPath] = useState('');
+    const [counter, setCounter] = useState(7);
+    const { userId } = useParams();
     const navigate = useNavigate();
-    const [userData, setUserData] = useState({
-        email: '',
+    const [userData, setUserData] = useState(() => {
+        const userToUpdate = store.user.access_to_user.find(user =>user.id == userId)
+        
+        if (userToUpdate) {
+            return {
+                email: userToUpdate.email,
+                name: userToUpdate.name,
+                lastName: userToUpdate.lastName,
+                username: userToUpdate.username,
+                numberDocument: userToUpdate.numberDocument,
+                phone: userToUpdate.phone,
+                age: userToUpdate.age,
+                gender: userToUpdate.gender
+            };
+        } else {
+            return {
+                email: '',
         password: '',
         name: '',
         lastName: '',
@@ -21,37 +40,58 @@ export const AddUser = () => {
         phone: '',
         age: '',
         gender: ''
-    });
+            };
+        }
+    })
+    
+    async function handleSubmit(event) {
+        event.preventDefault();
+        await actions.updateUser(userData, selectedRole, userId);
+        setCounter(0)
+    }
+   
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
+    useEffect(() => {
+        // Obtener los detalles del usuario específico y establecer los datos en el estado local
+        const userToUpdate = store.user.access_to_user.find(user => user.id === userId);
+        if (userToUpdate) {
+            setUserData({
+                email: userToUpdate.email,
+                name: userToUpdate.name,
+                lastName: userToUpdate.lastName,
+                username: userToUpdate.username,
+                numberDocument: userToUpdate.numberDocument,
+                phone: userToUpdate.phone,
+                age: userToUpdate.age,
+                gender: userToUpdate.gender
+            });
+        }
+    }, [userId, store.user.access_to_user]);
+
+    const handlerChange = e => {
+        const { name, value } = e.target;
         if (name === 'isPeople') {
             setSelectedRole(value);
             let updatedData = {};
             if (value === 'user') {
-                updatedData = { isUser: isUsers };
+                updatedData = { isUser: true };
                 setUserData(prevState => ({
                     ...prevState,
                     ...updatedData,
-                    isTeacher: undefined,
-                    isManager: undefined
+                    isTeacher: undefined
                 }));
             } else if (value === 'teacher') {
-                updatedData = { isTeacher: isUsers };
+                updatedData = { isTeacher: true };
                 setUserData(prevState => ({
                     ...prevState,
                     ...updatedData,
                     isUser: undefined,
-                    isManager: undefined,
                     certificateTeacher: certificate
                 }));
-            } else if (value === 'manager') {
-                updatedData = { isManager: isUsers };
+            } else {
                 setUserData(prevState => ({
                     ...prevState,
-                    ...updatedData,
-                    isUser: undefined,
-                    isTeacher: undefined
+                    [name]: value
                 }));
             }
         } else {
@@ -62,10 +102,14 @@ export const AddUser = () => {
         }
     };
 
-    async function handleSubmit(event) {
-        event.preventDefault();
-        await actions.createUser(userData, selectedRole);
-        setCounter(0)
+    const handlerSubmit = (e) => {
+        e.preventDefault();
+        if (userData.name !== '' && userData.email !== '' && userData.phone !== '' && userData.lastName !== '' && userData.username !== '' && userData.numberDocument !== '' && userData.age !== '' && userData.gender !== '') {
+            actions.updateUser(userData, selectedRole, userId);
+           
+        } else {
+            alert('No debe dejar ningun campo vacío');
+        }
     }
 
     function handlerGoToLogIn() {
@@ -89,7 +133,7 @@ export const AddUser = () => {
                     return
                       
                 }else if(store.error === '' && selectedRole !== '' && counter === 7){
-                    setRedirectPath(`/${selectedRole}View`)
+                    setRedirectPath(`/managerView`)
                     clearInterval(interval)
                 }
                 
@@ -103,52 +147,38 @@ export const AddUser = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
-    console.log(msg, msgError)
+
     return (
-        <div className='container'>
+        <div className="container mt-4 w-50">
             {/* Msg */}
-            <div className='position-relative'>
-                <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x' style={{ zIndex: 1 }}>
-                    {(msgError === '' && msg === '') ? (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                            {"Internet or server connection failure"}
-                        </div>
-                    ) : (msgError === '') ? (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                            {msg}
-                        </div>
-                    ) : (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                            {msgError}
-                        </div>
-                    )}
-                </div>
+            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
+                {(msgError === '' && msg === '') ? (
+                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                        {"Internet or server connection failure"}
+                    </div>
+                ) : (msgError === '') ? (
+                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                        {msg}
+                    </div>
+                ) : (
+                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                        {msgError}
+                    </div>
+                )}
             </div>
 
-            <div className="d-flex justify-content-center align-items-center position-relative mt-3 mb-5" style={{ zIndex: 0 }}>
-                <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute start-0'
-                    onClick={handlerHome}
-                    style={{ cursor: "pointer" }}>
-                    <GoArrowLeft />
-                </div>
-                <div className='d-flex justify-content-center align-items-center'>
-                    <h1>Record your Personal Data</h1>
-                </div>
-            </div>
-
-
-
-            <form className=" mt-5 mb-5 row g-3 was-validated" onSubmit={handleSubmit} noValidate>
-
-                {/* Role */}
+            <h1>Update</h1>
+            <div >
+                <form className="px-2" onSubmit={handlerSubmit}>
+                     {/* Role */}
                 <div className='col-12'>
                     <label className="form-label">Role</label>
                     <div className="input-group has-validation">
-                        <select className="form-select" name='isPeople' onChange={handleChange} value={selectedRole} required>
+                        <select className="form-select" name='isPeople' onChange={handlerChange} value={selectedRole} required>
                             <option value="">--Choose--</option>
                             <option value='teacher'>Teacher</option>
                             <option value='user'>Student</option>
-                            <option value='manager'>Manager</option>
+                            {/* <option value='manager'>Manager</option> */}
                         </select>
                     </div>
                     <div className="invalid-feedback">
@@ -162,7 +192,7 @@ export const AddUser = () => {
                         type="text"
                         className="form-control"
                         name='name'
-                        onChange={handleChange}
+                        onChange={handlerChange}
                         value={userData.name}
                         required />
                     <div className="invalid-feedback">
@@ -177,7 +207,7 @@ export const AddUser = () => {
                         type="text"
                         className="form-control"
                         name='lastName'
-                        onChange={handleChange}
+                        onChange={handlerChange}
                         value={userData.lastName}
                         required />
                     <div className="invalid-feedback">
@@ -192,7 +222,7 @@ export const AddUser = () => {
                             type="text"
                             className="form-control"
                             name='username'
-                            onChange={handleChange}
+                            onChange={handlerChange}
                             value={userData.username}
                             required />
                     </div>
@@ -207,7 +237,7 @@ export const AddUser = () => {
                         type="text"
                         className="form-control"
                         name='numberDocument'
-                        onChange={handleChange}
+                        onChange={handlerChange}
                         value={userData.numberDocument}
                         required />
                     <div className="invalid-feedback">
@@ -217,7 +247,7 @@ export const AddUser = () => {
                 {/* Gender */}
                 <div className={`col-lg-3 ${(selectedRole === 'manager') ? 'd-none' : 'd-block col-lg-3'}`}>
                     <label className="form-label">Gender</label>
-                    <select className="form-select" name='gender' onChange={handleChange} value={userData.gender} required>
+                    <select className="form-select" name='gender' onChange={handlerChange} value={userData.gender} required>
                         <option value="">--Choose--</option>
                         <option value="Female">Female</option>
                         <option value="Male">Male</option>
@@ -233,7 +263,7 @@ export const AddUser = () => {
                         type="phone"
                         className="form-control"
                         name='phone'
-                        onChange={handleChange}
+                        onChange={handlerChange}
                         value={userData.phone}
                         required />
                     <div className="invalid-feedback">
@@ -247,13 +277,30 @@ export const AddUser = () => {
                         type="number"
                         className="form-control"
                         name='age'
-                        onChange={handleChange}
+                        onChange={handlerChange}
                         value={userData.age}
                         required />
                     <div className="invalid-feedback">
                         Please enter your information.
                     </div>
                 </div>
+                
+                {/* Email */}
+                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'col-lg-6 '}`}>
+                    <label className="form-label">Email address</label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        name='email'
+                        onChange={handlerChange}
+                        value={userData.email}
+                        required />
+                    <div className="invalid-feedback">
+                        Please enter your information.
+                    </div>
+                    <div className="form-text">We'll never share your email with anyone else.</div>
+                </div>
+
                 {/* Certificate */}
                 <div className={`${(selectedRole === 'teacher') ? 'd-block col-lg-12' : 'd-none'}`}>
                     <label className="form-label">Do you have a Certificate?</label>
@@ -268,40 +315,12 @@ export const AddUser = () => {
                         Please enter your information.
                     </div>
                 </div>
-                {/* Email */}
-                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'col-lg-6 '}`}>
-                    <label className="form-label">Email address</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        name='email'
-                        onChange={handleChange}
-                        value={userData.email}
-                        required />
-                    <div className="invalid-feedback">
-                        Please enter your information.
-                    </div>
-                    <div className="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                {/* Password */}
-                <div className={`${(selectedRole === 'manager') ? 'd-block col-lg-4' : 'col-lg-6'}`}>
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        name='password'
-                        onChange={handleChange}
-                        value={userData.password}
-                        required />
-                    <div className="invalid-feedback">
-                        Please enter your information.
-                    </div>
-                </div>
-
+                
+                </form>
                 <button
                     type="submit"
                     className="btn btn-primary"
-                    onClick={handleSubmit}>
+                    onClick={handlerSubmit}>
                     {
                         (store.spinner)
                             ? <div className="spinner-border" role="status">
@@ -309,16 +328,16 @@ export const AddUser = () => {
                             </div>
                             : <div className="row align-items-center ">
                                 <div className="col align-self-center text-center fs-4">
-                                    <span>Create User</span>
+                                    <span>Update User</span>
                                 </div>
                             </div>
                     }
                 </button>
-
-                <div className='col-lg my-3 text-center text-decoration-underline' style={{ cursor: "pointer" }}>
-                    <a onClick={handlerGoToLogIn}>You already have an account.</a>
-                </div>
-            </form>
+            </div>
         </div>
     );
-};
+}
+
+
+
+    
