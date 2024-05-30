@@ -103,6 +103,15 @@ const Layout = () => {
                             } 
                             path="/UpdateQuizzes/:quizzesId" 
                         />
+
+                        <Route 
+                            element={
+                                <ProtectedRoute>
+                                    <Course />
+                                </ProtectedRoute>
+                            } 
+                            path="/Course/:courseId" 
+                        />
                         {/* Ruta para el componente Trolley */}
                         <Route element={<Trolley />} path="/trolley" />
 
