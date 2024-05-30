@@ -29,7 +29,7 @@ export const PostCourse = () => {
             await actions.createCourseNew(courseData)
             setCounter(0)
         } else {
-            alert('Ingrese todo los campos')
+            alert('Please fill in all fields')
         }
     }
 
@@ -46,99 +46,80 @@ export const PostCourse = () => {
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
 
-    return (
-        <div className=' position-relative'>
-            {/* Msg */}
-            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {msgError === ''
-                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                        {msg}
-                    </div>
-                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {msgError}
-                    </div>}
-            </div>
 
-            <div className='col-md-12 col-lg-5 d-flex justify-content-center align-items-start'>
-                <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
-                    <div className="d-flex justify-content-center align-items-center mb-5">
-                        <div className='d-flex justify-content-center align-items-center'>
-                            <h1>Create Course New</h1>
-                        </div>
-                    </div>
-                    <form onSubmit={handlerCreateCourse}>
-                        <div>
-                            <label>Title:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={courseData.title}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Category Title:</label>
-                            <input
-                                type="text"
-                                name="categoryTitle"
-                                value={courseData.categoryTitle}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Modules Length:</label>
-                            <input
-                                type="number"
-                                name="modulesLength"
-                                value={courseData.modulesLength}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Certificate:</label>
-                            <input
-                                type="text"
-                                name="certificate"
-                                value={courseData.certificate}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Price:</label>
-                            <input
-                                type="number"
-                                name="price"
-                                value={courseData.price}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <button className="btn btn-primary my-3" type='submit'>Upload Course</button>
-                    </form>
+    return (
+        <div className="container">
+            {/* Msg */}
+            <div className="row justify-content-center position-relative">
+                <div className="col-lg-8 col-md-10 col-sm-12 text-center">
+                    {msgError === ''
+                        ? <div className={`mt-3 fs-4 fw-bold ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                            {msg}
+                          </div>
+                        : <div className={`mt-3 fs-4 fw-bold ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                            {msgError}
+                          </div>}
                 </div>
             </div>
 
+            <div className="row justify-content-center">
+                <div className="col-lg-8 col-md-10 col-sm-12">
+                    <div className="border border-dark rounded-3 p-4 my-5 shadow">
+                        <div className="text-center mb-4">
+                            <h1 className="display-4">Create New Course</h1>
+                        </div>
+                        
+                        <form onSubmit={handlerCreateCourse}>
+                            <div className="mb-3">
+                                <label className="form-label">Title</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={courseData.title}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Category Title</label>
+                                <input
+                                    type="text"
+                                    name="categoryTitle"
+                                    value={courseData.categoryTitle}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Modules Length</label>
+                                <input
+                                    type="number"
+                                    name="modulesLength"
+                                    value={courseData.modulesLength}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Certificate</label>
+                                <input
+                                    type="text"
+                                    name="certificate"
+                                    value={courseData.certificate}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Price</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    value={courseData.price}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <button type="submit" className="btn btn-primary w-100">Upload Course</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
-
-

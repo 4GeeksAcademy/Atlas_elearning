@@ -82,42 +82,45 @@ export const ManagerDashboard = () => {
         navigate('/')
     }
     return (
-        <div className="row" style={{ height: '200vh' }}>
-            <div className="col-3 text-center">
-                <p>Dashboard</p>
-                <div className="fs-4" onClick={handleHome} style={{ cursor: 'pointer' }}>
-                    <FaCircleArrowLeft />
-                    <h1>Welcome!</h1>
-                    <h5>Manager</h5>
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-12 col-md-3 text-center border border-secondary p-0">
+                    <div className="p-3">
+                        <p>Dashboard</p>
+                        <div className="fs-4" onClick={handleHome} style={{ cursor: 'pointer' }}>
+                            <FaCircleArrowLeft />
+                            <h1>Welcome!</h1>
+                            <h5>Manager</h5>
+                        </div>
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleCreateCourse}>Create Courses</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyModule}>Create Modules</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyQuizzes}>Create Quizzes</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleUpdateCourse}>Update Courses</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyCourses}>View Courses</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyProfile}>Profile</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handlePayments}>Payments</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleTeachers}>Teachers</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleUsers}>Users</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={HandleFiles}>Files</button>
+
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handlePDF}>Certificate</button>
+                        
+                        <button className="btn btn-outline-primary my-2 w-75" onClick={handleCreateCategory}>Create Category</button>
+                    </div>
                 </div>
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleCreateCourse}>Create Courses</button>
-                
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyModule}>Create Modules</button>
-                
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyQuizzes}>Create Quizzes</button>
-
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleUpdateCourse}>Update Courses</button>
-
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyCourses}>View Courses</button>
-
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handleMyProfile}>Profile</button>
-
-                <button className="btn btn-outline-primary my-2 w-75" onClick={handlePayments}>Payments </button>
-
-                <button className='btn btn-outline-primary my-2 w-75' onClick={handleTeachers}>Teachers</button>
-
-                <button className='btn btn-outline-primary my-2 w-75' onClick={handleUsers}>Users</button>
-
-                <button className='btn btn-outline-primary my-2 w-75' onClick={HandleFiles}>Files</button>
-
-                <button className='btn btn-outline-primary my-2 w-75' onClick={handlePDF}>Certificate</button>
-
-                <button className='btn btn-outline-primary my-2 w-75' onClick={handleCreateCategory}>Create Category</button>
-            </div>
-            <div className="col-9">
-                {buttonSelected}
+                <div className="col-12 col-md-9 p-0">
+                    {buttonSelected}
+                </div>
             </div>
         </div>
-    )
-}
-
+    );
+};

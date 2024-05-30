@@ -74,7 +74,7 @@ export const Navbar = () => {
                     </div>
                     : <nav className="navbar navbar-light bg-light">
                         <div className="container-fluid">
-                            <a className="navbar-brand">Atlas learning</a>
+                            <a className="navbar-brand">Atlas Learning</a>
                             <div className="d-flex">
 
                                 {

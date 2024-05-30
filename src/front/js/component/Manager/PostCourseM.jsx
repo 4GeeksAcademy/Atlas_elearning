@@ -90,183 +90,140 @@ export const PostCourseM = () => {
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
 
     return (
-        <div className='position-relative'>
-            {/* Msg */}
-            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {(msgError === '' && msg === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {"Internet or server connection failure"}
-                    </div>
-                ) : (msgError === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                        {msg}
-                    </div>
-                ) : (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {msgError}
-                    </div>
-                )}
-            </div>
-
-            <div className='col-md-12 col-lg-5 d-flex justify-content-center align-items-start'>
-                <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
-                    <div className="d-flex justify-content-center align-items-center position-relative mb-5">
-                        <div className='d-flex justify-content-center align-items-center'>
-                            <h1>Create Course New</h1>
-                        </div>
-                    </div>
-                    <form onSubmit={handlerCreateCourse}>
-                        <div>
-                            <div className="container">
-                                <h2 className="text-center my-4">Upload Media</h2>
-                                <div className="row justify-content-center">
-                                    <div className="col-md-6">
-                                        <input type="file" className="form-control" onChange={uploadMedia} />
-                                    </div>
+        <div className="container">
+            <div className="row justify-content-center border border-dark">
+                <div className="col-lg-8 col-md-10 col-sm-12 ">
+                    <div className="border border-dark rounded-3 p-4 my-5 shadow">
+                        <div className="text-center position-relative">
+                            {(msgError === '' && msg === '') ? (
+                                <div className={`mt-3 fs-5 fw-bold ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                                    {"Internet or server connection failure"}
                                 </div>
-                                <div className="row justify-content-center my-4">
-                                    <div className="col-md-8">
-                                        {store.loading ? (
-                                            <div className="text-center">
-                                                <div className="spinner-border" role="status">
-                                                    <span className="sr-only">Loading...</span>
-                                                </div>
-                                            </div>
+                            ) : (msgError === '') ? (
+                                <div className={`mt-3 fs-5 fw-bold ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
+                                    {msg}
+                                </div>
+                            ) : (
+                                <div className={`mt-3 fs-5 fw-bold ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
+                                    {msgError}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="text-center mb-4">
+                            <h1 className="display-4">Create New Course</h1>
+                        </div>
+
+                        <form onSubmit={handlerCreateCourse}>
+                            <div className="mb-3">
+                                <label className="form-label">Title</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={courseData.title}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Category Title</label>
+                                <input
+                                    type="text"
+                                    name="categoryTitle"
+                                    value={courseData.categoryTitle}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Modules Length</label>
+                                <input
+                                    type="number"
+                                    name="modulesLength"
+                                    value={courseData.modulesLength}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Title Certificate To Get</label>
+                                <input
+                                    type="text"
+                                    name="titleCertificateToGet"
+                                    value={courseData.titleCertificateToGet}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Price</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    value={courseData.price}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Description</label>
+                                <textarea
+                                    name="description"
+                                    value={courseData.description}
+                                    onChange={handleChange}
+                                    className="form-control"
+                                    rows="3">
+                                </textarea>
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Title Teacher</label>
+                                <input
+                                    type="text"
+                                    name="titleTeacher"
+                                    value={courseData.titleTeacher}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Assessment</label>
+                                <input
+                                    type="text"
+                                    name="assessment"
+                                    value={courseData.assessment}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Date Expiration</label>
+                                <input
+                                    type="date"
+                                    name="dateExpiration"
+                                    value={courseData.dateExpiration}
+                                    onChange={handleChange}
+                                    className="form-control" />
+                            </div>
+
+                            <div className="mb-3">
+                                <label className="form-label">Upload Media</label>
+                                <input type="file" className="form-control" onChange={uploadMedia} />
+                                {store.loading ? (
+                                    <div className="text-center mt-3">
+                                        <div className="spinner-border" role="status">
+                                            <span className="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    store.media && (
+                                        store.mediaType === 'image' ? (
+                                            <img src={store.media} className="img-fluid mt-3" alt="Uploaded" />
                                         ) : (
-                                            store.media && (
-                                                store.mediaType === 'image' ? (
-                                                    <img src={store.media} className="img-fluid" alt="Uploaded" />
-                                                ) : (
-                                                    <video controls className="img-fluid">
-                                                        <source src={store.media} type="video/mp4" />
-                                                        Your browser does not support the video tag.
-                                                    </video>
-                                                )
-                                            )
-                                        )}
-                                    </div>
-                                </div>
+                                            <video controls className="img-fluid mt-3">
+                                                <source src={store.media} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )
+                                    )
+                                )}
                             </div>
 
-                            <label>Title:</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={courseData.title}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Category Title:</label>
-                            <input
-                                type="text"
-                                name="categoryTitle"
-                                value={courseData.categoryTitle}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Modules Length:</label>
-                            <input
-                                type="number"
-                                name="modulesLength"
-                                value={courseData.modulesLength}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Title Certificate To Get:</label>
-                            <input
-                                type="text"
-                                name="titleCertificateToGet"
-                                value={courseData.titleCertificateToGet}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Price:</label>
-                            <input
-                                type="number"
-                                name="price"
-                                value={courseData.price}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Description:</label>
-                            <textarea
-                                type="text"
-                                name="description"
-                                value={courseData.description}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" >
-                            </textarea>
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Title Teacher:</label>
-                            <input
-                                type="text"
-                                name="titleTeacher"
-                                value={courseData.titleTeacher}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Assessment:</label>
-                            <input
-                                type="text"
-                                name="assessment"
-                                value={courseData.assessment}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <div>
-                            <label>Date Expiration:</label>
-                            <input
-                                type="date"
-                                name="dateExpiration"
-                                value={courseData.dateExpiration}
-                                onChange={handleChange}
-                                id="validationFormCheck1"
-                                className="form-control" />
-                            <div className="invalid-feedback">
-                                Please enter your information.
-                            </div>
-                        </div>
-                        <button className="btn btn-primary my-3" type='submit'>Upload Course</button>
-                    </form>
+                            <button type="submit" className="btn btn-primary w-100">Upload Course</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
