@@ -48,7 +48,7 @@ export const Footer = () => {
 						<div className="row mt-3">
 							<div className="col-md-3 col-lg-3 col-xl-3 mx-auto mb-4">
 								<h6 className="text-uppercase fw-bold mb-4"></h6>
-								<p><Aquí colocar imagen du curso o logo/p>
+								<p>Aquí colocar imagen du curso o logo</p>
 							</div>
 
 							<div className="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
