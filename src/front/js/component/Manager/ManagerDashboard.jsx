@@ -12,7 +12,7 @@ import { Teachers } from './Teachers.jsx';
 import { ActiveUsers } from './ActiveUsers.jsx';
 import { GeneralFiles } from '../Manager/GeneralFiles.jsx';
 import { PostCourseM } from './PostCourseM.jsx';
-import { CourseCard } from '../Courses/CourseCard.jsx';
+import CourseCard from '../Courses/CourseCard.jsx';
 import { ModuleCourse } from '../Module/ModuleCourse.jsx'
 import { QuizzesCourse } from '../Quizzes/QuizzesCourse.jsx';
 import { CreateCategory } from './CreateCategory.jsx';

@@ -8,9 +8,16 @@ const ViewCourses = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    fetch('/api/courses')
+    fetch('/api/view/courses') // Ruta para obtener los cursos del usuario
       .then(response => response.json())
-      .then(data => setCourses(data))
+      .then(data => {
+        // Verificar si hay datos de cursos disponibles
+        if (data && data.access_to_courses && data.access_to_courses.length > 0) {
+          setCourses(data.access_to_courses); // Establecer los cursos obtenidos del usuario
+        } else {
+          console.log('No courses found for the user.');
+        }
+      })
       .catch(error => console.error('Error fetching courses:', error));
   }, []);
 
@@ -37,6 +44,9 @@ const ViewCourses = () => {
                 title={course.title}
                 description={course.description}
                 price={course.price}
+                categoryTitle={course.categoryTitle}
+                modulesLength={course.modulesLength}
+                titleTeacher={course.titleTeacher}
               />
             </div>
           ))}
@@ -47,4 +57,9 @@ const ViewCourses = () => {
 };
 
 export default ViewCourses;
+
+
+
+
+
 

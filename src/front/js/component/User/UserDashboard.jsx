@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../store/appContext.js';
 import { FaCircleArrowLeft } from 'react-icons/fa6';
@@ -10,8 +10,16 @@ import ViewCourses from './ViewCourses.jsx';
 
 export const UserDashboard = () => {
     const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
 
     const [buttonSelected, setButtonSelected] = useState(null);
+    const [myCourses, setMyCourses] = useState([]);
+
+    useEffect(() => {
+        if (store.courses) {
+            setMyCourses(store.courses);
+        }
+    }, [store.courses]);
 
     const handleMyCourses = () => {
         setButtonSelected(<CoursesContainer />);
@@ -31,14 +39,12 @@ export const UserDashboard = () => {
     };
 
     const handleViewCourses = () => {
-        setButtonSelected(<ViewCourses />);
+        setButtonSelected(<ViewCourses courses={myCourses} />);
     };
 
-    const navigate = useNavigate();
-
-    function handleHome() {
+    const handleHome = () => {
         navigate('/');
-    }
+    };
 
     return (
         <div>
@@ -95,3 +101,4 @@ export const UserDashboard = () => {
         </div>
     );
 };
+
