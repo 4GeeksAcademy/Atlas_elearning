@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { UserNavbar } from '../../component/User/UserNavbar.jsx';
-import CourseCard from '../../component/Courses/CourseCard.jsx';
 import '../../../styles/components.css';
 
 const ViewCourses = () => {
@@ -35,19 +34,22 @@ const ViewCourses = () => {
             {isFullScreen ? "Exit Full Screen" : "Full Screen"}
           </button>
         </div>
-        <div className="row">
+        <div>
           {courses.map(course => (
-            <div key={course.id} className="col-md-4 mb-4">
-              <CourseCard
-                id={course.id}
-                img={course.img}
-                title={course.title}
-                description={course.description}
-                price={course.price}
-                categoryTitle={course.categoryTitle}
-                modulesLength={course.modulesLength}
-                titleTeacher={course.titleTeacher}
-              />
+            <div key={course.id} className="mb-4">
+              <h3>{course.title}</h3>
+              <p>{course.description}</p>
+              <p>Price: {course.price}</p>
+              <p>Category: {course.categoryTitle}</p>
+              <p>Teacher: {course.titleTeacher}</p>
+              <p>Modules:</p>
+              <ul>
+                {course.modules.map(module => (
+                  <li key={module.id}>
+                    <strong>{module.title}</strong> - {module.description}
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
