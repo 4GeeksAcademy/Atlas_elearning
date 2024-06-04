@@ -9,7 +9,7 @@ import { UserProfile } from './UserProfile.jsx';
 import { UserPayment } from './UserPayment.jsx';
 import { CoursesContainer } from '../Courses/CoursesContainer.jsx';
 import { WelcomeUser } from './WelcomeUser.jsx';
-
+import { GoXCircle } from "react-icons/go";
 
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineQuiz } from "react-icons/md"
@@ -61,6 +61,10 @@ export const UserDashboard = () => {
 
     const handleCertificate = () => {
         setButtonSelected(<Certificate />)
+    }
+
+    function handleUnsuscribe() {
+        localStorage.removeItem("token-accessCourse");
     }
 
 
@@ -233,20 +237,20 @@ export const UserDashboard = () => {
                             </div>
                         </button>
 
-                        {/* <button
+                        <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === null}
+                            onClick={handleUnsuscribe}
                         >
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
-                                    <MdErrorOutline />
+                                    <GoXCircle  />
                                 </div>
                                 <div>
-                                    <h5>Sin datos</h5>
+                                    <h5>Unsubscribe</h5>
                                 </div>
                             </div>
-                        </button> */}
+                        </button>
 
                     </div>
                 </div>
