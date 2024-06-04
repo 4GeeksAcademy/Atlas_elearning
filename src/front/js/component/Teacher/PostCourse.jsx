@@ -90,7 +90,7 @@ export const PostCourse = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
-    const accessToAddCourse = Array.isArray(store.courseFavorite) ? store.courseFavorite : [];
+    const accessToCategory = Array.isArray(store.category) ? store.category : [];
 
     return (
         <div>
@@ -156,8 +156,8 @@ export const PostCourse = () => {
                             <select className="form-select" name='categoryTitle' onChange={handleChange} value={courseData.categoryTitle} required>
                                 <option value="">--Choose--</option>
                                 {
-                                    accessToAddCourse?.map((item, index) => (
-                                        <option key={index} value={item.titleCategory}>{item.titleCategory}/{item.subCategory}</option>
+                                    accessToCategory?.map((item, index) => (
+                                        <option key={index} value={item.categoryTitle}>{item.titleCategory}</option>
                                     ))
                                 }
                             </select>

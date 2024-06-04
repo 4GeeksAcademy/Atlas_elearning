@@ -6,7 +6,7 @@ import { LuHeart } from "react-icons/lu";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 
 export const CourseCategorySelected = () => {
-    const { store, actions } = useContext(Context); // Asegurarse de obtener `actions` desde el contexto
+    const { store, actions } = useContext(Context);
     const { titleCategory } = useParams();
     const [categories, setCategories] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -33,16 +33,16 @@ export const CourseCategorySelected = () => {
     return (
         <div>
             <UserNavbar />
-                <button
-                    className="btnFav d-flex justify-content-center align-items-center top-50 end-0 translate-middle-y ms-3 mt-3"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasScrolling"
-                    aria-controls="offcanvasScrolling"
-                    onClick={() => navigate(`/`)}
-                >
-                    <FaArrowLeft />
-                </button>
+            <button
+                className="btnFav d-flex justify-content-center align-items-center top-50 end-0 translate-middle-y ms-3 mt-3"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasScrolling"
+                aria-controls="offcanvasScrolling"
+                onClick={() => navigate(`/`)}
+            >
+                <FaArrowLeft />
+            </button>
             <div className="container-fluid">
                 <h3>Courses:</h3>
                 <div className="d-flex flex-wrap justify-content-center">
@@ -50,9 +50,8 @@ export const CourseCategorySelected = () => {
                         "No Uploaded Courses"
                     ) : (
                         courses.map((item, index) => (
-                            <div key={index} className="card mx-2 shadow rounded-4 col-12 cardEdit"
-                                onClick={() => navigate(`/course/${item.id}`)}
-                                style={{ maxWidth: '350px', margin: '20px auto' }}>
+                            <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3 my-5' style={{ width: "20rem", minHeight: "20rem" }}
+                                onClick={() => navigate(`/course/${item.id}`)}>
                                 <div className="card-img-top">
                                     <div className="course-thumbnail">
                                         <img
@@ -65,22 +64,21 @@ export const CourseCategorySelected = () => {
                                 </div>
 
                                 <div className="card-body rounded-bottom-4" style={{ backgroundColor: (item.id % 2 === 0) ? "#18BEBE" : (item.id % 3 === 0) ? "#3A6F99" : (item.id % 4 === 0) ? "#F6CA1F" : (item.id % 5 === 0) ? "#139895" : "#165D95" }}>
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h3 className="card-title fw-bolder fs-2 text-white">{item.title}</h3>
+                                    <div>
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                            <h3 className="card-title fw-bolder fs-5 text-dark text-truncate">{item.title}</h3>
                                         </div>
-                                        <div className="py-2 px-2 border fs-2 rounded-circle d-inline-flex justify-content-center align-items-center text-white" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
-                                            <strong>${item.price}</strong>
+                                        <div className="mt-3">
+                                            <p className="border rounded-pill fs-6 py-1 px-2 me-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>
+                                            <p className="border rounded-pill fs-6 py-1 px-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p>
                                         </div>
                                     </div>
-
-                                    <p className="border rounded-pill py-1 px-1 me-3 d-inline-flex text-white" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>
-
-                                    <p className="border rounded-pill py-1 px-1 d-inline-flex text-white" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: </p>
-
-                                    <div className="d-flex justify-content-end">
-                                        <button className='py-2 px-2 border fs-2 rounded-circle d-flex justify-content-center align-items-center addEdit text-white' onClick={(e) => { e.stopPropagation(); handleAddTrolley(item.title, item.id, item.price); }} style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
-                                            <LuHeart />
+                                    <div className="d-flex justify-content-between align-items-center mt-3">
+                                        <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav">
+                                            <strong>subscribe</strong>
+                                        </div>
+                                        <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
+                                            <LuHeart size={20} />
                                         </button>
                                     </div>
                                 </div>

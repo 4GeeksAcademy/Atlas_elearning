@@ -157,7 +157,7 @@ export const ModuleCourse = () => {
                         {
                             (!store.course.access_to_courses) ? <option disabled>Sin Datos</option>
                                 : store.course.access_to_courses?.map((item, index) => (
-                                    <option key={index} value={item.description}>#{item.id} /{item.description}</option>
+                                    <option key={index} value={item.descriptionContent}>#{item.id} /{item.description}</option>
                                 ))
                         }
                     </select>
