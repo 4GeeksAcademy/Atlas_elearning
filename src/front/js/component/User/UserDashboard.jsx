@@ -71,7 +71,6 @@ export const UserDashboard = () => {
     }
 
     const tokenPayString = localStorage.getItem("token-accessCourse")
-    console.log(tokenPayString)
 
     return (
         <div className="row">
@@ -85,7 +84,6 @@ export const UserDashboard = () => {
             >
                 MENU
             </button>
-
 
 
             <div className="offcanvas offcanvas-start"
