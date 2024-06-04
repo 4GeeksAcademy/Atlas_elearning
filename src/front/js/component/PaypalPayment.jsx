@@ -9,6 +9,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { GoXCircle } from "react-icons/go";
 
 function Message({ content, details, className }) {
+    const navigate = useNavigate();
     const formatDate = (isoDate) => {
         if (!isoDate || isoDate === 'N/A') return 'N/A';
         const date = new Date(isoDate);
@@ -22,6 +23,11 @@ function Message({ content, details, className }) {
         
         return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
     };
+
+    function handleHome(){
+        navigate("/")
+    }
+
 
     return (
         <div className={className}>
@@ -50,6 +56,7 @@ function Message({ content, details, className }) {
 
 export function PaypalPayment() {
     const navigate = useNavigate();
+    const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
     const initialOptions = {
         "client-id": "AevJ33XfD8OFiLiW8oNbuK33BjtIiZL3rNyccBkAwZArxDC8xmBcc4Th_ESuXEGqKBkBV83QXNl8I_ND",
         "enable-funding": "venmo",
@@ -70,17 +77,14 @@ export function PaypalPayment() {
         currencyCode: 'N/A',
         value: 'N/A',
         typePayment: 'PAYPAL',
-        courseId: 0 // Default value until it's updated later
+        courseId: 0,
+        email: userToLogin.email // Default value until it's updated later
     });
 
     const location = useLocation();
     const totalPrice = parseFloat(location.state?.totalPrice) || 0; // Ensure totalPrice is a number
     const numberCourse = location.state?.numberCourse || 0;
-
-    function handleHome(){
-        navigate("/")
-    }
-
+    
     // Update courseId with the correct value
     useEffect(() => {
         setGetDataPaypal(prevState => ({
@@ -108,7 +112,8 @@ export function PaypalPayment() {
                 status: detailsPaypal.status || 'N/A',
                 currencyCode: detailsPaypal.purchase_units?.[0]?.amount?.currency_code || 'N/A',
                 value: detailsPaypal.purchase_units?.[0]?.amount?.value || 'N/A',
-                courseId: numberCourse
+                courseId: numberCourse,
+                email: userToLogin.email 
             });
         }
     }, [detailsPaypal, numberCourse]);
@@ -148,7 +153,8 @@ export function PaypalPayment() {
             currencyCode: detailsPaypal.purchase_units?.[0]?.amount?.currency_code,
             value: detailsPaypal.purchase_units?.[0]?.amount?.value,
             typePayment: 'PAYPAL',
-            courseId: numberCourse
+            courseId: numberCourse,
+            email: userToLogin.email 
         };
         await actions.createPayments(paymentData);
         await actions.getAccessCourse();
@@ -156,6 +162,7 @@ export function PaypalPayment() {
 
     return (
         <div className="container mt-5 mb-5 ">
+            
             <UserNavbar />
             <div className="card shadow-sm p-4 d-flex justify-content-center align-items-center">
                 <div className='text-center d-flex justify-content-center align-items-center w-75 my-5'>

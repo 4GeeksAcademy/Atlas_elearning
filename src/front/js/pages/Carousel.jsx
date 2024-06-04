@@ -4,7 +4,7 @@ export const Carousel = () => {
     return (
         <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner" style={{height: "100vh", objectFit: "cover"}}>
-                <div className="carousel-item active">
+                <div className="carousel-item active ">
                     <img src="https://res.cloudinary.com/dfoegvmld/image/upload/v1717467454/mooiato6fhy7vcrkmr7p.png" className="d-block w-100" alt="Atlas" style={{height: "100vh", objectFit: "cover"}}/>
                 </div>
                 <div className="carousel-item ">

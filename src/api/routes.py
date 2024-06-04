@@ -1249,7 +1249,7 @@ def upload_image():
 def create_payment_course():
     try:
         data = request.get_json()
-        
+        email = request.json.get('email')
         # Validate the data
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -1278,6 +1278,17 @@ def create_payment_course():
         
         # Generate access token with a 30-day expiration
         token = create_access_token(identity=course.id, expires_delta=timedelta(days=30))
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            return jsonify({"Error": "User not found"}), 404
+
+        reset_token = create_access_token(identity=course.id, expires_delta=timedelta(days=30))
+        frontend_url = os.getenv('FRONTEND_URL')  
+        link = f"{frontend_url}/userView"  # Construir el enlace completo
+
+        msg = Message('Suscribe Active', recipients=[email])
+        msg.body = f"Thank you for joining and starting to enjoy our high-end course content. Click here to start {link}"
+        mail.send(msg)
 
         return jsonify({"message": "Payment for course created successfully", "payment": new_payment.serialize(), "token": token}), 201
     
@@ -1357,7 +1368,7 @@ def show_view_accessAllCourse():
             module_list = [module.serialize() for module in Modules.query.all()]
             quiz_list = [quiz.serialize() for quiz in Quizzes.query.all()]
             
-            return jsonify({"access_to_course": course_list, "access_to_module": module_list, "access_to_quiz": quiz_list, "user": user_list, "message": "Courses fetched successfully"}), 200
+            return jsonify({"access_to_course": course_list, "access_to_module": module_list, "access_to_quiz": quiz_list, "user": user_list, "message": "Access Courses successfully"}), 200
         else:
             return jsonify({"error": "Token invalid or not exists"}), 401
     
@@ -1411,7 +1422,7 @@ def show_view_curso(user_id, course_id, module_id, quiz_id):
 
             quiz_list = [mod.serialize() for mod in quiz]
 
-            return jsonify({"access_to_course": course_list, "access_to_module": module_list, "access_to_quiz": quiz_list, "user": user.serialize(), "message": "Courses fetched successfully"}), 200
+            return jsonify({"access_to_course": course_list, "access_to_module": module_list, "access_to_quiz": quiz_list, "user": user.serialize(), "message": "Access Courses Successfully"}), 200
         
         else:
             return jsonify({"Error": "Token invalid or not exists"}), 401
