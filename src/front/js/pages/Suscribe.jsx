@@ -1,26 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import '../../styles/components.css';
+import { Context } from '../store/appContext';
 
 export const Suscribe = () => {
+    const { store, actions } = useContext(Context);
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const courses = [
         { title: "Por 15 dias", price: "$15" },
         { title: "Susbribete a todo los Course", price: "$35" },
         { title: "Con certificado", price: "$40" },
     ];
 
-    const [titleCourse] = useState("indefinido")
-    const [courseId] = useState(1)
+    const [titleCourse] = useState("indefinido");
+    const [courseId] = useState(1);
 
-    function handleAddTrolley(titleCourse, courseId, price) {
-        actions.addCourseToTrolley(titleCourse, courseId, price);
-    }
+   /*  function handleAddTrolley(titleCourse, courseId, price) {
+        // Remove the $ sign and convert the string to a number
+        const cleanedPrice = parseFloat(price.replace('$', ''));
+        console.log(titleCourse, courseId, cleanedPrice);
+        navigate('/paypal', { state: { totalPrice: cleanedPrice, numberCourse: courseId } });
+    } */
 
-    /* const [showContent, setShowContent] = useState(false);
+    const handleCheckout = (titleCourse, courseId, price) => {
+        const cleanedPrice = parseFloat(price.replace('$', ''));
+        console.log(titleCourse, courseId, cleanedPrice);
 
-    useEffect(() => {
-        // Activar la transición una vez que la página se haya cargado completamente
-        setShowContent(true);
-    }, []); */
+        if (courseId !== undefined) {
+            navigate('/paypal', { state: { totalPrice: cleanedPrice, numberCourse: courseId } });
+        } else {
+            alert('Not Available.');
+        }
+    };
 
     return (
         <div className="container-fluid d-flex flex-column justify-content-around align-items-center" style={{ height: "100vh" }}>
@@ -38,17 +51,16 @@ export const Suscribe = () => {
                             </div>
 
                             <div className="d-flex justify-content-end mt-3">
-                                <p className=" fs-1 py-1 px-1 me-3 d-inline-flex text-white">{course.price}</p>
+                                <p className="fs-1 py-1 px-1 me-3 d-inline-flex text-white">{course.price}</p>
                             </div>
 
-                            <div className={`py-2 px-2 border fs-5 rounded-pill d-inline-flex justify-content-center align-items-center btnFav ${(index === 0 && index === 2) ? disabled : ''}`} onClick={()=>handleAddTrolley(parseInt(price))}>
-                                <strong>subscribe</strong>
+                            <div className={`py-2 px-2 border fs-5 rounded-pill d-inline-flex justify-content-center align-items-center btnFav`} onClick={() => handleCheckout(course.title, index, course.price)}>
+                                <strong style={{ cursor: "pointer" }}>subscribe</strong>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
-
         </div>
     );
 };

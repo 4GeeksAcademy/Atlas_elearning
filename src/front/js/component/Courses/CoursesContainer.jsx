@@ -74,7 +74,7 @@ export const CoursesContainer = () => {
                                             <p className="border rounded-pill fs-6 py-1 px-1 d-inline-flex letter text-truncate" style={{ right: 0, maxWidth: '40%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p>
                                         </div>
                                         <div className="d-flex justify-content-end">
-                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
+                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title, item.id, item.id)}>
                                                 <LuHeart size={20} />
                                             </button>
                                         </div>
