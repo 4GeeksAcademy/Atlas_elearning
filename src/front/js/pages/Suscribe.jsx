@@ -37,9 +37,11 @@ export const Suscribe = () => {
     };
 
     return (
-        <div className="container-fluid d-flex flex-column justify-content-around align-items-center" style={{ height: "100vh" }}>
+        <div className=" text-center container-fluid d-flex flex-column justify-content-around align-items-center" style={{ height: "100vh" }}>
             <div className="d-flex align-items-center">
-                <h1 className="poppins-extrabold-italic lh-lg fw-light">Unleash your curiosity, enjoy the learning process, and reach new heights with us.</h1>
+            <h1 className="poppins-extrabold-italic lh-lg fw-light text-uppercase text-dark">Unleash your curiosity, enjoy the learning process, and reach new heights with us.</h1>
+
+
             </div>
             <div className='d-flex justify-content-center'>
                 {courses.map((course, index) => (
