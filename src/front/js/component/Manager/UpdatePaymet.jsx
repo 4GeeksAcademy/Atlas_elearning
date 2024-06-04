@@ -100,9 +100,6 @@ export const UpdatePayment = () => {
         navigate('/managerView');
     }
 
-    function handlerHome() {
-        navigate('/');
-    }
 
     useEffect(() => {
         if (redirectPath !== '') {
@@ -172,7 +169,6 @@ export const UpdatePayment = () => {
 
             <h1>Update Payment</h1>
             <div>
-                <button onClick={handlerGoToHome}>Regresar</button>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Title Course</label>

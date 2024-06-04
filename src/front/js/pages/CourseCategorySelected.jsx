@@ -6,7 +6,7 @@ import { LuHeart } from "react-icons/lu";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 
 export const CourseCategorySelected = () => {
-    const { store, actions } = useContext(Context); // Asegurarse de obtener `actions` desde el contexto
+    const { store, actions } = useContext(Context);
     const { titleCategory } = useParams();
     const [categories, setCategories] = useState([]);
     const [courses, setCourses] = useState([]);
