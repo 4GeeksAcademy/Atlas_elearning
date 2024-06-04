@@ -1072,7 +1072,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
 
           const dataGetPayment = await respGetPayment.json();
-          ;
+          console.log(dataGetPayment)
           setStore({
             ...store,
             msg: dataGetPayment.message,

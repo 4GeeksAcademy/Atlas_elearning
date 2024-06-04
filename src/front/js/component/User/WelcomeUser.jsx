@@ -20,7 +20,8 @@ export const WelcomeUser = () => {
 
     // Verificar si store.course y store.course.access_to_course existen
     const accessToCourse = store.course?.access_to_course
-    const accessToPayment = store.payment?.payment
+    const accessToPayment = store.payment?.payments
+    console.log(store.payment, store.payment?.payments)
 
     return (
         <div className="container-fluid" style={{ position: "relative", textAlign: "center", height: "100vh", padding: 0, margin: 0 }}>
@@ -58,25 +59,23 @@ export const WelcomeUser = () => {
                                 >
                                     <div className="rounded-2 d-flex justify-content-between w-100" style={{ overflow: 'auto' }}>
                                         <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            #
+                                            Nro Paypal
                                         </a>
                                         <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
                                             Date
                                         </a>
                                         <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            Title Course
+                                            Status
+                                        </a>
+                                       
+                                        <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
+                                            Currency
                                         </a>
                                         <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            Pad Amount
+                                            value
                                         </a>
                                         <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            Type Payment
-                                        </a>
-                                        <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            Course Selected
-                                        </a>
-                                        <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                            Operator
+                                            Type of Payment
                                         </a>
     
                                     </div>
@@ -96,27 +95,25 @@ export const WelcomeUser = () => {
                                             }}
                                         >
                                             <div className="rounded-2 d-flex justify-content-between w-100" style={{ overflow: 'auto' }}>
-                                                <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                                    {item.id}
+                                                <a className="text-decoration-none text-dark m-3 me-5" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
+                                                    {item.idPaypal}
                                                 </a>
-                                                <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
+                                                <a className="text-decoration-none text-dark m-3 ms-5" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
                                                     {item.date}
                                                 </a>
                                                 <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                                    {item.titleCourse}
+                                                    {item.status}
                                                 </a>
                                                 <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '50%' }}>
-                                                    {item.padAmount}
+                                                    {item.currencyCode}
+                                                </a>
+                                                <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
+                                                    {item.value}
                                                 </a>
                                                 <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
                                                     {item.typePayment}
                                                 </a>
-                                                <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                                    {item.courseId}
-                                                </a>
-                                                <a className="text-decoration-none text-dark m-3" style={{ cursor: 'pointer', width: '10%', maxHeight: "450px" }}>
-                                                    {item.userId}
-                                                </a>
+                                                
                                             </div>
                                         </div>
                                     </div>

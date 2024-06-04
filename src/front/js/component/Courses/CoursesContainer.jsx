@@ -63,7 +63,7 @@ export const CoursesContainer = () => {
                                     <div className="card-body rounded-bottom-4 p-3 bg-white d-flex flex-column justify-content-between">
                                         <div>
                                             <div className="d-flex justify-content-between align-items-center mb-2">
-                                                <h3 className="card-title fw-bolder fs-5 text-dark text-truncate">{item.title}</h3>
+                                                <h3 className="card-title fw-bolder fs-5 text-dark text-truncate" id="Courses">{item.title}</h3>
                                             </div>
                                             <div className="mt-3">
                                                 <p className="border rounded-pill fs-6 py-1 px-2 me-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>
@@ -72,7 +72,7 @@ export const CoursesContainer = () => {
                                         </div>
                                         <div className="d-flex justify-content-between align-items-center mt-3">
                                             <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav" style={{ cursor: "pointer" }}>
-                                                <a href="#Suscribe" className="text-decoraction-none"><strong>subscribe</strong></a>
+                                                <a href="#Suscribe" className="text-decoration-none"><strong>subscribe</strong></a>
                                             </div>
                                             <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
                                                 <LuHeart size={20} />
