@@ -35,6 +35,9 @@ import { WelcomeTeacher } from './WelcomeTeacher.jsx';
 
 import { Message } from '../Message.jsx'
 import { ManagerProfile } from '../Manager/ManagerProfile.jsx';
+import { GetModule } from '../Manager/GetModule.jsx';
+import { CourseCard } from '../Courses/CourseCard.jsx';
+
 
 
 export const TeacherDashboard = () => {
@@ -92,6 +95,19 @@ export const TeacherDashboard = () => {
     function handleHome() {
         navigate('/')
     }
+
+    const handleGetModules = () => {
+        setButtonSelected(<GetModule />)
+
+    }
+
+    const handleMyModule = () => {
+        setButtonSelected(<ModuleCourse />)
+    }
+    
+    const handleUpdateCourse = () => {
+        setButtonSelected(<CourseCard />)
+    } 
 
     
 
@@ -176,7 +192,7 @@ export const TeacherDashboard = () => {
                             </div>
                         </button>
 
-                        <button className="btn btn-outline-dark my-2 w-75" disabled>
+                        <button className="btn btn-outline-dark my-2 w-75" onClick={handleMyModule}>
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
@@ -212,7 +228,7 @@ export const TeacherDashboard = () => {
                             </div>
                         </button>
 
-                        <button className="btn btn-outline-dark my-2 w-75" disabled>
+                        <button className="btn btn-outline-dark my-2 w-75" onClick={handleUpdateCourse}>
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
@@ -236,7 +252,7 @@ export const TeacherDashboard = () => {
                             </div>
                         </button>
 
-                        <button className="btn btn-outline-dark my-2 w-75" disabled>
+                        <button className="btn btn-outline-dark my-2 w-75" onClick={handleGetModules}>
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
@@ -248,7 +264,7 @@ export const TeacherDashboard = () => {
                             </div>
                         </button>
 
-                        <button className="btn btn-outline-dark my-2 w-75" onClick={handleMyPayment}>
+                        <button className="btn btn-outline-dark my-2 w-75" disabled>
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
@@ -272,7 +288,7 @@ export const TeacherDashboard = () => {
                             </div>
                         </button>
 
-                        <button className='btn btn-outline-dark my-2 w-75' onClick={handleSettings}>
+                        <button className='btn btn-outline-dark my-2 w-75' disabled>
 
                             <div className='d-flex justify-content-between align-items-center'>
                                 <div className='p-1 mx-1 border fs-3 rounded-circle d-flex justify-content-center align-items-center'>
