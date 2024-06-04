@@ -1,15 +1,14 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../store/appContext';
 
-import { Message } from '../Message.jsx'
+import { Message } from '../Message.jsx';
 import { FaHeart } from 'react-icons/fa';
 
 export const UserNavbar = () => {
     const { store, actions } = useContext(Context);
-    const navigate = useNavigate(); setHovered
-    const [hovered, setHovered] = useState(false)
+    const navigate = useNavigate();
+    const [hovered, setHovered] = useState(false);
     const [loading, setLoading] = useState(false); // Estado para controlar la visualización del spinner
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
@@ -19,7 +18,6 @@ export const UserNavbar = () => {
         setLoading(store.spinner);
     }, [store.spinner]);
 
-
     function handleGoToTrolley() {
         navigate('/Trolley');
     }
@@ -28,15 +26,14 @@ export const UserNavbar = () => {
         navigate('/');
     }
 
-
     const handleMouseEnter = () => {
-        setHovered(true)
-        console.log(hovered => hovered + 1)
-    }
+        setHovered(true);
+        console.log(hovered => hovered + 1);
+    };
 
     const handleMouseLeave = () => {
-        setHovered(false)
-    }
+        setHovered(false);
+    };
 
     function handleHomeView() {
         localStorage.removeItem('jwt-token');
@@ -45,11 +42,6 @@ export const UserNavbar = () => {
 
         navigate('/SignOut');
     }
-
-    function handleHome() {
-        navigate('/')
-    }
-
 
     const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
     const accessToAddCourse = Array.isArray(store.courseFavorite) ? store.courseFavorite : [];
@@ -113,9 +105,6 @@ export const UserNavbar = () => {
                             </div>
 
                             <div className="dropdown">
-                            
-                                 {FaHeart} 
-
                                 <button
                                     type="button"
                                     className="btn btnFav dropdown-toggle text-center mx-2 px-3 py-2"
@@ -129,7 +118,7 @@ export const UserNavbar = () => {
                                     </span>
                                 </button>
 
-                                <div className="dropdown-menu" >
+                                <div className="dropdown-menu">
                                     {accessToAddCourse.length === 0 ? (
                                         <p className='dropdown-item'>Not course in Trolley</p>
                                     ) : (
@@ -141,9 +130,7 @@ export const UserNavbar = () => {
                                                         {/* <span>{trolley.price}</span> */}
                                                         {/* <span>{trolley.date}</span> */}
                                                     </div>
-                                                    <button className="btn-close ms-3" onClick={() => actions.deleteTrolley(trolley.id)}>
-
-                                                    </button>
+                                                    <button className="btn-close ms-3" onClick={() => actions.deleteTrolley(trolley.id)}></button>
                                                 </div>
                                             ))}
                                             {/* <button className="btn btn-link" onClick={handleGoToTrolley}>More</button> */}
@@ -151,7 +138,6 @@ export const UserNavbar = () => {
                                     )}
                                 </div>
                             </div>
-
 
                             <button
                                 type="button"
@@ -172,4 +158,3 @@ export const UserNavbar = () => {
         </div>
     );
 };
-

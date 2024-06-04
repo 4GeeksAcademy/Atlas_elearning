@@ -78,25 +78,20 @@ export const ResetPassword = () => {
 
     return (
         <div className=' position-relative'>
-            {/* Msg */}
-            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {msgError === ''
-                    ? <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 9) ? "alert alert-success" : "d-none"}`}>
-                        {msg}
-                    </div>
-                    : <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 9) ? "alert alert-danger" : "d-none"}`}>
-                        {msgError}
-                    </div>}
-            </div>
+            {/* Mostrar mensaje de éxito o error */}
+            {msgError && <Message type="danger" text={msgError} />}
+            {msg && <Message type="success" text={msg} />} 
+
+
             {/* Título */}
             <div className='row d-flex flex-row'>
                 <div className='col-md-12 col-lg-5 d-flex justify-content-center align-items-start'>
                     <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
                         <div className="d-flex justify-content-center align-items-center position-relative mb-5">
-                            <div className='d-flex justify-content-center align-items-center mx-2 fs-4 position-absolute top-0 start-0' onClick={handlerHome} style={{ cursor: "pointer" }}>
+                            <div className='d-flex justify-content-center align-items-center mx-2 fs-4 ' onClick={handlerHome} style={{ cursor: "pointer" }}>
                                 <GoArrowLeft />
                             </div>
-                            <div className='d-flex justify-content-center align-items-center position-absolute top-0 start-50 translate-middle-x'>
+                            <div className='d-flex justify-content-center align-items-center '>
                                 <h1>Reset Password</h1>
                             </div>
                         </div>

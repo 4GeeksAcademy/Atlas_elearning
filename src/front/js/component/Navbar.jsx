@@ -1,16 +1,19 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
 import { FaHeart } from 'react-icons/fa';
 
+import { Message } from './Message.jsx';
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
     const [hovered, setHovered] = useState()
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false)
+    const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
+
 
 
 
@@ -53,6 +56,10 @@ export const Navbar = () => {
 
     return (
         <div className="position-relative">
+            {/* Mostrar mensaje de éxito o error */}
+            {msgError && <Message type="danger" text={msgError} />}
+            {msg && <Message type="success" text={msg} />}
+
             {loading && ( // Renderizar el spinner si está en estado de carga
                 <div className="spinner-overlay d-flex justify-content-center align-items-center">
                     <div className="spinner-overlay d-flex justify-content-center align-items-center">
@@ -221,7 +228,7 @@ export const Navbar = () => {
                                     type="button"
                                     className="btnFav text-center mx-2 px-3 py-2"
                                 >
-                                    <i className="fa-solid fa-cart-shopping fa-fade" style={{ color: "#165D95" }}></i>
+                                <FaHeart style={{ color: '#fa0505' }} />
                                 </button>
                             </Link>
                         </div>

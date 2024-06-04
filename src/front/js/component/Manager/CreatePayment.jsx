@@ -10,12 +10,13 @@ export const CreatePayment = () => {
     const [counter, setCounter] = useState(7)
     const [paymentData, setPaymentData] = useState({
         date: '',
-        currency_code: '',
+        idPaypal: '',
+        currencyCode: '',
         value: '',
         status: '',
         typePayment: '',
-        userId: '',
         courseId: '',
+        userId: '',
         managerId: 1
     });
     
@@ -58,22 +59,7 @@ export const CreatePayment = () => {
 
     return (
         <div className='position-relative'>
-            {/* Msg */}
-            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {(msgError === '' && msg2 === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {"Internet or server connection failure"}
-                    </div>
-                ) : (msgError === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                        {msg2}
-                    </div>
-                ) : (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {msgError}
-                    </div>
-                )}
-            </div>
+           
 
             <div className='d-flex justify-content-center align-items-start'>
                 <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>
@@ -85,7 +71,7 @@ export const CreatePayment = () => {
                     <form onSubmit={handlerCreateCategory}>
                         <div>
 
-                            <label>Transaccion:</label>
+                            <label>Status Transaccion:</label>
                             <input
                                 type="text"
                                 name="status"
@@ -111,8 +97,8 @@ export const CreatePayment = () => {
                             </div>
                         </div>
                         <div>
-                            <label>Pad Amount:</label>
-                            <select className="form-select" name='value' onChange={handleChange} value={paymentData.value} required>
+                            <label>Nro Paypal</label>
+                            {/* <select className="form-select" name='value' onChange={handleChange} value={paymentData.value} required>
                                 <option value="">--Choose--</option>
                                 {
                                     (store.course.access_to_courses.length == 0) 
@@ -122,17 +108,38 @@ export const CreatePayment = () => {
                                     ))
                                 }
 
-                            </select>
+                            </select> */}
+                            <input
+                                type="text"
+                                name="idPaypal"
+                                value={paymentData.idPaypal}
+                                onChange={handleChange}
+                                id="validationFormCheck1"
+                                className="form-control" />
                             <div className="invalid-feedback">
                                 Please enter your information.
                             </div>
                         </div>
                         <div>
-                            <label>Type Payment:</label>
-                            <select className="form-select" name='typePayment' onChange={handleChange} value={paymentData.typePayment} required>
+                            <label>Value:</label>
+                            <input
+                                type="number"
+                                name="value"
+                                value={paymentData.value}
+                                onChange={handleChange}
+                                id="validationFormCheck1"
+                                className="form-control" />
+                            <div className="invalid-feedback">
+                                Please enter your information.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Currency:</label>
+                            <select className="form-select" name='currency_code' onChange={handleChange} value={paymentData.currency_code} required>
                                 <option value="">--Choose--</option>
-                                <option value="paypal">Paypal</option>
-                                <option value="TDC/TDD">Tarjeta de Debito / Credito</option>currency_code
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
                             </select>
                             <div className="invalid-feedback">
                                 Please enter your information.
@@ -140,12 +147,14 @@ export const CreatePayment = () => {
                         </div>
 
                         <div>
-                            <label>Type Payment:</label>
-                            <select className="form-select" name='currency_code' onChange={handleChange} value={paymentData.currency_code} required>
-                                <option value="">--Choose--</option>
-                                <option value="USD">USD</option>
-                                <option value="EUR">EUR</option>
-                            </select>
+                            <label>Type of Payment:</label>
+                            <input
+                                type="text"
+                                name="typePayment"
+                                value={paymentData.typePayment}
+                                onChange={handleChange}
+                                id="validationFormCheck1"
+                                className="form-control" />
                             <div className="invalid-feedback">
                                 Please enter your information.
                             </div>
