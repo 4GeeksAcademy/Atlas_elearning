@@ -9,9 +9,11 @@ export const Suscribe = () => {
     const navigate = useNavigate();
 
     const courses = [
-        { title: "For 15 days", price: "$15", soon: "soon" },
-        { title: "Subscribe to all Courses", price: "$35" },
-        { title: "Subscription more certificates", price: "$40", soon: "soon" },
+
+        { title: "15 days test", price: "$15" },
+        { title: "Access all our courses", price: "$35" },
+        { title: "All courses + certificate", price: "$40" },
+
     ];
 
     function test() {

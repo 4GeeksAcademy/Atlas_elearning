@@ -44,7 +44,7 @@ export const CoursesContainer = () => {
                 </button>
                 <div className="d-flex justify-content-center align-items-center overflow-hidden p-4 scroll-container" ref={containerRef} style={{ whiteSpace: 'nowrap' }}>
                     {store.course && store.course.access_to_courses && store.course.access_to_courses.length === 0 ? (
-                        "No hay Cursos Cargados"
+                        "No Uploaded Courses"
                     ) : (
                         store.course && store.course.access_to_courses && store.course.access_to_courses.map((item, index) => {
                             return (
