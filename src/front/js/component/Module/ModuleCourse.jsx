@@ -87,26 +87,11 @@ export const ModuleCourse = () => {
     console.log(formData);
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
-    const msg2 = typeof store.msg2 === 'string' ? store.msg2 : JSON.stringify(store.msg2);
+    const msg = typeof store.msg === 'string' ? store.msg2 : JSON.stringify(store.msg2);
 
     return (
         <div className="container position-relative">
-            {/* Msg */}
-            <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {(msgError === '' && msg2 === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {"Internet or server connection failure"}
-                    </div>
-                ) : (msgError === '') ? (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                        {msg2}
-                    </div>
-                ) : (
-                    <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                        {msgError}
-                    </div>
-                )}
-            </div>
+            
 
             <h2>Create Course Module</h2>
             <form onSubmit={handleSubmit}>

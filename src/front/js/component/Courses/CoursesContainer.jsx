@@ -74,7 +74,14 @@ export const CoursesContainer = () => {
                                             <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav">
                                                 <strong>subscribe</strong>
                                             </div>
-                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
+                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}></button> {/* // actual */}
+                                        </div>
+                                        <div className="mt-3">
+                                            <p className="border rounded-pill fs-6 py-1 px-1 me-3 d-inline-flex letter text-truncate" style={{ maxWidth: '40%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>  {/* //entrante */}
+                                            <p className="border rounded-pill fs-6 py-1 px-1 d-inline-flex letter text-truncate" style={{ right: 0, maxWidth: '40%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p> {/* //entrante */}
+                                        </div>
+                                        <div className="d-flex justify-content-end">
+                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title, item.id, item.id)}>
                                                 <LuHeart size={20} />
                                             </button>
                                         </div>
