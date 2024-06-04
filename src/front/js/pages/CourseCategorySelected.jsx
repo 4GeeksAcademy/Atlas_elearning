@@ -47,7 +47,7 @@ export const CourseCategorySelected = () => {
                 <h3>Courses:</h3>
                 <div className="d-flex flex-wrap justify-content-center">
                     {courses.length === 0 ? (
-                        "No hay Cursos Cargados"
+                        "No Uploaded Courses"
                     ) : (
                         courses.map((item, index) => (
                             <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3 my-5' style={{ width: "20rem", minHeight: "20rem" }}
