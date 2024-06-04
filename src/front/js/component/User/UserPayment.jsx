@@ -56,6 +56,7 @@ export const UserPayment = () => {
     if (error) {
         return <p>Error: {error}</p>;
     }
+    const accessToPayment = store.payment?.payments
 
     return (
         <>
@@ -71,8 +72,9 @@ export const UserPayment = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {payments.length > 0 ? (
-                        payments.map((pay, index) => (
+                    {(accessToPayment && accessToPayment.length === 0
+                            ? "No hay payment cargados"
+                            : accessToPayment?.map((pay, index) => (
                             <tr key={index}>
                                 <th scope="row">{pay.idPaypal}</th>
                                 <td>{pay.date}</td>
@@ -82,11 +84,7 @@ export const UserPayment = () => {
                                 <td>{pay.typePayment}</td>
                             </tr>
                         ))
-                    ) : (
-                        <tr>
-                            <td colSpan="6">No payments found</td>
-                        </tr>
-                    )}
+                    ) }
                 </tbody>
             </table>
         </>
