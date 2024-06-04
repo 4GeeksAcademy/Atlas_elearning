@@ -287,7 +287,7 @@ class Payment(db.Model):
 
 class Modules(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description_content = db.Column(db.String(500), nullable=False)
+    description_content = db.Column(db.String(9999999), nullable=False)
     title = db.Column(db.String(9999999), nullable=False)
     url_video = db.Column(db.String(9999999), nullable=False)  
     video_id = db.Column(db.String(9999999), nullable=True)
