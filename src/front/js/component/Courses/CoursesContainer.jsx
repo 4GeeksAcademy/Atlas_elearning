@@ -61,30 +61,23 @@ export const CoursesContainer = () => {
                                         </div>
                                     </div>
                                     <div className="card-body rounded-bottom-4 p-3 bg-white d-flex flex-column justify-content-between">
-                                        <div>
-                                            <div className="d-flex justify-content-between align-items-center mb-2">
-                                                <h3 className="card-title fw-bolder fs-5 text-dark text-truncate">{item.title}</h3>
-                                            </div>
-                                            <div className="mt-3">
-                                                <p className="border rounded-pill fs-6 py-1 px-2 me-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>
-                                                <p className="border rounded-pill fs-6 py-1 px-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex justify-content-between align-items-center mt-3">
-                                            <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav">
-                                                <strong>subscribe</strong>
-                                            </div>
-                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}></button> {/* // actual */}
+                                    <div>
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                            <h3 className="card-title fw-bolder fs-5 text-dark text-truncate">{item.title}</h3>
                                         </div>
                                         <div className="mt-3">
-                                            <p className="border rounded-pill fs-6 py-1 px-1 me-3 d-inline-flex letter text-truncate" style={{ maxWidth: '40%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>  {/* //entrante */}
-                                            <p className="border rounded-pill fs-6 py-1 px-1 d-inline-flex letter text-truncate" style={{ right: 0, maxWidth: '40%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p> {/* //entrante */}
+                                            <p className="border rounded-pill fs-6 py-1 px-2 me-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.categoryTitle}</p>
+                                            <p className="border rounded-pill fs-6 py-1 px-2 d-inline-flex letter text-truncate" style={{ maxWidth: '48%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>Modulos: {item.modulesLength}</p>
                                         </div>
-                                        <div className="d-flex justify-content-end">
-                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title, item.id, item.id)}>
-                                                <LuHeart size={20} />
-                                            </button>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center mt-3">
+                                        <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav">
+                                            <strong>subscribe</strong>
                                         </div>
+                                        <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
+                                            <LuHeart size={20} />
+                                        </button>
+                                    </div>
                                     </div>
                                 </div>
                             );

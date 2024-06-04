@@ -50,7 +50,7 @@ export const CourseCategorySelected = () => {
                         "No hay Cursos Cargados"
                     ) : (
                         courses.map((item, index) => (
-                            <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3' style={{ width: "20rem", minHeight: "20rem" }}
+                            <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3 my-5' style={{ width: "20rem", minHeight: "20rem" }}
                                 onClick={() => navigate(`/course/${item.id}`)}>
                                 <div className="card-img-top">
                                     <div className="course-thumbnail">

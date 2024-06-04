@@ -21,62 +21,64 @@ export const Course = () => {
 
   return (
     <>
-      <Navbar />
-      <div className="row-12">
-        <button
-          className="btnFav d-flex justify-content-center align-items-center top-50 end-0 translate-middle-y ms-3 mt-3"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasScrolling"
-          aria-controls="offcanvasScrolling"
-          onClick={() => navigate(`/`)}
-        >
-           <FaArrowLeft />
-        </button>
+  <Navbar />
+  <div className="row-12">
+    <button
+      className="btnFav d-flex justify-content-center align-items-center top-50 end-0 translate-middle-y ms-3 mt-3"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasScrolling"
+      aria-controls="offcanvasScrolling"
+      onClick={() => navigate(`/`)}
+    >
+      <FaArrowLeft />
+    </button>
+  </div>
+  {course ? (
+    <>
+      <div className="card mb-3 cardCourseInformation">
+        <div className="row g-0">
+          <div className="col-md-4">
+            <div className="img-container" style={{ position: 'relative', width: '100%', height: '100%', minHeight: '200px' }}>
+              <img
+                src={course.titleUrlMedia}
+                className="img-fluid rounded-start"
+                alt="Course thumbnail"
+                style={{ objectFit: 'cover', width: '100%', height: '100%', minHeight: '200px', minWidth: '200px' }}
+              />
+            </div>
+          </div>
+          <div className="col-md-8">
+            <div className="card-body">
+              <h5 className="card-title">{course.title}</h5>
+              <p className="card-text">{course.description}</p>
+              <p className="card-text">
+                <small className="text-body-secondary">Number of assessments: {course.assessment}</small>
+              </p>
+              <div className="card-text">
+                <small className="text-body-secondary">You will get: {course.titleCertificateToGet}</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      {course ? (
-        <>
-          <div className="card mb-3 cardCourseInformation">
-            <div className="row g-0">
-              <div className="col-md-4">
-                <img
-                  src={course.titleUrlMedia}
-                  className="img-fluid rounded-start"
-                  alt="Course thumbnail"
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                />
-              </div>
-              <div className="col-md-8">
-                <div className="card-body">
-                  <h5 className="card-title">{course.title}</h5>
-                  <p className="card-text">{course.description}</p>
-                  <p className="card-text">
-                    <small className="text-body-secondary">Number of assessments: {course.assessment}</small>
-                  </p>
-                  <div className="card-text">
-                    <small className="text-body-secondary">You will get: {course.titleCertificateToGet}</small>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div className="container">
+        <div className="row text-center text-md-start">
+          <div className="col-12 col-md-4 border-end border-warning border-4 mb-3 mb-md-0 course-text">
+            <span>Instructor: {course.titleTeacher}</span>
           </div>
-          <div className="container">
-            <div className="row text-center text-md-start">
-              <div className="col-12 col-md-4 border-end border-warning border-4 mb-3 mb-md-0 course-text">
-                <span>Instructor: {course.titleTeacher}</span>
-              </div>
-              <div className="col-12 col-md-4 border-end border-warning border-4 mb-3 mb-md-0 course-text">
-                <span>Course creation date: {course.createDate}</span>
-              </div>
-              <div className="col-12 col-md-4 border-warning border-4 course-text">
-                <span>Course expiration Date: {course.dateExpiration}</span>
-              </div>
-            </div>
+          <div className="col-12 col-md-4 border-end border-warning border-4 mb-3 mb-md-0 course-text">
+            <span>Course creation date: {course.createDate}</span>
           </div>
-        </>
-      ) : (
-        <div>No course data</div>
-      )}
+          <div className="col-12 col-md-4 border-warning border-4 course-text">
+            <span>Course expiration Date: {course.dateExpiration}</span>
+          </div>
+        </div>
+      </div>
     </>
+  ) : (
+    <div>No course data</div>
+  )}
+</>
   );
 };
