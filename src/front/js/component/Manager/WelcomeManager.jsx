@@ -10,9 +10,9 @@ export const WelcomeManager = () => {
     const { store, actions } = useContext(Context);
     const [active, setActive] = useState(false);
 
-    useEffect(()=>{
+   /*  useEffect(()=>{
         actions.getUser()
-    },[])
+    },[]) */
 
     const toggleActive = () => {
         setActive(!active);
