@@ -10,9 +10,9 @@ export const Suscribe = () => {
 
     const courses = [
 
-        { title: "15 days test", price: "$15" },
+        { title: "15 days test", price: "$15" , soon: "soon"},
         { title: "Access all our courses", price: "$35" },
-        { title: "All courses + certificate", price: "$40" },
+        { title: "All courses + certificate", price: "$40" , soon: "soon"},
 
     ];
 
