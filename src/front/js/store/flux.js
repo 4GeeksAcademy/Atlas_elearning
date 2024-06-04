@@ -89,8 +89,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           localStorage.setItem("currentRole", userRole);
           setStore({ ...store, currentRole: userRole });
           setStore({ ...store, msg: dataLoginIn.message });
-      
-        console.log(userToLogin,dataLoginIn)
 
           await getActions().getUser();
 
@@ -511,9 +509,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify({
               titleCourse: titleCourse,
-              courseId: courseId,
-              price: price,
-              userId: store.userId
+              price: price
             }),
           });
 
@@ -1044,7 +1040,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataAddPayment = await respAddPayment.json();
           localStorage.setItem("token-accessCourse", dataAddPayment.token)
-          setStore({ ...store, msg2: dataAddPayment.message,
+          setStore({ ...store, msg: dataAddPayment.message,
             tokenToPay: dataAddPayment.token }
           
           )

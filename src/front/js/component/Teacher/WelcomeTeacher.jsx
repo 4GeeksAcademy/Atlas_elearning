@@ -9,10 +9,10 @@ export const WelcomeTeacher = () => {
     const { store, actions } = useContext(Context);
     const [active, setActive] = useState(false);
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         actions.getCourse()
         actions.getUser()
-    },[])
+    },[]) */
 
     const toggleActive = () => {
         setActive(!active);

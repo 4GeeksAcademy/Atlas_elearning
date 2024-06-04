@@ -71,7 +71,6 @@ export const UserDashboard = () => {
     }
 
     const tokenPayString = localStorage.getItem("token-accessCourse")
-    console.log(tokenPayString)
 
     return (
         <div className="row">
@@ -85,7 +84,6 @@ export const UserDashboard = () => {
             >
                 MENU
             </button>
-
 
 
             <div className="offcanvas offcanvas-start"
@@ -133,7 +131,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                         >
 
                             <div className='d-flex justify-content-between align-items-center'>
@@ -148,7 +146,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                             onClick={handleViewCourse}>
 
                             <div className='d-flex justify-content-between align-items-center'>
@@ -163,7 +161,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                             onClick={handleMyPayment}>
 
                             <div className='d-flex justify-content-between align-items-center'>
@@ -178,7 +176,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                             onClick={handleMyCourses}>
 
                             <div className='d-flex justify-content-between align-items-center'>
@@ -193,7 +191,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                         >
 
                             <div className='d-flex justify-content-between align-items-center'>
@@ -222,7 +220,7 @@ export const UserDashboard = () => {
 
                         <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                             onClick={handleCertificate}
                         >
                             <div className='d-flex justify-content-between align-items-center'>
@@ -237,7 +235,7 @@ export const UserDashboard = () => {
 
                         {/* <button
                             className="btn btn-outline-dark my-2 w-75"
-                            disabled={tokenPayString === ""}
+                            disabled={tokenPayString === null}
                         >
 
                             <div className='d-flex justify-content-between align-items-center'>

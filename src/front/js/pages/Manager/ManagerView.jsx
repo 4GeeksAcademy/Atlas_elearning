@@ -7,10 +7,10 @@ import { ManagerDashboard } from '../../component/Manager/ManagerDashboard.jsx'
 export const ManagerView = () => {
   const { store, actions } = useContext(Context)
     
-    useEffect(()=>{
+    /* useEffect(()=>{
         actions.getUser()
     },[])
-
+ */
   return (
     <div>
       <ManagerNavbar />
