@@ -37,7 +37,7 @@ export const Teachers = () => {
             ) : (
                 <div className='border border-primary rounded mx-5 my-2 py-3 px-3 text-center'>
                     {store.user.access_to_teacher.length === 0 ? (
-                        "No hay Teachers Registrados"
+                        "There are no active teachers yet"
                     ) : (
                         <table className="table mx-auto">
                             <thead>

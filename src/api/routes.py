@@ -1302,7 +1302,7 @@ def get_all_payments_courses():
 def put_payment(pay_id):
     try:
 
-        value = request.get('value'),
+        value = request.json.get('value'),
         type_payment = request.json.get('typePayment')
         
         user_id = request.json.get('userId')
