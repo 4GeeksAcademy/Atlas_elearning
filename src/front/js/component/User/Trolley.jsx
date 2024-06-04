@@ -51,7 +51,7 @@ export const Trolley = () => {
                     <h1><strong>$</strong>{price}</h1>
                 </div>
                 <div className="col-9">
-                    {store.courseFavorite.length === 0 ? "No hay Cursos Cargados" :
+                    {store.courseFavorite.length === 0 ? "" :
                         store.courseFavorite.map((item, index) => (
                             <div key={index}>
                                 <table className="table mx-auto">

@@ -3,9 +3,9 @@ import '../../styles/components.css';
 
 export const Suscribe = () => {
     const courses = [
-        { title: "Por 15 dias", price: "$15" },
-        { title: "Susbribete a todo los Course", price: "$35" },
-        { title: "Con certificado", price: "$40" },
+        { title: "15 days test", price: "$15" },
+        { title: "Access all our courses", price: "$35" },
+        { title: "All courses + certificate", price: "$40" },
     ];
 
     const [titleCourse] = useState("indefinido")
@@ -42,7 +42,7 @@ export const Suscribe = () => {
                             </div>
 
                             <div className={`py-2 px-2 border fs-5 rounded-pill d-inline-flex justify-content-center align-items-center btnFav ${(index === 0 && index === 2) ? disabled : ''}`} onClick={()=>handleAddTrolley(parseInt(price))}>
-                                <strong>subscribe</strong>
+                                <strong>Subscribe</strong>
                             </div>
                         </div>
                     </div>

@@ -62,7 +62,7 @@ export const Category = () => {
                                             <h3 className="card-title fw-bolder fs-5 text-white">{item.subCategory}</h3>
                                         </div>
                                         <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav" style={{ backgroundColor: "rgba(255, 255, 255, 0.5)" }}>
-                                            <strong>subscribe</strong>
+                                            <strong>Subscribe</strong>
                                         </div>
                                     </div>
                                     <p className="border rounded-pill py-1 px-1 me-3 d-inline-flex letter text-truncate" style={{ maxWidth: '70%', backgroundColor: "rgba(255, 255, 255, 0.5)" }}>{item.titleCategory}</p>
