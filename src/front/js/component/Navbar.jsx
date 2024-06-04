@@ -190,7 +190,6 @@ export const Navbar = () => {
             ) : (
                 <nav className="navbar navbar-light bg-white position-relative">
                     <div className="container-fluid">
-                        
                         <div className='d-flex'>
                             <div className="col-3">
                                 <img src="https://res.cloudinary.com/dfoegvmld/image/upload/v1717377021/i6uvyydr1sapaurgp3r5.png"
