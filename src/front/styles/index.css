@@ -10,3 +10,86 @@
         max-width: 30px; /* Smaller size for mobile */
     }
 }
+
+/* Footer.jsx Styles*/
+
+/* Hover effect h5 tags*/
+.title:hover {
+    color: #ff6600;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Hover efect social media icons */
+.social-icon a svg {
+    transition: transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+}
+
+.social-icon a svg:hover {
+    transform: scale(1.2);
+    fill: #ff6600;
+}
+
+/* Transitions */
+.category-item {
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.category-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* shadow hover*/
+.category-item:hover .col {
+    color: #165D95;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Animation */
+.animated {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Logo effects */
+.logo {
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+    transform: translateZ(5px) translateY(5px);
+}
+
+/* Button .back-to-top styles */
+.back-to-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #18BEBE;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.back-to-top:hover {
+    background-color: #165D95;
+    transform: scale(1.2);
+}

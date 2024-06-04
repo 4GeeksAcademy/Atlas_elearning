@@ -9,9 +9,11 @@ export const Suscribe = () => {
     const navigate = useNavigate();
 
     const courses = [
-        { title: "For 15 days", price: "$15", soon: "soon" },
-        { title: "Subscribe to all Courses", price: "$35" },
-        { title: "Subscription more certificates", price: "$40", soon: "soon" },
+
+        { title: "15 days test", price: "$15" },
+        { title: "Access all our courses", price: "$35" },
+        { title: "All courses + certificate", price: "$40" },
+
     ];
 
     function test() {
@@ -57,17 +59,9 @@ export const Suscribe = () => {
                                 <p className="fs-1 py-1 px-1 me-3 d-inline-flex text-white">{course.price}</p>
                             </div>
 
-                            <div
-                                className={`py-2 px-4 border fs-5 rounded-pill d-inline-flex justify-content-center align-items-center btnFav ${course.soon === "soon" ? "disabled" : ""}`}
-                                onClick={() => {
-                                    if (course.soon !== "soon") {
-                                        handleCheckout(course.title, index, course.price);
-                                    }
-                                }}
-                            >
-                                <strong style={{ cursor: course.soon === "soon" ? "not-allowed" : "pointer" }}>
-                                    {course.soon === "soon" ? "Soon" : "Subscribe"}
-                                </strong>
+                            <div className={`py-2 px-2 border fs-5 rounded-pill d-inline-flex justify-content-center align-items-center btnFav ${(index === 0 && index === 2) ? disabled : ''}`} onClick={()=>handleAddTrolley(parseInt(price))}>
+                                <strong>Subscribe</strong>
+
                             </div>
                         </div>
                     </div>

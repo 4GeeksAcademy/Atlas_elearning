@@ -44,7 +44,7 @@ export const CoursesContainer = () => {
                 </button>
                 <div className="d-flex justify-content-center align-items-center overflow-hidden p-4 scroll-container" ref={containerRef} style={{ whiteSpace: 'nowrap' }}>
                     {store.course && store.course.access_to_courses && store.course.access_to_courses.length === 0 ? (
-                        "No hay Cursos Cargados"
+                        "No Uploaded Courses"
                     ) : (
                         store.course && store.course.access_to_courses && store.course.access_to_courses.map((item, index) => {
                             return (
@@ -66,7 +66,7 @@ export const CoursesContainer = () => {
                                                 <h3 className="card-title fw-bolder fs-5 text-white">{item.title}</h3>
                                             </div>
                                             <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav">
-                                                <strong>subscribe</strong>
+                                                <strong>Suscribe</strong>
                                             </div>
                                         </div>
                                         <div className="mt-3">
