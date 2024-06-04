@@ -79,9 +79,24 @@
 }
 
 .btnFav:hover {
-  border: 0.3px solid #F6CA1F;
+  border: none;
   background-color: #F6CA1F;
   color: #165D95;
+}
+
+.btnFav2 {
+  background-color: rgb(255, 255, 255, 0);
+  border: 0.3px solid #F6CA1F;
+  border-radius: 20px;
+  color: #F6CA1F;
+  font-size: 20px;
+  transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.btnFav2:hover {
+  border: none;
+  background-color: white;
+  color: #F6CA1F;
 }
 
 .letter{
@@ -168,6 +183,10 @@ nav {
 .disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.item-edit{
+  font-size: 150px
 }
 
 /* .course-text {

@@ -11,12 +11,14 @@ export const Course = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Store updated:", store);
-    const foundCourse = store.course.access_to_courses.find(course => course.id === parseInt(id));
-
-    console.log("Found course:", foundCourse);
-    setCourse(foundCourse);
+    if (store.course && store.course.access_to_courses) {
+      const foundCourse = store.course.access_to_courses.find(course => course.id === parseInt(id));
+      setCourse(foundCourse);
+    } else {
+      console.log("");
+    }
   }, [store, id, actions]);
+  
 
 
   return (

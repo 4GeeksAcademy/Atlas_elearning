@@ -1,21 +1,20 @@
-
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
-
 import { FaHeart } from 'react-icons/fa';
 
+import { Message } from './Message.jsx';
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
-    const [hovered, setHovered] = useState()
+    const [hovered, setHovered] = useState(false);
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false)
-
+    const [loading, setLoading] = useState(false);
+    const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
+    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
 
 
     useEffect(() => {
-        // Cambiar el estado del spinner
         setLoading(store.spinner);
     }, [store.spinner]);
 
@@ -41,23 +40,27 @@ export const Navbar = () => {
     }
 
     const handleMouseEnter = () => {
-        setHovered(true)
-        console.log(hovered => hovered + 1)
+        setHovered(true);
+        console.log(hovered => hovered + 1);
     }
+
     const handleMouseLeave = () => {
-        setHovered(false)
+        setHovered(false);
     }
 
     const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
-    const accessToAddCourse = Array.isArray(store.courseFavorite) ? store.courseFavorite : [];
+
+    const accessToAddCourse = store?.courseFavorite || [];
 
     return (
         <div className="position-relative">
-            {loading && ( // Renderizar el spinner si está en estado de carga
+            {/* Mostrar mensaje de éxito o error */}
+            {msgError && <Message type="danger" text={msgError} />}
+            {msg && <Message type="success" text={msg} />}
+
+            {loading && (
                 <div className="spinner-overlay d-flex justify-content-center align-items-center">
-                    <div className="spinner-overlay d-flex justify-content-center align-items-center">
-                        <img className="spinner-image" src="http://res.cloudinary.com/dfoegvmld/image/upload/v1717432190/k08lvmnyqvccpqiyr001.png" alt="spinner" style={{ width: '100px' }} />
-                    </div>
+                    <img className="spinner-image" src="http://res.cloudinary.com/dfoegvmld/image/upload/v1717432190/k08lvmnyqvccpqiyr001.png" alt="spinner" style={{ width: '100px' }} />
                 </div>
             )}
             {localStorage.getItem('jwt-token') ? (
@@ -77,7 +80,7 @@ export const Navbar = () => {
                                 <div className="collapse position-absolute top-0 start-0" style={{ marginLeft: '10%', zIndex: 1050 }} id="coursesCategories">
                                     <div className="card card-body">
                                         {store.category && store.category.length > 0 ? (
-                                            store.category.map((item, index) => {
+                                            store?.category?.map((item, index) => {
                                                 return (
                                                     <a type="text" className="d-block mb-2" onClick={() => navigate(`/category/${item.titleCategory}`)} key={index}>{item.titleCategory}</a>
                                                 )
@@ -105,33 +108,20 @@ export const Navbar = () => {
                                 )}
                             </div>
                             <Link to={`/${store.currentRole}View`}>
-                                <button
-                                    type="button"
-                                    className="btnFav text-center mx-2 px-3 py-2"
-                                >
+                                <button type="button" className="btnFav text-center mx-2 px-3 py-2">
                                     Panel
                                 </button>
                             </Link>
                             
                             <div className="dropdown">
-
-                                  {FaHeart} 
-
-                                <button
-                                    type="button"
-                                    className="btn btnFav dropdown-toggle text-center mx-2 px-3 py-2"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    data-bs-auto-close="true"
-                                >
+                                <button type="button" className="btn btnFav dropdown-toggle text-center mx-2 px-3 py-2" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
                                     Favorites{' '}
                                     <span className={`badge rounded-pill text-bg-${accessToAddCourse.length === 0 ? 'secondary' : 'light'}`}>
                                         <FaHeart style={{ color: '#fa0505' }} /> {accessToAddCourse.length}
                                     </span>
                                 </button>
 
-
-                                <div className="dropdown-menu" >
+                                <div className="dropdown-menu">
                                     {accessToAddCourse.length === 0 ? (
                                         <p className='dropdown-item'>Not course in Trolley</p>
                                     ) : (
@@ -139,13 +129,9 @@ export const Navbar = () => {
                                             {accessToAddCourse.map((trolley, index) => (
                                                 <div key={index} className="dropdown-item d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <span>{trolley.titleCourse}</span>
-                                                        {/* <span>{trolley.price}</span> */}
-                                                        {/* <span>{trolley.date}</span> */}
-                                                    </div >
-                                                    <button className="btn-close ms-3 " onClick={() => actions.deleteTrolley(trolley.id)}>
-
-                                                    </button>
+                                                        <span >{trolley.titleCourse}</span>
+                                                    </div>
+                                                    <button className="btn-close ms-3" onClick={() => actions.deleteTrolley(trolley.id)}></button>
                                                 </div>
                                             ))}
                                             <div className="text-center">
@@ -156,11 +142,7 @@ export const Navbar = () => {
                                 </div>
                             </div>
 
-                            <button
-                                type="button"
-                                className="btnFav text-center mx-2 px-3 py-2"
-                                onClick={handleHomeView}
-                            >
+                            <button type="button" className="btnFav text-center mx-2 px-3 py-2" onClick={handleHomeView}>
                                 Sign Out
                             </button>
                             <div className='border border-warning rounded-pill px-2 py-1 fs-6'>
@@ -186,7 +168,7 @@ export const Navbar = () => {
                                 <div className="collapse position-absolute top-0 start-0" style={{ marginLeft: '10%', zIndex: 1050 }} id="coursesCategories">
                                     <div className="card card-body">
                                         {store.category && store.category.length > 0 ? (
-                                            store.category.map((item, index) => {
+                                            store?.category?.map((item, index) => {
                                                 return (
                                                     <a type="text" className="d-block mb-2" onClick={() => navigate(`/category/${item.titleCategory}`)} key={index}>{item.titleCategory}</a>
                                                 )
@@ -199,31 +181,15 @@ export const Navbar = () => {
                             </div>
                         </div>
 
-                        <div className="col-3 d-flex justify-content-end">
-                            <Link to='/FormUser'>
-                                <button
-                                    type="button"
-                                    className="btnFav text-center mx-2 px-3 py-2"
-                                >
-                                    Sign Up
-                                </button>
-                            </Link>
-                            <Link to='/logIn'>
-                                <button
-                                    type="button"
-                                    className="btnFav text-center mx-2 px-3 py-2"
-                                >
-                                    Log In
-                                </button>
-                            </Link>
-                            <Link to="/trolley">
-                                <button
-                                    type="button"
-                                    className="btnFav text-center mx-2 px-3 py-2"
-                                >
-                                    <i className="fa-solid fa-cart-shopping fa-fade" style={{ color: "#165D95" }}></i>
-                                </button>
-                            </Link>
+                        <div className="collapse navbar-collapse" id="navbarContent">
+                            <div className="d-flex justify-content-end">
+                                <Link to="/SignIn">
+                                    <button className="btnFav text-center mx-2 px-3 py-2">Sign In</button>
+                                </Link>
+                                <Link to="/SignUp">
+                                    <button className="btnFav text-center mx-2 px-3 py-2">Sign Up</button>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </nav>
