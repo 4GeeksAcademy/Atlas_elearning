@@ -9,11 +9,11 @@ export const WelcomeUser = () => {
     const { store, actions } = useContext(Context);
     const [active, setActive] = useState(false);
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         actions.getCourse()
         actions.getPayments()
     },[])
-
+ */
     const toggleActive = () => {
         setActive(!active);
     }; 

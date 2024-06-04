@@ -4,18 +4,24 @@ import { Context } from '../store/appContext';
 
 export const Message = ({ type, text }) => {
     const [show, setShow] = useState(true);
+    const { store, actions } = useContext(Context)
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setShow(false);
+            setShow(false)
+            actions.updateMsgError('')
+            actions.updateMsg('')
         }, 7000); // Ocultar el mensaje después de 7 segundos
 
         return () => clearTimeout(timer); // Limpiar el temporizador al desmontar el componente
-    }, []);
+    }, [actions]);
+
+    console.log(text, store.msg, store.error)
 
     const handleClose = () => {
         setShow(false);
     };
+
 
     return (
         <div className='mt-5' style={{

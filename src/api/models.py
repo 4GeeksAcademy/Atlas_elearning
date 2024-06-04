@@ -229,13 +229,13 @@ class Trolley(db.Model):
     price = db.Column(db.Integer, nullable=False)
     date = db.Column(db.String(9999999), unique=False, nullable=False)
 
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
+    """ course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     
 
     #Relations
     course = db.relationship('Course', backref=db.backref('Trolley', lazy=True))
-    user = db.relationship('User', backref=db.backref('Trolley', lazy=True))
+    user = db.relationship('User', backref=db.backref('Trolley', lazy=True)) """
     
 
     def __repr__(self):
@@ -246,9 +246,8 @@ class Trolley(db.Model):
             "id": self.id,
             "titleCourse": self.title_course,
             "price": self.price,
-            "date": self.date,
-            "course_id": self.course_id,
-            "user_id": self.user_id,
+            "date": self.date
+            
         }
 
 class Payment(db.Model):

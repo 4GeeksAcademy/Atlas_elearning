@@ -211,8 +211,12 @@ def get_token_login_user():
         else:
             return jsonify({"Error":"Invalid Password"}), 400
         
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        # Manejar errores de la base de datos de manera específica
+        return jsonify({"Error": "Database error", "message": str(e)}), 500
     except Exception as e:
-        return jsonify({"Error": "User not exists in Data Base", "message": str(e)}), 500
+        # Manejar otros errores internos del servidor
+        return jsonify({"Error": "Internal Server Error", "message": str(e)}), 500
 
 @api.route('/login/teacher', methods=['POST'])
 def get_token_login_teacher():
@@ -277,8 +281,12 @@ def get_token_login_manager():
         else:
             return jsonify({"Error":"Invalid Password"}), 400
         
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        # Manejar errores de la base de datos de manera específica
+        return jsonify({"Error": "Database error", "message": str(e)}), 500
     except Exception as e:
-        return jsonify({"Error": "Manager not exists in Data Base" , "Msg": str(e)}), 500
+        # Manejar otros errores internos del servidor
+        return jsonify({"Error": "Internal Server Error", "message": str(e)}), 500
 
 
 
@@ -984,12 +992,10 @@ def add_course_to_trolley():
         # Extract data from the request
         title_course = data.get('titleCourse')
         price = data.get('price')
-        course_id = data.get('courseId')
-        user_id = data.get('userId')
 
         # Check for missing required fields
-        if not title_course or not price or not course_id :
-            return jsonify({"Error": "titleCourse, price, courseId, and userId are required"}), 400
+        if not title_course or not price  :
+            return jsonify({"Error": "titleCourse, price, and userId are required"}), 400
         
         # Validate the course ID
         #course = Course.query.filter_by(id=course_id).first()
@@ -1006,9 +1012,7 @@ def add_course_to_trolley():
         new_trolley = Trolley(
             title_course=title_course,
             price=price,
-            date=current_date_time,
-            course_id=course_id,
-            user_id=user_id
+            date=current_date_time
         )
         db.session.add(new_trolley)
         db.session.commit()
