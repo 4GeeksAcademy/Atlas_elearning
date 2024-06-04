@@ -90,27 +90,11 @@ export const PostCourse = () => {
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error);
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
-    const accessToAddCourse = Array.isArray(store.courseFavorite) ? store.courseFavorite : [];
+    const accessToCategory = Array.isArray(store.category) ? store.category : [];
 
     return (
         <div>
             <div className='position-relative'>
-                {/* Msg */}
-                <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                    {(msgError === '' && msg === '') ? (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                            {"Internet or server connection failure"}
-                        </div>
-                    ) : (msgError === '') ? (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                            {msg}
-                        </div>
-                    ) : (
-                        <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
-                            {msgError}
-                        </div>
-                    )}
-                </div>
             </div>
 
             <div className='container-fluid d-flex justify-content-center align-items-start'>
@@ -173,8 +157,8 @@ export const PostCourse = () => {
                             <select className="form-select" name='categoryTitle' onChange={handleChange} value={courseData.categoryTitle} required>
                                 <option value="">--Choose--</option>
                                 {
-                                    accessToAddCourse?.map((item, index) => (
-                                        <option key={index} value={item.titleCategory}>{item.titleCategory}/{item.subCategory}</option>
+                                    accessToCategory?.map((item, index) => (
+                                        <option key={index} value={item.categoryTitle}>{item.titleCategory}</option>
                                     ))
                                 }
                             </select>
