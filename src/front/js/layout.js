@@ -19,11 +19,14 @@ import { SignOut } from "./pages/SignOut.jsx";
 import ProtectedRoute from "./component/ProtectedRoute.jsx";
 import { ResetPassword } from "./component/ResetPassword.jsx";
 import { ResetPasswordNewChange } from "./component/ResetPasswordNewChange.jsx";
-import Course from "./pages/Courses/Course.jsx";
+import { Course } from "./pages/Courses/Course.jsx";
 import { PaypalPayment } from "./component/PaypalPayment.jsx";
 import { UpdateUser } from "./component/Manager/UpdateUser.jsx";
 import { UpdateCourse } from "./component/Manager/UpdateCourse.jsx";
 import { Trolley } from "./component/User/Trolley.jsx";
+import { UpdateQuizzes } from "./component/Manager/UpdateQuizzes.jsx";
+import { UpdatePayment } from "./component/Manager/UpdatePaymet.jsx";
+import { CourseCategorySelected } from "./pages/CourseCategorySelected.jsx";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -44,53 +47,74 @@ const Layout = () => {
                         <Route element={<PaypalPayment />} path="/Paypal" />
 
                         {/* Protected Routes */}
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <TeacherView />
                                 </ProtectedRoute>
-                            } 
-                            path="/teacherView" 
+                            }
+                            path="/teacherView"
                         />
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <UserView />
                                 </ProtectedRoute>
-                            } 
-                            path="/userView" 
+                            }
+                            path="/userView"
                         />
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <ManagerView />
                                 </ProtectedRoute>
-                            } 
-                            path="/managerView" 
+                            }
+                            path="/managerView"
                         />
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <UpdateUser />
                                 </ProtectedRoute>
-                            } 
-                            path="/UpdateUser/:userId" 
+                            }
+                            path="/userUpdate/:userId"
                         />
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <UpdateCourse />
                                 </ProtectedRoute>
-                            } 
-                            path="/UpdateCourse/:courseId" 
+                            }
+                            path="/UpdateCourse/:courseId"
                         />
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
-                                    <Course />
+                                    <UpdatePayment />
                                 </ProtectedRoute>
-                            } 
-                            path="/course/:id" 
+                            }
+                            path="/paymentUpdate/:payId"
+                        />
+
+                        <Route
+                            element={
+                                <ProtectedRoute>
+                                    <UpdateQuizzes />
+                                </ProtectedRoute>
+                            }
+                            path="/UpdateQuizzes/:quizId"
+                        />
+                        <Route
+                            element={                                
+                                    <Course />                               
+                            }
+                            path="/course/:id"
+                        />
+                        <Route
+                            element={
+                                <CourseCategorySelected />
+                            }
+                            path="/category/:titleCategory"
                         />
                         {/* Ruta para el componente Trolley */}
                         <Route element={<Trolley />} path="/trolley" />

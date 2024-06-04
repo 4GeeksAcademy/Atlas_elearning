@@ -6,6 +6,7 @@ import { GrFormPreviousLink } from "react-icons/gr";
 import { GoHome } from "react-icons/go";
 import { GoArrowLeft } from "react-icons/go"
 
+
 export const UpdateCourse = () => {
     const { actions, store } = useContext(Context);
     const [selectedRole, setSelectedRole] = useState('')
@@ -75,13 +76,27 @@ export const UpdateCourse = () => {
 
     };
 
+    const resetForm = () => {
+        setCourseData({
+            title: '',
+            categoryTitle: '',
+            modulesLength: '',
+            titleCertificateToGet: '',
+            price: '',
+            description: '',
+            assessment: '',
+            titleTeacher: '',
+            dateExpiration: ''
+        });
+    };
+
     const handlerSubmit = async (e) => {
         e.preventDefault();
         if (courseData.name !== '' && courseData.email !== '' && courseData.phone !== '' && courseData.lastName !== '' && courseData.username !== '' && courseData.numberDocument !== '' && courseData.age !== '' && courseData.gender !== '') {
             await actions.updateCourse(courseData, courseId);
-
+            resetForm();
         } else {
-            alert('No debe dejar ningun campo vacío');
+            alert('You must not leave any field empty.');
         }
     }
 
@@ -102,11 +117,11 @@ export const UpdateCourse = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter(prevCounter => {
-                if (msgError === '' && msg === '') {
+                if (msgError === '' && msg2 === '') {
                     return
 
-                } else if (store.error === ''  && counter === 7) {
-                    
+                } else if (store.error === '' && counter === 7) {
+
                     clearInterval(interval)
                 }
 
@@ -115,23 +130,23 @@ export const UpdateCourse = () => {
         }, 500);
 
         return () => clearInterval(interval);
-    }, [setRedirectPath, store.error, counter]);
+    }, [setRedirectPath, store.error, counter, msg2, msgError]);
 
 
     const msgError = typeof store.error === 'string' ? store.error : JSON.stringify(store.error)
-    const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg)
+    const msg2 = typeof store.msg2 === 'string' ? store.msg2 : JSON.stringify(store.msg2)
 
     return (
         <div className="container mt-4 w-50">
             {/* Msg */}
             <div className='d-flex justify-content-center position-fixed position-absolute top-0 start-50 translate-middle-x'>
-                {(msgError === '' && msg === '') ? (
+                {(msgError === '' && msg2 === '') ? (
                     <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
                         {"Internet or server connection failure"}
                     </div>
                 ) : (msgError === '') ? (
                     <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-success" : "d-none"}`}>
-                        {msg}
+                        {msg2}
                     </div>
                 ) : (
                     <div className={`text-center mt-3 fs-4 fw-bold w-100 ${(counter >= 1 && counter <= 5) ? "alert alert-danger" : "d-none"}`}>
@@ -215,7 +230,7 @@ export const UpdateCourse = () => {
                             Please enter your information.
                         </div>
                     </div>
-                    
+
                     {/* Price */}
                     <div className='d-block col-lg-4'>
                         <label className="form-label">Price</label>
@@ -290,13 +305,13 @@ export const UpdateCourse = () => {
                         </div>
                     </div>
 
-                   
+
 
                 </form>
                 <button
                     type="submit"
                     className="btn btn-primary"
-                    onClick={handlerSubmit}>
+                    onClick={handlerSubmit} >
                     {
                         (store.spinner)
                             ? <div className="spinner-border" role="status">

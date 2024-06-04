@@ -1,10 +1,13 @@
+
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
       message: "",
       user: "",
       error: "",
+      error2: "",
       msg: "",
+      msg2: "",
       course: "",
       currentRole: "",
       spinner: false,
@@ -13,9 +16,18 @@ const getState = ({ getStore, getActions, setStore }) => {
       mediaType: "",
       courseFavorite: "",
       category: "",
-      modules: ""
+      modules: "",
+      quizzes: "",
+      payment: "",
+      medios: [],
+      order: "",
+      access: "",
+      tokenToPay: ""
+      
     },
+
     actions: {
+      // Login System
       createUser: async (newUser, userRole) => {
         const store = getStore();
         getActions().updateMsgError("");
@@ -35,9 +47,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           if (!respCreateUser.ok) {
             const errorData = await respCreateUser.json();
-            console.log(errorData);
             setStore({ ...store, error: errorData.Error });
-            throw new Error(errorData.Error || "Error al crear el usuario");
+            throw new Error(errorData.Error || "Error creating user");
           }
           const dataCreateUser = await respCreateUser.json();
           setStore({ ...store, msg: dataCreateUser.message });
@@ -69,21 +80,27 @@ const getState = ({ getStore, getActions, setStore }) => {
           if (!respLoginIn.ok) {
             const errorData = await respLoginIn.json();
             setStore({ ...store, error: errorData.Error });
-            throw new Error(errorData.Error || "Error al iniciar sesión");
+            throw new Error(errorData.Error || "Failed to login");
           }
 
           const dataLoginIn = await respLoginIn.json();
-          localStorage.setItem("jwt-token", dataLoginIn.access_token);
+          localStorage.setItem("jwt-token", dataLoginIn.access_token)
+          
           localStorage.setItem("currentRole", userRole);
           setStore({ ...store, currentRole: userRole });
           setStore({ ...store, msg: dataLoginIn.message });
+      
+        console.log(userToLogin,dataLoginIn)
+
           await getActions().getUser();
+
         } catch (err) {
           console.error(err);
         } finally {
           getActions().spinner(false);
         }
       },
+      
 
       getUser: async (userRol) => {
         const store = getStore();
@@ -112,11 +129,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             const errorData = await respGetUsers.json();
             setStore({ ...store, error: errorData.Error });
             throw new Error(
-              errorData.Error || "Error al obtener los datos del usuario"
+              errorData.Error || "Error getting user data"
             );
           }
 
           const dataGetUser = await respGetUsers.json();
+          localStorage.setItem("userData", JSON.stringify(dataGetUser))
           setStore({ ...store, user: dataGetUser });
           setStore({ ...store, msg: dataGetUser.message });
         } catch (err) {
@@ -127,31 +145,128 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       checkUserSession: async () => {
         const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
         try {
           const token = localStorage.getItem("jwt-token");
           const userRole = localStorage.getItem("currentRole");
-          const userToLogin = JSON.parse(localStorage.getItem("userToLogin"));
-          if (token && userRole && userToLogin) {
+          const userToLoginStr = localStorage.getItem("userToLogin");
+
+          await getActions().getCourse();
+          await getActions().getTrolleyToOrder();
+          await getActions().getCategory();
+          
+      
+          if (token && userRole && userToLoginStr) {
+            const userToLogin = JSON.parse(userToLoginStr);
+            if (!userToLogin) {
+              throw new Error("Failed to parse userToLogin from localStorage");
+            }
+      
             setStore({ currentRole: userRole });
+            
+           
             await getActions().getUser(userRole);
-            await getActions().getCourse()
-            await getActions().getTrolleyToOrder()
-            await getActions().getCategory()
-            await getActions().getModules()
+            await getActions().getModules();
+            await getActions().getQuizzes();
+            await getActions().getPayments();
+            await getActions().getOrders();
           }
         } catch (err) {
           setStore({ ...store, error: "Error checking user session" });
           console.error("Error checking user session: ", err);
         }
       },
+      
 
+      updateUser: async (dataUpdate, type, userId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
+
+          const url = process.env.BACKEND_URL + "/api/view/manager/" + type + "/" + userId;
+          const respUpdateUser = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(dataUpdate),
+          });
+
+          if (!respUpdateUser.ok) {
+            const errorData = await respUpdateUser.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error in update"
+            );
+          }
+
+          const dataUpdateUser = await respUpdateUser.json();
+          setStore({ ...store, msg: dataUpdateUser.message });
+
+          await getActions().getUser()
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      deleteUser: async (type, userId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
+
+          const url = process.env.BACKEND_URL + "/api/view/manager/" + type + "/" + userId;
+          const respDelUser = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            }
+          })
+
+
+          if (!respDelUser.ok) {
+            const errorData = await respDelUser.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error al Update"
+            );
+          }
+
+
+          const dataDelUser = await respDelUser.json();
+          setStore({ ...store, msg: dataDelUser.message });
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+    
+      // RESET PASSWORD
       resetPassword: async (email, userPassword) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
 
-        console.log(email, userPassword);
         try {
           console.log(
             process.env.BACKEND_URL + `/api/forgot-password/` + userPassword
@@ -192,9 +307,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().spinner(true);
 
         try {
-          console.log(
-            process.env.BACKEND_URL + `/api/forgot-password/` + tokenPassword
-          );
           const tokenPassword = localStorage.getItem("jwt-token-reset");
           if (!tokenPassword) throw new Error("No token found");
 
@@ -224,6 +336,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      // MESSAGE
       updateMsgError: async (changesMsg) => {
         const store = getStore();
         setStore({ ...store, error: changesMsg });
@@ -234,18 +347,19 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({ ...store, msg: changesMsg });
       },
 
+      // SPINNER
       spinner: (changesSpinner) => {
         const store = getStore();
         setStore({ ...store, spinner: changesSpinner });
       },
 
+      // COURSES SYSTEM
       createCourseNew: async (dataCourse) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
 
-        console.log(dataCourse)
         try {
           const url = process.env.BACKEND_URL + "/api/create/courses";
           const respCreateCourse = await fetch(url, {
@@ -260,7 +374,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.log(errorData);
             setStore({ ...store, error: errorData.error });
             throw new Error(
-              errorData.error || "Error al añadir el curso al carrito"
+              errorData.error || "Error when adding course to cart"
             );
           }
           const dataCreateCourse = await respCreateCourse.json();
@@ -285,7 +399,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             const errorData = await respGetCourse.json();
             console.log(errorData);
             setStore({ ...store, error: errorData.error });
-            throw new Error(errorData.error || "Error al Obtener el Curso");
+            throw new Error(errorData.error || "Error Obtaining Course");
           }
 
           const dataGetCourse = await respGetCourse.json();
@@ -293,8 +407,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             ...store,
             msg: dataGetCourse.message,
             course: dataGetCourse,
-          });
-          console.log(dataGetCourse);
+          })
         } catch (err) {
           console.log(err);
         } finally {
@@ -302,6 +415,87 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      updateCourse: async (dataUpdate, courseId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
+
+          const url = process.env.BACKEND_URL + "/api/view/courses/" + courseId;
+          const respUpdateCourse = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(dataUpdate),
+          })
+
+          if (!respUpdateCourse.ok) {
+            const errorData = await respUpdateCourse.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error in Update"
+            )
+          }
+
+          const dataUpdateCourse = await respUpdateCourse.json()
+          setStore({ ...store, msg: dataUpdateCourse.message })
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      deleteCourse: async (courseId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
+
+          const url = process.env.BACKEND_URL + "/api/view/courses/" + courseId;
+          const respDeleteModule = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            }
+          })
+
+
+          if (!respDelCourse.ok) {
+            const errorData = await respDelCourse.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error al Delete"
+            );
+          }
+
+
+          const dataDelCourse = await respDeleteModule.json();
+          setStore({ ...store, msg: dataDelCourse.message });
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      // TROLLEY
       addCourseToTrolley: async (titleCourse, courseId, price) => {
         const store = getStore();
         getActions().updateMsgError("");
@@ -331,7 +525,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             await getActions().getTrolleyToOrder()
 
             throw new Error(
-              errorData.error || "Error al añadir el curso al carrito"
+              errorData.error || "Error when adding course to cart"
             );
           }
 
@@ -356,10 +550,9 @@ const getState = ({ getStore, getActions, setStore }) => {
           const respGetOrder = await fetch(url);
 
           if (!respGetOrder.ok) {
-            const errorData = await respGetOrder.json();
-            console.log(errorData);
+            const errorData = await respGetOrder.json()
             setStore({ ...store, error: errorData.error });
-            throw new Error(errorData.error || "Error al Obtener el Curso");
+            throw new Error(errorData.error || "Error Obtaining Course");
           }
 
           const dataGetOrder = await respGetOrder.json();
@@ -368,7 +561,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             msg: dataGetOrder.message,
             courseFavorite: dataGetOrder,
           });
-          console.log(dataGetOrder);
+          
         } catch (err) {
           console.log(err);
         } finally {
@@ -393,11 +586,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
           if (!respDelTrolley.ok) {
-            const errorData = await respDelTrolley.json();
-            console.log(errorData);
+            const errorData = await respDelTrolley.json()
             setStore({ ...store, error: errorData.error });
             throw new Error(
-              errorData.error || "Error al añadir el curso al carrito"
+              errorData.error || "Error when adding course to cart"
             );
           }
 
@@ -414,6 +606,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      // QUIZZES
       newQuizz: async (dataQuizz) => {
         const store = getStore();
         getActions().updateMsgError("");
@@ -432,8 +625,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           );
 
           if (!respNewQuizz.ok) {
-            const errorData = await respNewQuizz.json();
-            console.log(errorData);
+            const errorData = await respNewQuizz.json()
             setStore({ ...store, error: errorData.Error });
             throw new Error(errorData.Error || "Error creating quizz");
           }
@@ -446,6 +638,143 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+      postQuizzes: async (formData) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        try {
+          const respAddQuizzes = await fetch(`${process.env.BACKEND_URL}/api/module/quizzes`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (!respAddQuizzes.ok) {
+            const errorData = await respAddQuizzes.json()
+            setStore({ ...store, error: errorData.error });
+
+            throw new Error(
+              errorData.error || "Error creating quizzes"
+            );
+          }
+          const dataAddQuizzes = await respAddQuizzes.json();
+          setStore({ ...store, msg: dataAddQuizzes.message });
+          
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      getQuizzes: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+          const url = process.env.BACKEND_URL + "/api/module/quizzes";
+          const respGetQuizzes = await fetch(url);
+
+          if (!respGetQuizzes.ok) {
+            const errorData = await respGetQuizzes.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(errorData.error || "Error when obtaining the quizzes");
+          }
+
+          const dataGetQuizzes = await respGetQuizzes.json();
+          setStore({
+            ...store,
+            msg: dataGetQuizzes.message,
+            quizzes: dataGetQuizzes,
+          });
+          
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      updateQuizzes: async (dataUpdate, quizId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+
+          const url = process.env.BACKEND_URL + "/api/module/quizzes/" + quizId;
+          const respUpdateQuiz = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataUpdate),
+          })
+
+          if (!respUpdateQuiz.ok) {
+            const errorData = await respUpdateQuiz.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Update error"
+            )
+          }
+
+          const dataUpdateQuiz = await respUpdateQuiz.json()
+          setStore({ ...store, msg2: dataUpdateQuiz.message })
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      deleteQuizzes: async (quizId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+
+          const url = process.env.BACKEND_URL + "/api/module/quizzes/" + quizId;
+          const respDelQuizzes = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+
+
+          if (!respDelQuizzes.ok) {
+            const errorData = await respDelQuizzes.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Delete error"
+            );
+          }
+
+
+          const dataDelQuizzes = await respDelQuizzes.json();
+          setStore({ ...store, msg: dataDelQuizzes.message });
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      // CERTIFICATE AND MEDIA
       uploadCertificate: async (file) => {
         try {
           const responseUploadData = await fetch(process.env.BACKEND_URL + `/api/upload`, {
@@ -455,19 +784,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           if (!responseUploadData.ok) {
             const errorUploadData = await responseUploadData();
-            console.log(errorUploadData)
             setStore({ ...store, error: errorUploadData.Error })
             throw new Error(errorUploadData.Error || "Error posting certificate")
-          } else {
+
+          } 
+          else 
+          {
             const uploadData = await response.json();
             alert('File uploaded successfully: ' + JSON.stringify(uploadData));
           }
           const dataNewCertificate = await respNewCertificate.json()
           setStore({ ...store, msg: dataNewCertificate.message })
+
         } catch (error) {
-          console.error('Error during file upload:', error);
-          setError('An error occurred while uploading the file');
-          alert('An error occurred while uploading the file');
+          setError('An error occurred while uploading the file')
+
         } finally {
           getActions().spinner(false);
         }
@@ -500,7 +831,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
 
           const uploadedMedia = await response.json();
-          setStore({ media: uploadedMedia.secure_url, loading: false });
+          setStore({ media: uploadedMedia.secure_url, loading: false, medios: [uploadedMedia] });
           console.log(uploadedMedia);
         } catch (error) {
           console.error('Error uploading media:', error);
@@ -508,178 +839,13 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      updateUser: async (dataUpdate, userRol, userId) => {
-        const store = getStore();
-        getActions().updateMsgError("");
-        getActions().updateMsg("");
-        getActions().spinner(true);
-        try {
-
-          const token = localStorage.getItem("jwt-token");
-          if (!token) throw new Error("No token found");
-
-          const url = process.env.BACKEND_URL + "/api/view/manager/" + userRol + "/" + userId;
-          const respUpdateUser = await fetch(url, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            },
-            body: JSON.stringify(dataUpdate),
-          })
-
-          if (!respUpdateUser.ok) {
-            const errorData = await respUpdateUser.json();
-            console.log(errorData);
-            setStore({ ...store, error: errorData.error });
-            throw new Error(
-              errorData.error || "Error al añadir el curso al carrito"
-            )
-          }
-
-          const dataUpdateUser = await respUpdateUser.json()
-          setStore({ ...store, msg: dataUpdateUser.message })
-
-          await getActions().getUser(userRole);
-
-        } catch (err) {
-          console.log(err);
-        } finally {
-          getActions().spinner(false);
-        }
-      },
-
-      deleteUser: async (userId) => {
-        const store = getStore();
-        getActions().updateMsgError("");
-        getActions().updateMsg("");
-        getActions().spinner(true);
-        try {
-          const token = localStorage.getItem("jwt-token");
-          if (!token) throw new Error("No token found");
-
-          const url = process.env.BACKEND_URL + "/api/view/manager/user/" + userId;
-          const respDelUser = await fetch(url, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            }
-          })
-
-
-          if (!respDelUser.ok) {
-            const errorData = await respDelUser.json();
-            console.log(errorData);
-            setStore({ ...store, error: errorData.error });
-            throw new Error(
-              errorData.error || "Error al añadir el curso al carrito"
-            );
-          }
-
-
-          const dataDelUser = await respDelUser.json();
-          setStore({ ...store, msg: dataDelUser.message });
-
-          await getActions().getUser();
-
-        } catch (err) {
-          console.log(err);
-        } finally {
-          getActions().spinner(false);
-        }
-      },
-
-      updateCourse: async (dataUpdate, courseId) => {
-        const store = getStore();
-        getActions().updateMsgError("");
-        getActions().updateMsg("");
-        getActions().spinner(true);
-        try {
-
-          const token = localStorage.getItem("jwt-token");
-          if (!token) throw new Error("No token found");
-
-          const url = process.env.BACKEND_URL + "/api/view/courses/" + courseId;
-          const respUpdateCourse = await fetch(url, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            },
-            body: JSON.stringify(dataUpdate),
-          })
-
-          if (!respUpdateCourse.ok) {
-            const errorData = await respUpdateCourse.json();
-            console.log(errorData);
-            setStore({ ...store, error: errorData.error });
-            throw new Error(
-              errorData.error || "Error al Update"
-            )
-          }
-
-          const dataUpdateCourse = await respUpdateCourse.json()
-          setStore({ ...store, msg: dataUpdateCourse.message })
-
-          await getActions().getUser();
-
-        } catch (err) {
-          console.log(err);
-        } finally {
-          getActions().spinner(false);
-        }
-      },
-
-      deleteCourse: async (courseId) => {
-        const store = getStore();
-        getActions().updateMsgError("");
-        getActions().updateMsg("");
-        getActions().spinner(true);
-        try {
-          const token = localStorage.getItem("jwt-token");
-          if (!token) throw new Error("No token found");
-
-          const url = process.env.BACKEND_URL + "/api/view/courses/" + courseId;
-          const respDelCourse = await fetch(url, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
-            }
-          })
-
-
-          if (!respDelCourse.ok) {
-            const errorData = await respDelCourse.json();
-            console.log(errorData);
-            setStore({ ...store, error: errorData.error });
-            throw new Error(
-              errorData.error || "Error al Delete"
-            );
-          }
-
-
-          const dataDelCourse = await respDelCourse.json();
-          setStore({ ...store, msg: dataDelCourse.message });
-
-          await getActions().getUser();
-
-        } catch (err) {
-          console.log(err);
-        } finally {
-          getActions().spinner(false);
-        }
-      },
-
+      // MODULES
       postModule: async (dataModule) => {
         const store = getStore();
         const actions = getActions();
         actions.updateMsgError("");
         actions.updateMsg("");
         actions.spinner(true);
-
-        console.log(dataModule);
 
         try {
           const url = process.env.BACKEND_URL + "/api/module/course";
@@ -692,8 +858,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           });
 
           if (!respAddModule.ok) {
-            const errorData = await respAddModule.json();
-            console.error(errorData);
+            const errorData = await respAddModule.json()
             setStore({ ...store, error: errorData.Error });
 
             throw new Error(errorData.Error || "Error creating module");
@@ -701,7 +866,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataAddModule = await respAddModule.json();
           setStore({ ...store, msg: dataAddModule.message });
-          console.log(dataAddModule);
+     
 
         } catch (err) {
           console.error("Error in postModule:", err);
@@ -717,7 +882,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().updateMsg("");
         getActions().spinner(true);
         try {
-          const url = process.env.BACKEND_URL + "/api/module/courses";
+          const url = process.env.BACKEND_URL + "/api/module/course";
           const respGetModules = await fetch(url);
 
           if (!respGetModules.ok) {
@@ -732,8 +897,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             ...store,
             msg: dataGetModules.message,
             modules: dataGetModules,
-          });
-          console.log(dataGetModules);
+          })
+
         } catch (err) {
           console.log(err);
         } finally {
@@ -741,12 +906,54 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
+       deleteModules: async (modulesId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        try {
+          const token = localStorage.getItem("jwt-token");
+          if (!token) throw new Error("No token found");
+
+          const url = process.env.BACKEND_URL + "/api/module/course/" + modulesId;
+          const respDeleteModule = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              
+            }
+          })
+
+
+          if (!respDeleteModule.ok) {
+            const errorData = await respDeleteModule.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Error in  Delete"
+            );
+          }
+
+
+          const dataDelModule = await respDeleteModule.json();
+          setStore({ ...store, msg: dataDelModule.message });
+
+          await getActions().getUser();
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      // CATEGORY
       createCategory: async (dataCategory) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
-        console.log(dataCategory)
+
         try {
           const url = process.env.BACKEND_URL + "/api/courses/categories";
           const respAddCategory = await fetch(url, {
@@ -758,20 +965,18 @@ const getState = ({ getStore, getActions, setStore }) => {
           });
 
           if (!respAddCategory.ok) {
-            const errorData = await respAddCategory.json();
-            console.log(errorData);
+            const errorData = await respAddCategory.json()
             setStore({ ...store, error: errorData.error });
 
             await getActions().getTrolleyToOrder()
 
             throw new Error(
-              errorData.error || "Error al añadir la Category"
+              errorData.error || "Error when adding the Category"
             );
           }
 
           const dataAddCategory = await respAddCategory.json();
           setStore({ ...store, msg: dataAddCategory.message });
-          console.log(dataAddCategory);
 
         } catch (err) {
           console.log(err);
@@ -790,10 +995,9 @@ const getState = ({ getStore, getActions, setStore }) => {
           const respGetCategory = await fetch(url);
 
           if (!respGetCategory.ok) {
-            const errorData = await respGetCategory.json();
-            console.log(errorData);
+            const errorData = await respGetCategory.json()
             setStore({ ...store, error: errorData.error });
-            throw new Error(errorData.error || "Error al Obtener la Category");
+            throw new Error(errorData.error || "Error when adding the Category");
           }
 
           const dataGetCategory = await respGetCategory.json();
@@ -802,7 +1006,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             msg: dataGetCategory.message,
             category: dataGetCategory.Category,
           });
-          console.log(dataGetCategory);
+
         } catch (err) {
           console.log(err);
         } finally {
@@ -810,36 +1014,339 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // postQuizzes: async (formData) => {
-      //   try {
-      //     const response = await fetch(`${process.env.BACKEND_URL}/api/module/quizzes`, {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify(formData)
-      //     });
+      // PAYMENT
+      createPayments: async (dataPayment) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+        
+        try {
+          const url = process.env.BACKEND_URL + "/api/payment/courses";
+          const respAddPayment = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataPayment),
+          });
 
-      //     if (!response.ok) {
-      //       const errorData = await response.json();
-      //       console.log("Error de servidor:", errorData);
-      //       throw new Error(errorData.error || "Error al crear la Evaluación");
-      //     }
+          if (!respAddPayment.ok) {
+            const errorData = await respAddPayment.json();
+            setStore({ ...store, error: errorData.error });
 
-      //     return await response.json();
-      //   } catch (error) {
-      //     console.error("Error en la solicitud:", error);
-      //     throw error;
-      //   }
-      // }
+            await getActions().getPayments()
+
+            throw new Error(
+              errorData.error || "Error in Payment"
+            );
+          }
+
+          const dataAddPayment = await respAddPayment.json();
+          localStorage.setItem("token-accessCourse", dataAddPayment.token)
+          setStore({ ...store, msg2: dataAddPayment.message,
+            tokenToPay: dataAddPayment.token }
+          
+          )
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      getPayments: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        try {
+          const url = process.env.BACKEND_URL + "/api/payment/courses";
+          const respGetPayment = await fetch(url);
+
+          if (!respGetPayment.ok) {
+            const errorData = await respGetPayment.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(errorData.error || "Error in payment");
+          }
+
+          const dataGetPayment = await respGetPayment.json();
+          ;
+          setStore({
+            ...store,
+            msg: dataGetPayment.message,
+            payment: dataGetPayment,
+          })
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      updatePayment: async (dataUpdate, payId) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        try {
+
+          const url = process.env.BACKEND_URL + "/api/payment/courses/" + payId;
+          const respUpdatePayment = await fetch(url, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataUpdate),
+          })
+
+          if (!respUpdatePayment.ok) {
+            const errorData = await respUpdatePayment.json();
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Update error"
+            )
+          }
+
+          const dataUpdatePayment = await respUpdatePayment.json()
+          setStore({ ...store, msg: dataUpdatePayment.message })
+
+          await getActions().getUser();
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      deletePayment: async (payId) => {
+        try {
+
+          const url = process.env.BACKEND_URL + "/api/payment/courses/" + payId;
+          const respDelPayment = await fetch(url, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
 
 
+          if (!respDelPayment.ok) {
+            const errorData = await respDelPayment.json();
+            setStore({ ...store, error: errorData.error });
+            throw new Error(
+              errorData.error || "Delete error"
+            );
+          }
 
 
+          const dataDelPayment = await respDelPayment.json();
+          setStore({ ...store, msg: dataDelPayment.message });
 
+          await getActions().getPayments();
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      //ORDERS
+      createOrders: async (dataOrders) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+
+        try {
+          const url = process.env.BACKEND_URL + "/api/order/courses";
+          const respAddOrder = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataOrders),
+          });
+
+          if (!respAddOrder.ok) {
+            const errorData = await respAddOrder.json();
+            setStore({ ...store, error: errorData.error });
+
+            await getActions().getOrders()
+
+            throw new Error(
+              errorData.error || "Error in Payment"
+            );
+          }
+
+          const dataAddOrder = await respAddOrder.json();
+          setStore({ ...store, msg: dataAddOrder.message });
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      getOrders: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        try {
+          const url = process.env.BACKEND_URL + "/api/order/courses";
+          const respGetOrder = await fetch(url);
+
+          if (!respGetOrder.ok) {
+            const errorData = await respGetOrder.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(errorData.error || "Error in Order");
+          }
+
+          const dataGetOrder = await respGetOrder.json();
+          setStore({
+            ...store,
+            msg: dataGetOrder.message,
+            order: dataGetOrder,
+          })
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      createOrders: async (dataOrders) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+
+        try {
+          const url = process.env.BACKEND_URL + "/api/order/courses";
+          const respAddOrder = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dataOrders),
+          });
+
+          if (!respAddOrder.ok) {
+            const errorData = await respAddOrder.json()
+            setStore({ ...store, error: errorData.error });
+
+            await getActions().getOrders()
+
+            throw new Error(
+              errorData.error || "Error in Payment"
+            );
+          }
+
+          const dataAddOrder = await respAddOrder.json();
+          setStore({ ...store, msg: dataAddOrder.message })
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+
+      getAccessCourse: async () => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        const token = localStorage.getItem("token-accessCourse")
+        if (!token) throw new Error("No token found");
+        
+        try {
+          const url = process.env.BACKEND_URL + "/api/view/course/accessAll";
+          const respGetAccess = await fetch(url, {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: "Bearer " + token,
+            }
+          });
+
+          if (!respGetAccess.ok) {
+            const errorData = await respGetAccess.json()
+            setStore({ ...store, error: errorData.error });
+            throw new Error(errorData.error || "Error in payment");
+          }
+
+          const dataGetAccess = await respGetAccess.json();
+          setStore({
+            ...store,
+            msg: dataGetAccess.message,
+            access: dataGetAccess
+          });
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+      
+      /**PROXIMAS PUEBAS */
+      getCoursePayment: async (course_id, user_id, module_id, quiz_id) => {
+        const store = getStore();
+        getActions().updateMsgError("");
+        getActions().updateMsg("");
+        getActions().spinner(true);
+
+        const token = localStorage.getItem("token-accessCourse")
+        if (!token) throw new Error("No token found");
+        
+        localStorage.setItem("userData")
+
+        try {
+          const url = process.env.BACKEND_URL + "/api/view/course/course_id/user/user_id/module/module_id/quiz/quiz_id";
+          const respGetPayment = await fetch(url, {
+            headers: {
+              "Content-type": "application/json",
+              Authorization: "Bearer " + token,
+            }
+          });
+
+          if (!respGetPayment.ok) {
+            const errorData = await respGetPayment.json();
+            console.log(errorData);
+            setStore({ ...store, error: errorData.error });
+            throw new Error(errorData.error || "Error in payment");
+          }
+
+          const dataGetPayment = await respGetPayment.json();
+          localStorage.setItem("token-accessCourse", dataGetPayment.token);
+          setStore({
+            ...store,
+            msg: dataGetPayment.message,
+            pt: dataGetPayment,
+          });
+          console.log(dataGetPayment);
+
+        } catch (err) {
+          console.log(err);
+        } finally {
+          getActions().spinner(false);
+        }
+      },
+      
     }
-  };
-}
-
+  }
+};
 
 export default getState;
