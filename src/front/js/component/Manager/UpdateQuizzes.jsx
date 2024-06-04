@@ -150,7 +150,7 @@ export const UpdateQuizzes = () => {
             </div>
             <h1>Update Quiz</h1>
             <div>
-                <button onClick={handlerGoToHome}>Regresar</button>
+                <button onClick={handlerGoToHome}>Go back</button>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label>Question Title</label>
@@ -186,8 +186,8 @@ export const UpdateQuizzes = () => {
                         <label>Approved</label>
                         <select className="form-select" name='approved' onChange={handleChange} value={quizData.approved} required>
                             <option value="">--Choose--</option>
-                            <option value={true}>Aprobado</option>
-                            <option value={false}>Reprobado</option>
+                            <option value={true}>Approved</option>
+                            <option value={false}>Reprobate</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -216,8 +216,8 @@ export const UpdateQuizzes = () => {
                         <label>Approval Percentage</label>
                         <select className="form-select" name='approvalPercentage' onChange={handleChange} value={quizData.approvalPercentage} required>
                             <option value="">--Choose--</option>
-                            <option value={true}>Aprobado</option>
-                            <option value={false}>Reprobado</option>
+                            <option value={true}>Approved</option>
+                            <option value={false}>Reprobate</option>
                         </select>
                     </div>
                     <div className="form-group">

@@ -144,7 +144,7 @@ export const HistoryCoursesUser = () => {
             <div className='mx-5 my-2 py-3 px-3 text-center'>
                 <div>
                     {orders.length === 0 ? (
-                        "No hay Courses Registrados"
+                        "There are no registered courses"
                     ) : (
                         <table className="table mx-auto">
                             <thead>
@@ -279,7 +279,7 @@ export const HistoryCoursesUser = () => {
             <div className='mx-5 my-2 py-3 px-3 text-center'>
                 <div>
                     {orders.length === 0 ? (
-                        "No hay Courses Registrados"
+                        "There are no registered courses"
                     ) : (
                         <table className="table mx-auto">
                             <thead>

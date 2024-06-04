@@ -86,17 +86,14 @@ export const ManagerDashboard = () => {
 
     const handleMyModule = () => {
         setButtonSelected(<ModuleCourse />)
-        actions.getModules()
     } 
 
     const handleMyQuizzes = () => {
-        setButtonSelected(<QuizzesCourse />)
-        actions.getQuizzes()
+        setButtonSelected(<QuizzesCourse />)     
     }
 
     const handleGetQuizzes = () => {
         setButtonSelected(<GetQuizzes />)
-        actions.getQuizzes()
     }
 
 

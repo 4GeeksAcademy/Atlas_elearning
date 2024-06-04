@@ -5,6 +5,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa"
 import { GrFormPreviousLink } from "react-icons/gr";
 import { GoHome } from "react-icons/go";
 import { IoAddCircleOutline } from "react-icons/io5";
+import { Message } from '../Message.jsx';
 
 export const UpdateUser = (Role) => {
     const { actions, store } = useContext(Context);
@@ -124,7 +125,16 @@ export const UpdateUser = (Role) => {
             {/* Mostrar mensaje de éxito o error */}
             {msgError && <Message type="danger" text={msgError} />}
             {msg && <Message type="success" text={msg} />}
-
+            <button
+                className="btnFav d-flex justify-content-center align-items-center top-50 end-0 translate-middle-y ms-3 mt-3"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasScrolling"
+                aria-controls="offcanvasScrolling"
+                onClick={() => navigate(`/`)}
+            >
+                <FaArrowLeft />
+            </button>
             <h1>Update</h1>
             <div >
                 <form className="px-2" onSubmit={handleSubmit}>
