@@ -94,8 +94,7 @@ export const PostCourse = () => {
 
     return (
         <div>
-            <div className='position-relative'>
-            </div>
+            
 
             <div className='container-fluid d-flex justify-content-center align-items-start'>
                 <div className='border border-black rounded-3 mx-auto my-5 p-3 w-75'>

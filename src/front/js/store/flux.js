@@ -23,7 +23,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       order: "",
       access: "",
       tokenToPay: ""
-      
+
     },
 
     actions: {
@@ -85,7 +85,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataLoginIn = await respLoginIn.json();
           localStorage.setItem("jwt-token", dataLoginIn.access_token)
-          
+
           localStorage.setItem("currentRole", userRole);
           setStore({ ...store, currentRole: userRole });
           setStore({ ...store, msg: dataLoginIn.message });
@@ -98,7 +98,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           getActions().spinner(false);
         }
       },
-      
+
 
       getUser: async (userRol) => {
         const store = getStore();
@@ -153,17 +153,17 @@ const getState = ({ getStore, getActions, setStore }) => {
           await getActions().getCourse();
           await getActions().getTrolleyToOrder();
           await getActions().getCategory();
-          
-      
+
+
           if (token && userRole && userToLoginStr) {
             const userToLogin = JSON.parse(userToLoginStr);
             if (!userToLogin) {
               throw new Error("Failed to parse userToLogin from localStorage");
             }
-      
+
             setStore({ currentRole: userRole });
-            
-           
+
+
             await getActions().getUser(userRole);
             await getActions().getModules();
             await getActions().getQuizzes();
@@ -175,7 +175,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error checking user session: ", err);
         }
       },
-      
+
 
       updateUser: async (dataUpdate, type, userId) => {
         const store = getStore();
@@ -257,7 +257,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-    
+
       // RESET PASSWORD
       resetPassword: async (email, userPassword) => {
         const store = getStore();
@@ -499,7 +499,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
-        console.log(titleCourse, courseId, price)
+        console.log(titleCourse, courseId, price);
         try {
           const url = process.env.BACKEND_URL + "/api/trolley/courses";
           const respAddTrolley = await fetch(url, {
@@ -526,7 +526,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
 
           const dataAddTrolley = await respAddTrolley.json();
-          setStore({ ...store, msg: dataAddTrolley.message });
+          setStore({ ...store, courseFavorite: [...store.courseFavorite, { titleCourse, courseId, price }], msg: dataAddTrolley.message });
           console.log(dataAddTrolley);
 
         } catch (err) {
@@ -535,6 +535,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           getActions().spinner(false);
         }
       },
+
 
       getTrolleyToOrder: async () => {
         const store = getStore();
@@ -557,7 +558,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             msg: dataGetOrder.message,
             courseFavorite: dataGetOrder,
           });
-          
+
         } catch (err) {
           console.log(err);
         } finally {
@@ -659,7 +660,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
           const dataAddQuizzes = await respAddQuizzes.json();
           setStore({ ...store, msg: dataAddQuizzes.message });
-          
+
 
         } catch (err) {
           console.log(err);
@@ -689,7 +690,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             msg: dataGetQuizzes.message,
             quizzes: dataGetQuizzes,
           });
-          
+
         } catch (err) {
           console.log(err);
         } finally {
@@ -783,9 +784,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             setStore({ ...store, error: errorUploadData.Error })
             throw new Error(errorUploadData.Error || "Error posting certificate")
 
-          } 
-          else 
-          {
+          }
+          else {
             const uploadData = await response.json();
             alert('File uploaded successfully: ' + JSON.stringify(uploadData));
           }
@@ -862,7 +862,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataAddModule = await respAddModule.json();
           setStore({ ...store, msg: dataAddModule.message });
-     
+
 
         } catch (err) {
           console.error("Error in postModule:", err);
@@ -902,7 +902,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-       deleteModules: async (modulesId) => {
+      deleteModules: async (modulesId) => {
         const store = getStore();
         getActions().updateMsgError("");
         getActions().updateMsg("");
@@ -916,7 +916,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
-              
+
             }
           })
 
@@ -1016,7 +1016,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         getActions().updateMsgError("");
         getActions().updateMsg("");
         getActions().spinner(true);
-        
+
         try {
           const url = process.env.BACKEND_URL + "/api/payment/courses";
           const respAddPayment = await fetch(url, {
@@ -1040,9 +1040,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           const dataAddPayment = await respAddPayment.json();
           localStorage.setItem("token-accessCourse", dataAddPayment.token)
-          setStore({ ...store, msg: dataAddPayment.message,
-            tokenToPay: dataAddPayment.token }
-          
+          setStore({
+            ...store, msg: dataAddPayment.message,
+            tokenToPay: dataAddPayment.token
+          }
+
           )
 
         } catch (err) {
@@ -1267,7 +1269,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         const token = localStorage.getItem("token-accessCourse")
         if (!token) throw new Error("No token found");
-        
+
         try {
           const url = process.env.BACKEND_URL + "/api/view/course/accessAll";
           const respGetAccess = await fetch(url, {
@@ -1296,7 +1298,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           getActions().spinner(false);
         }
       },
-      
+
       /**PROXIMAS PUEBAS */
       getCoursePayment: async (course_id, user_id, module_id, quiz_id) => {
         const store = getStore();
@@ -1306,7 +1308,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         const token = localStorage.getItem("token-accessCourse")
         if (!token) throw new Error("No token found");
-        
+
         localStorage.setItem("userData")
 
         try {
@@ -1340,7 +1342,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           getActions().spinner(false);
         }
       },
-      
+
     }
   }
 };
