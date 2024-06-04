@@ -11,7 +11,7 @@ export const Carousel = () => {
                         <p className='mt-5 fs-3 text-uppercase fw-bolder' style={{ color: "#165D95" }}>We carry the weight of knowledge so that studying is light for you</p>
                         <h1 className='display-1 fw-bolder text-uppercase item-edit' style={{ color: "#165D95" }}>Atlas</h1>
                         <div className='row d-flex justify-content-between'>
-                            <a href="#" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
+                            <a href="#Courses" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
                             <a href="#Suscribe" className='btnFav col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Subscribe</a>
                         </div>
                     </div>
@@ -22,7 +22,7 @@ export const Carousel = () => {
                         <p className='mt-5 fs-3 text-uppercase  fw-bolder' style={{ color: "#165D95" }}>Take advantage of our subscriptions</p>
                         <h1 className='display-2 fw-bolder text-uppercase' style={{ color: "#165D95" }}>Intensive Course</h1>
                         <div className='row d-flex justify-content-between'>
-                            <a href="#" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
+                            <a href="#Courses" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
                             <a href="#Suscribe" className='btnFav col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Subscribe</a>
                         </div>
                     </div>
@@ -33,7 +33,7 @@ export const Carousel = () => {
                         <p className='mt-5 fs-3 text-uppercase fw-bolder' style={{ color: "#165D95" }}>Share your knowledge to improve the world</p>
                         <h1 className='display-3 fw-bolder text-uppercase ' style={{ color: "#165D95" }}>Teach others, and upload your content...</h1>
                         <div className='row d-flex justify-content-between'>
-                            <a href="#" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
+                            <a href="#Courses" className='btnFav2 col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Explore</a>
                             <a href="#Suscribe" className='btnFav col-md-5 col-sm-12 justify-content-center fs-4 text-decoration-none fw-bolder'>Subscribe</a>
                         </div>
                     </div>

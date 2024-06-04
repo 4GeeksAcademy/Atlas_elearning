@@ -129,7 +129,7 @@ export const Navbar = () => {
                                             {accessToAddCourse.map((trolley, index) => (
                                                 <div key={index} className="dropdown-item d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <span >{trolley.titleCourse}</span>
+                                                        <span onClick={() => navigate(`/course/${t}`)}>{trolley.titleCourse}</span>
                                                     </div>
                                                     <button className="btn-close ms-3" onClick={() => actions.deleteTrolley(trolley.id)}></button>
                                                 </div>

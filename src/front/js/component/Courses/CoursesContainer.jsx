@@ -48,7 +48,7 @@ export const CoursesContainer = () => {
                     ) : (
                         store.course && store.course.access_to_courses && store.course.access_to_courses.map((item, index) => {
                             return (
-                                <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3' style={{ width: "20rem" }}>
+                                <div key={index} className='card border-0 cardEdit shadow rounded-5 text-white bg-dark col-xxl-3 col-xl-3 col-lg-4 col-md-5 col-sm-12 me-3' id="Courses" style={{ width: "20rem" }}>
                                     <div className="card-img-top">
                                         <div className="course-thumbnail">
                                             <img
@@ -66,7 +66,7 @@ export const CoursesContainer = () => {
                                                 <h3 className="card-title fw-bolder fs-5 text-white">{item.title}</h3>
                                             </div>
                                             <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav" style={{ cursor: "pointer" }}>
-                                                <strong>subscribe</strong>
+                                                <a href="#Suscribe" className="text-decoraction-none"><strong>subscribe</strong></a>
                                             </div>
                                         </div>
                                         <div className="mt-3">

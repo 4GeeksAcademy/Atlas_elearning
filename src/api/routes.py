@@ -1017,7 +1017,7 @@ def add_course_to_trolley():
         db.session.add(new_trolley)
         db.session.commit()
 
-        return jsonify({"message": "Course added to trolley successfully", "order": new_trolley.serialize()}), 201
+        return jsonify({"message": "Course added to Favorite successfully", "order": new_trolley.serialize()}), 201
 
     except Exception as e:
         return jsonify({"Error": "An error occurred", "details": str(e)}), 500
@@ -1030,7 +1030,7 @@ def get_trolley():
         return jsonify(serialized_trolley), 200
     
     except Exception as e:
-        return jsonify({"Error": "An error occurred while fetching trolleys", "error_details": str(e)}), 500
+        return jsonify({"Error": "An error occurred while fetching Favorite", "error_details": str(e)}), 500
     
 @api.route('/view/trolley/<int:trolley_id>', methods=['DELETE'])
 def delete_trolley(trolley_id):
@@ -1038,15 +1038,15 @@ def delete_trolley(trolley_id):
         trolley = Trolley.query.get(trolley_id)
 
         if not trolley:
-            return jsonify({"Error": "Trolley not found"}), 404
+            return jsonify({"Error": "Favorite not found"}), 404
         
         db.session.delete(trolley)
         db.session.commit()
 
-        return jsonify({"message": "Trolley delete succesfully."}), 200
+        return jsonify({"message": "Favorite delete succesfully."}), 200
     
     except Exception as err:
-        return jsonify({"Error": "Error in deleting trolley: " + str(err)}), 500
+        return jsonify({"Error": "Error in deleting Favorite: " + str(err)}), 500
 
     
 
