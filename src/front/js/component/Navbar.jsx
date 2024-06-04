@@ -70,7 +70,7 @@ export const Navbar = () => {
             {localStorage.getItem('jwt-token') ? (
                 <nav className="navbar navbar-light bg-white navbar-expand-lg">
                     <div className="container-fluid">
-                        <button
+                    <button
                             className="navbar-toggler"
                             type="button"
                             data-bs-toggle="collapse"
