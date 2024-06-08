@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Context } from '../store/appContext'
 
 import { GoArrowLeft } from "react-icons/go";
-
+import { Message } from './Message.jsx'
 
 export const ResetPassword = () => {
     const { store, actions } = useContext(Context)
