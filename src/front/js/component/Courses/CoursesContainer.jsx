@@ -74,7 +74,7 @@ export const CoursesContainer = () => {
                                             <div className="py-2 px-2 border fs-6 rounded-pill d-inline-flex justify-content-center align-items-center btnFav" style={{ cursor: "pointer" }}>
                                                 <a href="#Suscribe" className="text-decoration-none"><strong>subscribe</strong></a>
                                             </div>
-                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title)}>
+                                            <button className='py-2 px-2 border fs-6 rounded-circle d-flex justify-content-center align-items-center btnFav' onClick={() => handleAddTrolley(item.title, 1, 35)}>
                                                 <LuHeart size={20} />
                                             </button>
                                         </div>

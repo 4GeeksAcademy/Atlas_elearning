@@ -15,8 +15,6 @@ export const Navbar = () => {
     const msg = typeof store.msg === 'string' ? store.msg : JSON.stringify(store.msg);
 
 
-
-
     useEffect(() => {
         // Cambiar el estado del spinner
         setLoading(store.spinner);
